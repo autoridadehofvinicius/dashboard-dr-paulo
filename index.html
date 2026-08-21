@@ -534,8 +534,26 @@
     var base = (dentro.length ? dentro : cidM).map(function(c){ return [c.lat, c.lon]; })
       .concat(raiosG.map(function(r){ return [r.lat, r.lon]; }))
       .concat(cidG.map(function(c){ return [c.lat, c.lon]; }));
-    MAPA.fitBounds(L.latLngBounds(base), {padding:[26,26], maxZoom:9});
-    setTimeout(function(){ if (MAPA) MAPA.invalidateSize(); }, 120);
+    /* o enquadramento so vale depois que o container tem o tamanho final;
+       feito cedo demais, o Leaflet calcula o zoom por uma caixa errada e as
+       areas ficam fora da vista. Reenquadra quando o layout assenta e sempre
+       que a janela mudar de tamanho. */
+    var CAIXA = L.latLngBounds(base);
+    function enquadrar(){
+      if (!MAPA) return;
+      MAPA.invalidateSize({animate:false});
+      MAPA.fitBounds(CAIXA, {padding:[26,26], maxZoom:9, animate:false});
+    }
+    enquadrar();
+    requestAnimationFrame(enquadrar);
+    setTimeout(enquadrar, 250);
+    setTimeout(enquadrar, 900);
+    if (!window.__reenquadra){
+      window.__reenquadra = true;
+      window.addEventListener("resize", function(){ if (window.__enq) window.__enq(); });
+    }
+    window.__enq = enquadrar;
+    window.__MAPA = MAPA;
 
     var nCid = cidM.length + custom.length;
     el("mapNote").textContent = nCid + " cidades e áreas segmentadas · " +
