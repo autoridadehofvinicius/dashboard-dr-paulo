@@ -208,8 +208,9 @@
       <div class="ln"><span class="val" id="kPv">—</span><span class="dl" id="kPvD"></span></div>
       <span class="sub2" id="kPvS"></span>
       <svg id="sparkPv" viewBox="0 0 200 30" height="30" aria-hidden="true"></svg></div>
-    <div class="card kpi"><span class="lbl">Conversões · Google</span>
-      <div class="ln"><span class="val" id="kGcv">—</span><span class="dl" id="kGcvD"></span></div></div>
+    <div class="card kpi"><span class="lbl">Visitas ao site <span style="color:var(--gold)">· Google</span></span>
+      <div class="ln"><span class="val" id="kGcv">—</span><span class="dl" id="kGcvD"></span></div>
+      <span class="sub2" id="kGcvS"></span></div>
     <div class="card kpi"><span class="lbl">Cliques totais</span>
       <div class="ln"><span class="val" id="kCl">—</span><span class="dl" id="kClD"></span></div></div>
   </div>
@@ -226,7 +227,7 @@
       <span class="kicker">Tendência</span>
       <div class="chead"><h2>Resultados por dia</h2>
         <div class="lg"><span class="k"><span class="sw" style="background:var(--meta)"></span>Conversas WhatsApp</span>
-          <span class="k"><span class="sw" style="background:var(--gold)"></span>Conversões Google</span></div></div>
+          <span class="k"><span class="sw" style="background:var(--gold)"></span>Visitas ao site</span></div></div>
       <div class="plot" id="pRes"></div>
     </div>
   </div>
@@ -273,7 +274,7 @@
     <div class="hd"><h2><span class="pl" style="background:var(--gold)"></span>Campanhas · Google Ads</h2>
       <span class="fnote">nível campanha</span></div>
     <div class="scroll"><table id="tGoogle">
-      <thead><tr><th>Campanha</th><th>Orç./dia</th><th>Invest.</th><th>Impr.</th><th>Cliques</th><th>CTR</th><th>CPC</th><th>Conv.</th></tr></thead>
+      <thead><tr><th>Campanha</th><th>Orç./dia</th><th>Invest.</th><th>Impr.</th><th>Visitas ao site</th><th>CTR</th><th>CPC</th></tr></thead>
       <tbody></tbody></table></div>
   </div>
 
@@ -513,7 +514,7 @@
     var invA = soma(mAnt,"sp")+soma(gAnt,"sp");
     var conv = soma(mAtual,"cv"), convA = soma(mAnt,"cv");
     var pv = soma(mAtual,"pv"), pvA = soma(mAnt,"pv");
-    var gcv = soma(gAtual,"cv"), gcvA = soma(gAnt,"cv");
+    var gcv = soma(gAtual,"cl"), gcvA = soma(gAnt,"cl");
     var cl = soma(mAtual,"cl")+soma(gAtual,"cl"), clA = soma(mAnt,"cl")+soma(gAnt,"cl");
 
     function delta(a,b,elId){
@@ -530,6 +531,8 @@
     el("kConvS").textContent = conv ? ("custo médio " + BRL(invMeta/conv) + " · verba Meta inteira") : "";
     el("kPvS").textContent = pv ? ("custo médio " + BRL(invMeta/pv) + " · verba Meta inteira") : "";
     el("kGcv").textContent = NUM(Math.round(gcv)); delta(gcv,gcvA,"kGcvD");
+    var invG_ = soma(gAtual,"sp");
+    el("kGcvS").textContent = gcv ? ("custo por visita " + BRL(invG_/gcv)) : "";
     el("kCl").textContent = NUM(cl); delta(cl,clA,"kClD");
 
     var ds = dias(per);
@@ -540,7 +543,7 @@
     }
     var invM = porDia(mAtual,"sp"), invG = porDia(gAtual,"sp");
     linha(el("pInv"), ds, [{v:invM,cor:"#2F6DA8"},{v:invG,cor:"#BE9A5A"}]);
-    linha(el("pRes"), ds, [{v:porDia(mAtual,"cv"),cor:"#2F6DA8"},{v:porDia(gAtual,"cv"),cor:"#BE9A5A"}]);
+    linha(el("pRes"), ds, [{v:porDia(mAtual,"cv"),cor:"#2F6DA8"},{v:porDia(gAtual,"cl"),cor:"#BE9A5A"}]);
 
     // sparkline do hero
     var tot = invM.map(function(v,i){ return v + invG[i]; });
@@ -592,9 +595,9 @@
       var st = c.st === "ENABLED" ? "<span class='chip on'>ativa</span>"
              : (c.st ? "<span class='chip off'>"+String(c.st).toLowerCase()+"</span>" : "");
       return "<tr><td class='nm' title='"+c.c+"'>"+c.c+st+"</td><td>"+BRL(c.orc||0)+"</td><td>"+BRL(c.sp)+
-        "</td><td>"+NUM(c.im)+"</td><td>"+NUM(c.cl)+"</td><td>"+(c.ctr||0).toFixed(2)+"%</td><td>"+
-        (c.cpc?BRL(c.cpc):"—")+"</td><td>"+(Math.round((c.cv||0)*10)/10)+"</td></tr>";
-    }).join("") : "<tr><td colspan='8' class='vazio'>Sem campanhas.</td></tr>";
+        "</td><td>"+NUM(c.im)+"</td><td><b>"+NUM(c.cl)+"</b></td><td>"+(c.ctr||0).toFixed(2)+"%</td><td>"+
+        (c.cpc?BRL(c.cpc):"—")+"</td></tr>";
+    }).join("") : "<tr><td colspan='7' class='vazio'>Sem campanhas.</td></tr>";
 
     var rotuloPer = per === 1 ? "hoje" : ("últimos " + per + " dias");
     el("fnote").textContent = "Meta + Google · nível campanha · " + rotuloPer;
