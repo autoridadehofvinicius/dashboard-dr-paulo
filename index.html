@@ -255,7 +255,7 @@
 
   <div class="card tbl">
     <div class="hd"><h2><span class="pl" style="background:var(--meta)"></span>Campanhas de conversa · WhatsApp</h2>
-      <span class="fnote">todas as ativas, inclusive as que ainda não entregaram</span></div>
+      <span class="fnote" id="notaConv">todas as ativas, inclusive as que ainda não entregaram</span></div>
     <div class="scroll"><table id="tMeta">
       <thead><tr><th>Campanha</th><th>Invest.</th><th>Impr.</th><th>Cliques</th><th>CTR</th><th>Conversas</th><th>Custo/conversa</th></tr></thead>
       <tbody></tbody></table></div>
@@ -320,6 +320,30 @@
   function soma(linhas, campo){
     return (linhas||[]).reduce(function(a,l){ return a + (l[campo]||0); }, 0);
   }
+
+  /* Soma as linhas DIARIAS do periodo por campanha. As tabelas precisam sair
+     daqui, e nao do resumo de 30 dias da API, senao nao respeitam o filtro. */
+  function agregar(linhas, meta){
+    var m = {};
+    (linhas||[]).forEach(function(l){
+      var a = m[l.c] || (m[l.c] = {c:l.c, sp:0, im:0, cl:0, cv:0, pv:0});
+      a.sp += l.sp||0; a.im += l.im||0; a.cl += l.cl||0; a.cv += l.cv||0; a.pv += l.pv||0;
+    });
+    (meta||[]).forEach(function(c){
+      if (!m[c.c] && c.st === "ACTIVE")
+        m[c.c] = {c:c.c, sp:0, im:0, cl:0, cv:0, pv:0};
+      if (m[c.c]){ m[c.c].tipo=c.tipo; m[c.c].st=c.st; m[c.c].orc=c.orc; m[c.c].canal=c.canal; }
+    });
+    return Object.keys(m).map(function(k){
+      var a = m[k];
+      a.ctr = a.im ? (a.cl/a.im)*100 : 0;
+      a.cpc = a.cl ? a.sp/a.cl : 0;
+      a.cpa = a.cv ? a.sp/a.cv : 0;
+      a.cpv = a.pv ? a.sp/a.pv : 0;
+      return a;
+    });
+  }
+
   var TIPO = {};
   (function(){ (window.PAULO_DATA && window.PAULO_DATA.meta_camp || []).forEach(function(c){ TIPO[c.c]=c.tipo; }); })();
   function somaTipo(linhas, tipo){
@@ -540,7 +564,7 @@
     el("sparkPv").innerHTML = '<path d="'+sp2+'" fill="none" stroke="var(--muted)" stroke-width="1.8" stroke-linejoin="round" opacity=".8"/>';
 
     // tabelas
-    var todas = D.meta_camp || [];
+    var todas = agregar(mAtual, D.meta_camp);
     function selo(c){
       if (c.st === "ACTIVE" && c.sp <= 0) return "<span class='chip on'>ativa · sem entrega</span>";
       if (c.st === "ACTIVE") return "<span class='chip on'>ativa</span>";
@@ -566,15 +590,19 @@
     }).join("") : "<tr><td colspan='7' class='vazio'>Nenhum impulsionamento no período.</td></tr>";
 
     var tg = document.querySelector("#tGoogle tbody");
-    var gc = D.google_camp||[];
+    var gc = agregar(gAtual, D.google_camp).sort(function(a,b){ return (b.sp-a.sp) || a.c.localeCompare(b.c); });
     tg.innerHTML = gc.length ? gc.map(function(c){
-      var st = c.st === "ENABLED" ? "<span class='chip on'>ativa</span>" : "<span class='chip off'>"+(c.st||"").toLowerCase()+"</span>";
-      return "<tr><td class='nm' title='"+c.c+"'>"+c.c+st+"</td><td>"+BRL(c.orc)+"</td><td>"+BRL(c.sp)+
-        "</td><td>"+NUM(c.im)+"</td><td>"+NUM(c.cl)+"</td><td>"+c.ctr.toFixed(2)+"%</td><td>"+
-        (c.cpc?BRL(c.cpc):"—")+"</td><td>"+(c.cv||0)+"</td></tr>";
+      var st = c.st === "ENABLED" ? "<span class='chip on'>ativa</span>"
+             : (c.st ? "<span class='chip off'>"+String(c.st).toLowerCase()+"</span>" : "");
+      return "<tr><td class='nm' title='"+c.c+"'>"+c.c+st+"</td><td>"+BRL(c.orc||0)+"</td><td>"+BRL(c.sp)+
+        "</td><td>"+NUM(c.im)+"</td><td>"+NUM(c.cl)+"</td><td>"+(c.ctr||0).toFixed(2)+"%</td><td>"+
+        (c.cpc?BRL(c.cpc):"—")+"</td><td>"+(Math.round((c.cv||0)*10)/10)+"</td></tr>";
     }).join("") : "<tr><td colspan='8' class='vazio'>Sem campanhas.</td></tr>";
 
-    el("fnote").textContent = "Meta + Google · nível campanha";
+    var rotuloPer = per === 1 ? "hoje" : ("últimos " + per + " dias");
+    el("fnote").textContent = "Meta + Google · nível campanha · " + rotuloPer;
+    var nc = el("notaConv");
+    if (nc) nc.textContent = "todas as ativas · " + rotuloPer;
     mapa(); regioes();
   }
 
