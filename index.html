@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex,nofollow">
 <title>Dr. Paulo Igor Rauen · Inteligência de Tráfego</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
   :root{
     --page:#F5F7FA; --surface:#FFFFFF; --ink:#0A1C30; --ink2:#40506180; --ink2s:#405061;
@@ -117,7 +119,28 @@
   .regs{display:grid;grid-template-columns:repeat(4,1fr);gap:12px 22px;margin-top:18px;
     padding-top:16px;border-top:1px solid var(--grid)}
   @media(max-width:900px){.regs{grid-template-columns:1fr 1fr}}
-  .mapbox{position:relative;border:1px solid var(--grid);border-radius:12px;overflow:hidden;
+  #mapbox{height:600px;z-index:0;background:var(--surface)}
+  #mapbox .leaflet-container{font:inherit}
+  .leaflet-popup-content-wrapper{background:var(--surface);color:var(--ink);border-radius:10px;
+    box-shadow:0 8px 28px rgba(0,0,0,.28)}
+  .leaflet-popup-tip{background:var(--surface)}
+  .leaflet-popup-content{margin:10px 13px;font-size:12.5px;line-height:1.5}
+  .leaflet-popup-content b{color:var(--gold)}
+  .leaflet-control-attribution{background:rgba(255,255,255,.72)!important;font-size:10px!important}
+  :root[data-theme="dark"] .leaflet-control-attribution{background:rgba(10,20,32,.72)!important;color:#8fa0b0!important}
+  :root[data-theme="dark"] .leaflet-control-attribution a{color:#a9bccd!important}
+  .pino{display:flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;
+    background:var(--gold);border:2.5px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.4);
+    font:700 11px/1 ui-sans-serif,system-ui;color:#0A1C30}
+  .pino.fora{background:#C0453C;color:#fff}
+  .rot{font:700 11.5px/1 ui-sans-serif,system-ui;color:var(--ink);white-space:nowrap;
+    text-shadow:0 0 3px var(--surface),0 0 3px var(--surface),0 0 5px var(--surface);
+    transform:translate(16px,-7px)}
+  .aviso-geo{display:inline-flex;align-items:center;gap:7px;margin-top:10px;padding:7px 12px;
+    border-radius:8px;background:rgba(192,69,60,.10);border:1px solid rgba(192,69,60,.35);
+    font-size:12px;color:var(--ink)}
+  .aviso-geo b{color:#C0453C}
+  .mapbox-legado{position:relative;border:1px solid var(--grid);border-radius:12px;overflow:hidden;
     background:linear-gradient(160deg,rgba(10,28,48,.03),rgba(190,154,90,.05))}
   :root[data-theme="dark"] .mapbox{background:linear-gradient(160deg,rgba(255,255,255,.02),rgba(190,154,90,.06))}
   .mapbox svg{display:block;width:100%;height:auto}
@@ -242,10 +265,12 @@
       <div>
         <div class="mapbox" id="mapbox"></div>
         <div class="mleg">
-          <span class="k"><span class="b" style="background:rgba(190,154,90,.30);border:1px solid var(--gold)"></span>Área de cobertura (raio configurado)</span>
+          <span class="k"><span class="b" style="background:rgba(190,154,90,.28);border:1px solid var(--gold)"></span>Raio segmentado no Meta</span>
+          <span class="k"><span class="b" style="background:rgba(47,109,168,.22);border:1px dashed var(--meta)"></span>Raio segmentado no Google</span>
           <span class="k"><span class="b" style="background:var(--gold)"></span>Cidade de atendimento</span>
-          <span class="k"><span class="b" style="background:var(--meta)"></span>Cidade alcançada (tamanho = impressões)</span>
+          <span class="k"><span class="b" style="background:var(--meta)"></span>Cidade alcançada no Google (tamanho = impressões)</span>
         </div>
+        <div id="avisoGeo"></div>
       </div>
     </div>
     <div class="reg">
@@ -386,110 +411,138 @@
   }
 
   /* ---------- mapa ---------- */
+  /* Mapa real (Leaflet + tiles CARTO). O SVG anterior so conseguia desenhar as
+     cidades que o Google ja tinha entregue; a cobertura de verdade esta na
+     SEGMENTACAO dos conjuntos do Meta, que e de onde vem D.meta_geo. */
+  var ATENDE = {"Umuarama":1, "Campo Mourão":1, "Palotina":1};
+  var MAPA = null, CAMADAS = null, TILE = null;
+
+  function km(a, b){
+    var R = 6371, t = Math.PI/180;
+    var dLa = (b[0]-a[0])*t, dLo = (b[1]-a[1])*t;
+    var h = Math.sin(dLa/2)*Math.sin(dLa/2) +
+            Math.cos(a[0]*t)*Math.cos(b[0]*t)*Math.sin(dLo/2)*Math.sin(dLo/2);
+    return 2*R*Math.asin(Math.sqrt(h));
+  }
+  function mediana(v){
+    var x = v.slice().sort(function(a,b){return a-b;});
+    return x.length ? x[Math.floor(x.length/2)] : 0;
+  }
+  function tileURL(escuro){
+    return "https://{s}.basemaps.cartocdn.com/" + (escuro ? "dark_all" : "light_all") +
+           "/{z}/{x}/{y}{r}.png";
+  }
+  function estaEscuro(){
+    var t = document.documentElement.getAttribute("data-theme");
+    if (t) return t === "dark";
+    return window.matchMedia("(prefers-color-scheme: dark)").matches;
+  }
+
   function mapa(){
-    var raios = D.area_raios || [], alvos = (D.area_alvos||[]).filter(function(a){ return a.lat; });
-    var cid = (D.google_cidades||[]).filter(function(c){ return c.lat && c.im > 0; });
-    var pts = [];
-    raios.forEach(function(r){ pts.push([r.lat, r.lon, (r.raio||0)]); });
-    alvos.forEach(function(a){ pts.push([a.lat, a.lon, 0]); });
-    cid.forEach(function(c){ pts.push([c.lat, c.lon, 0]); });
-    if (!pts.length){ el("mapbox").innerHTML = '<div class="vazio">Sem dados de localização.</div>'; return; }
-
-    var latC = pts.reduce(function(a,p){return a+p[0];},0)/pts.length;
-    var kx = Math.cos(latC*Math.PI/180);
-    var minLa=99, maxLa=-99, minLo=999, maxLo=-999;
-    pts.forEach(function(p){
-      var dg = p[2]/111;
-      minLa=Math.min(minLa,p[0]-dg); maxLa=Math.max(maxLa,p[0]+dg);
-      minLo=Math.min(minLo,p[1]-dg/kx); maxLo=Math.max(maxLo,p[1]+dg/kx);
-    });
-    var mg=0.28; minLa-=mg; maxLa+=mg; minLo-=mg; maxLo+=mg;
-
-    var W=1180, H=580, pad=20;
-    var sx = (W-pad*2)/((maxLo-minLo)*kx), sy = (H-pad*2)/(maxLa-minLa);
-    var s = Math.min(sx, sy);
-    var offX = pad + ((W-pad*2) - (maxLo-minLo)*kx*s)/2;
-    var offY = pad + ((H-pad*2) - (maxLa-minLa)*s)/2;
-    var X = function(lon){ return offX + (lon-minLo)*kx*s; };
-    var Y = function(lat){ return offY + (maxLa-lat)*s; };
-    var Rkm = function(km){ return (km/111)*s; };
-
-    var g = '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Mapa de cobertura">';
-    g += '<defs><radialGradient id="glow"><stop offset="0%" stop-color="var(--gold)" stop-opacity=".30"/>'+
-         '<stop offset="100%" stop-color="var(--gold)" stop-opacity=".04"/></radialGradient></defs>';
-    g += '<g opacity=".5">';
-    for (var i=0;i<=12;i++){ var xx=pad+i*(W-pad*2)/12; g+='<line x1="'+xx+'" y1="'+pad+'" x2="'+xx+'" y2="'+(H-pad)+'" stroke="var(--grid)" stroke-width="1"/>'; }
-    for (var j=0;j<=7;j++){ var yy=pad+j*(H-pad*2)/7; g+='<line x1="'+pad+'" y1="'+yy+'" x2="'+(W-pad)+'" y2="'+yy+'" stroke="var(--grid)" stroke-width="1"/>'; }
-    g += '</g>';
-
-    raios.forEach(function(r){
-      var km = r.un === "MILES" ? r.raio*1.609 : r.raio;
-      g += '<circle cx="'+X(r.lon)+'" cy="'+Y(r.lat)+'" r="'+Rkm(km)+'" fill="url(#glow)" stroke="var(--gold)" stroke-width="2.2" stroke-dasharray="8 6" opacity="1"/>';
-    });
-
-    var maxIm = Math.max.apply(null, cid.map(function(c){ return c.im; }).concat([1]));
-    cid.forEach(function(c){
-      var r = 5 + 18*Math.sqrt(c.im/maxIm);
-      g += '<circle cx="'+X(c.lon)+'" cy="'+Y(c.lat)+'" r="'+r+'" fill="var(--meta)" opacity=".48"/>';
-      g += '<circle cx="'+X(c.lon)+'" cy="'+Y(c.lat)+'" r="'+r+'" fill="none" stroke="var(--meta)" stroke-width="1.8"/>';
-      g += '<title>'+c.n+' — '+NUM(c.im)+' impressões, '+NUM(c.cl)+' cliques</title>';
-    });
-
-    // marcadores das cidades alvo (sem rotulo ainda)
-    alvos.forEach(function(a){
-      var cx=X(a.lon), cy=Y(a.lat);
-      g += '<rect x="'+(cx-4)+'" y="'+(cy-4)+'" width="8" height="8" transform="rotate(45 '+cx+' '+cy+')" fill="none" stroke="var(--gold-d)" stroke-width="1.4"/>';
-    });
-
-    // ---- rotulos com anti-colisao ----
-    function curto(n){
-      n = (n||"").replace(/ Department$/,"").replace(/ Del Espiritu Santo$/,"")
-                 .replace(/^Marechal Candido Rondon$/,"M. C. Rondon")
-                 .replace(/^Assis Chateaubriand$/,"A. Chateaubriand");
-      return n.length > 16 ? n.slice(0,15)+"…" : n;
+    if (typeof L === "undefined"){
+      el("mapbox").innerHTML = '<div class="vazio">Mapa indisponível (sem conexão).</div>';
+      return;
     }
-    var rots = [];
-    var nomes = ["Umuarama","Campo Mourão","Palotina"];
-    raios.forEach(function(r,k){
-      rots.push({x:X(r.lon), y:Y(r.lat), t:nomes[k]||"", peso:2});
-    });
-    alvos.forEach(function(a){ rots.push({x:X(a.lon), y:Y(a.lat), t:curto(a.n), peso:1}); });
+    var G = D.meta_geo || {};
+    var cidM = (G.cidades || []).filter(function(c){ return c.lat; });
+    var custom = (G.custom || []).filter(function(c){ return c.lat; });
+    var raiosG = (D.area_raios || []).filter(function(r){ return r.lat; });
+    var alvosG = (D.area_alvos || []).filter(function(a){ return a.lat; });
+    var cidG = (D.google_cidades || []).filter(function(c){ return c.lat && c.im > 0; });
 
-    // ordena por peso (cidades principais primeiro) e depois por y
-    rots.sort(function(a,b){ return (b.peso-a.peso) || (a.y-b.y); });
-    var postos = [];
-    rots.forEach(function(r){
-      var lx = r.x + (r.peso===2 ? 14 : 10);
-      var ly = r.y + (r.peso===2 ? 4 : 3.5);
-      var larg = r.t.length * (r.peso===2 ? 8.2 : 6.3);
-      // empurra para baixo enquanto colidir com algum rotulo ja posicionado
-      for (var tent=0; tent<14; tent++){
-        var bate = postos.some(function(p){
-          return Math.abs(p.y-ly) < 11 && lx < p.x+p.w+6 && p.x < lx+larg+6;
-        });
-        if (!bate) break;
-        ly += 14.5;
-      }
-      postos.push({x:lx, y:ly, w:larg});
-      // linha de chamada quando o rotulo desceu muito
-      if (Math.abs(ly - (r.y + 4)) > 9){
-        g += '<line x1="'+(r.x+3)+'" y1="'+r.y+'" x2="'+(lx-2)+'" y2="'+(ly-3)+'" stroke="var(--faint)" stroke-width=".8" opacity=".7"/>';
-      }
-      if (r.peso === 2){
-        g += '<circle cx="'+r.x+'" cy="'+r.y+'" r="8.5" fill="var(--gold)" stroke="#fff" stroke-width="2.5"/>';
-        g += '<text x="'+lx+'" y="'+ly+'" font-size="15" font-weight="800" fill="var(--ink)" '+
-             'stroke="var(--surface)" stroke-width="3.5" paint-order="stroke">'+r.t+'</text>';
-      } else {
-        g += '<text x="'+lx+'" y="'+ly+'" font-size="11.5" fill="var(--ink2s)" '+
-             'stroke="var(--surface)" stroke-width="2.5" paint-order="stroke">'+r.t+'</text>';
-      }
+    if (!cidM.length && !raiosG.length && !cidG.length){
+      el("mapbox").innerHTML = '<div class="vazio">Sem dados de localização.</div>';
+      return;
+    }
+
+    /* centro do agrupamento principal, pela mediana — a media escorrega quando
+       uma cidade foi marcada no estado errado e puxa o mapa pra longe. */
+    var todos = cidM.concat(custom.map(function(c){ return {lat:c.lat, lon:c.lon, n:c.n||""}; }));
+    var centro = [mediana(todos.map(function(c){return c.lat;})),
+                  mediana(todos.map(function(c){return c.lon;}))];
+    var LIMITE = 500;
+    var dentro = [], fora = [];
+    cidM.forEach(function(c){
+      (km(centro, [c.lat, c.lon]) > LIMITE ? fora : dentro).push(c);
     });
 
-    g += '</svg>';
-    el("mapbox").innerHTML = g;
+    if (MAPA){ MAPA.remove(); MAPA = null; }
+    el("mapbox").innerHTML = "";
+    MAPA = L.map("mapbox", {scrollWheelZoom:false, zoomControl:true, attributionControl:true});
+    TILE = L.tileLayer(tileURL(estaEscuro()), {
+      maxZoom: 16, subdomains: "abcd",
+      attribution: '&copy; OpenStreetMap &copy; CARTO'
+    }).addTo(MAPA);
 
-    var totIm = cid.reduce(function(a,c){return a+c.im;},0);
-    el("mapNote").textContent = cid.length + " cidades alcançadas · " + NUM(totIm) + " impressões no Google";
+    var ouro = "#BE9A5A", azul = estaEscuro() ? "#6FA7DC" : "#2F6DA8", vermelho = "#C0453C";
+
+    /* raios do Meta — a sobreposicao das areas e o que desenha a mancha */
+    dentro.concat(fora).forEach(function(c){
+      var f = fora.indexOf(c) >= 0;
+      L.circle([c.lat, c.lon], {
+        radius: Math.max(c.raio || 15, 8) * 1000,
+        color: f ? vermelho : ouro, weight: 1, opacity: f ? .85 : .40,
+        fillColor: f ? vermelho : ouro, fillOpacity: f ? .10 : .07
+      }).addTo(MAPA).bindPopup(
+        "<b>" + c.n + "</b><br>" + c.uf + (f ? " · fora da área de atendimento" : "") +
+        "<br>raio de " + (c.raio || "?") + " km · Meta Ads");
+    });
+    custom.forEach(function(c){
+      L.circle([c.lat, c.lon], {radius: Math.max(c.raio||10,5)*1000, color: ouro,
+        weight: 1, opacity: .40, fillColor: ouro, fillOpacity: .07})
+       .addTo(MAPA).bindPopup("<b>" + (c.n || "Local marcado no mapa") +
+        "</b><br>raio de " + c.raio + " km · Meta Ads");
+    });
+
+    /* raios do Google (tracejado, pra distinguir da area do Meta) */
+    raiosG.forEach(function(r){
+      L.circle([r.lat, r.lon], {radius: (r.raio||0)*1000, color: azul, weight: 1.6,
+        opacity: .75, dashArray: "6 5", fillColor: azul, fillOpacity: .05})
+       .addTo(MAPA).bindPopup("<b>Raio do Google Ads</b><br>" + (r.raio||0) + " km");
+    });
+
+    /* cidades que o Google JA alcancou, dimensionadas por impressao */
+    var maxIm = Math.max.apply(null, cidG.map(function(c){return c.im;}).concat([1]));
+    cidG.forEach(function(c){
+      L.circleMarker([c.lat, c.lon], {
+        radius: 5 + 13*Math.sqrt(c.im/maxIm), color: "#fff", weight: 1.2,
+        fillColor: azul, fillOpacity: .8
+      }).addTo(MAPA).bindPopup("<b>" + c.n + "</b><br>" + NUM(c.im) +
+        " impressões · " + NUM(c.cl||0) + " cliques<br>alcançada pelo Google Ads");
+    });
+
+    /* cidades de atendimento */
+    todos.concat(alvosG.map(function(a){return {lat:a.lat, lon:a.lon, n:a.n};}))
+      .forEach(function(c){
+        if (!ATENDE[c.n]) return;
+        if (ATENDE[c.n] === "ok") return;
+        ATENDE[c.n] = "ok";
+        L.marker([c.lat, c.lon], {icon: L.divIcon({className:"", iconSize:[26,26],
+          iconAnchor:[13,13], html:'<div class="pino">✚</div>'})})
+         .addTo(MAPA).bindPopup("<b>" + c.n + "</b><br>cidade de atendimento");
+        L.marker([c.lat, c.lon], {interactive:false, icon: L.divIcon({className:"",
+          iconSize:[0,0], html:'<div class="rot">'+c.n+'</div>'})}).addTo(MAPA);
+      });
+    Object.keys(ATENDE).forEach(function(k){ if (ATENDE[k]==="ok") ATENDE[k]=1; });
+
+    /* enquadra so o agrupamento principal: incluir a cidade fora da area
+       afastaria o zoom a ponto de nao dar pra ler a regiao de verdade */
+    var base = (dentro.length ? dentro : cidM).map(function(c){ return [c.lat, c.lon]; })
+      .concat(raiosG.map(function(r){ return [r.lat, r.lon]; }))
+      .concat(cidG.map(function(c){ return [c.lat, c.lon]; }));
+    MAPA.fitBounds(L.latLngBounds(base).pad(0.12));
+    setTimeout(function(){ if (MAPA) MAPA.invalidateSize(); }, 120);
+
+    var nCid = cidM.length + custom.length;
+    el("mapNote").textContent = nCid + " cidades e áreas segmentadas · " +
+      ((G.regioes||[]).length ? (G.regioes||[]).join(", ") + " · " : "") +
+      cidG.length + " cidades já alcançadas no Google";
+
+    el("avisoGeo").innerHTML = fora.length
+      ? '<div class="aviso-geo"><b>Fora da área:</b> ' + fora.map(function(c){
+          return c.n + "/" + c.uf + " (" + Math.round(km(centro,[c.lat,c.lon])) + " km)";
+        }).join(", ") + ' — conferir a segmentação desses conjuntos.</div>'
+      : "";
   }
 
   function regioes(){
