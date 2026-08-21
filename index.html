@@ -526,12 +526,9 @@
     el("kInv").textContent = BRL(inv); delta(inv,invA,"kInvD");
     el("kConv").textContent = NUM(conv); delta(conv,convA,"kConvD");
     el("kPv").textContent = NUM(pv); delta(pv,pvA,"kPvD");
-    var invConv = 0, invPv = 0;
-    (D.meta_camp||[]).forEach(function(c){
-      if (c.tipo === "conversa") invConv += c.sp; else if (c.tipo === "perfil") invPv += c.sp;
-    });
-    el("kConvS").textContent = conv ? ("custo por conversa " + BRL(soma(mAtual,"sp") && conv ? somaTipo(mAtual,"conversa")/conv : 0)) : "";
-    el("kPvS").textContent = pv ? ("custo por visita " + BRL(somaTipo(mAtual,"perfil")/pv)) : "";
+    var invMeta = soma(mAtual,"sp");
+    el("kConvS").textContent = conv ? ("custo médio " + BRL(invMeta/conv) + " · verba Meta inteira") : "";
+    el("kPvS").textContent = pv ? ("custo médio " + BRL(invMeta/pv) + " · verba Meta inteira") : "";
     el("kGcv").textContent = NUM(Math.round(gcv)); delta(gcv,gcvA,"kGcvD");
     el("kCl").textContent = NUM(cl); delta(cl,clA,"kClD");
 
