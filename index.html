@@ -647,6 +647,12 @@
     var perAd = {};
     somaPor(D.google_ads_dia, per, function(l){ return l.id; })
       .forEach(function(a){ perAd[a.k] = a; });
+    /* melhor desempenho do periodo primeiro — a ordenacao nao pode mais vir
+       pronta do coletor, porque a metrica agora depende do filtro */
+    ads = ads.slice().sort(function(x, y){
+      var a = perAd[x.id] || {sp:0, im:0}, b = perAd[y.id] || {sp:0, im:0};
+      return (b.sp-a.sp) || (b.im-a.im) || x.c.localeCompare(y.c);
+    });
     var cx = el("gAds");
     if (cx){
       cx.innerHTML = ads.length ? ads.map(function(a){
