@@ -417,7 +417,7 @@
      cidades que o Google ja tinha entregue; a cobertura de verdade esta na
      SEGMENTACAO dos conjuntos do Meta, que e de onde vem D.meta_geo. */
   var ATENDE = {"Umuarama":1, "Campo Mourão":1, "Palotina":1};
-  var MAPA = null, CAMADAS = null, TILE = null;
+  var MAPA = null, TILE = null, MAPA_TEMA = null;
 
   function km(a, b){
     var R = 6371, t = Math.PI/180;
@@ -445,6 +445,13 @@
       el("mapbox").innerHTML = '<div class="vazio">Mapa indisponível (sem conexão).</div>';
       return;
     }
+    /* o mapa nao depende do periodo: refazer a cada clique no filtro custava
+       recarregar os tiles e jogava fora o zoom/arrasto do usuario. So refaz
+       quando o tema muda (os tiles claros e escuros sao diferentes). */
+    var tema = estaEscuro() ? "dark" : "light";
+    if (MAPA && MAPA_TEMA === tema){ return; }
+    MAPA_TEMA = tema;
+
     var G = D.meta_geo || {};
     var cidM = (G.cidades || []).filter(function(c){ return c.lat; });
     var custom = (G.custom || []).filter(function(c){ return c.lat; });
