@@ -140,10 +140,6 @@
   .rot{font:700 11.5px/1 ui-sans-serif,system-ui;color:var(--ink);white-space:nowrap;
     text-shadow:0 0 3px var(--surface),0 0 3px var(--surface),0 0 5px var(--surface);
     transform:translate(16px,-7px)}
-  .aviso-geo{display:inline-flex;align-items:center;gap:7px;margin-top:10px;padding:7px 12px;
-    border-radius:8px;background:rgba(192,69,60,.10);border:1px solid rgba(192,69,60,.35);
-    font-size:12px;color:var(--ink)}
-  .aviso-geo b{color:#C0453C}
   .mapbox-legado{position:relative;border:1px solid var(--grid);border-radius:12px;overflow:hidden;
     background:linear-gradient(160deg,rgba(10,28,48,.03),rgba(190,154,90,.05))}
     .mleg{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--ink2s);margin-top:10px}
@@ -272,7 +268,6 @@
           <span class="k"><span class="b" style="background:var(--gold)"></span>Cidade de atendimento</span>
           <span class="k"><span class="b" style="background:var(--meta)"></span>Cidade alcançada no Google (tamanho = impressões)</span>
         </div>
-        <div id="avisoGeo"></div>
       </div>
     </div>
     <div class="reg">
@@ -469,11 +464,10 @@
     var todos = cidM.concat(custom.map(function(c){ return {lat:c.lat, lon:c.lon, n:c.n||""}; }));
     var centro = [mediana(todos.map(function(c){return c.lat;})),
                   mediana(todos.map(function(c){return c.lon;}))];
-    var LIMITE = 500;
-    var dentro = [], fora = [];
-    cidM.forEach(function(c){
-      (km(centro, [c.lat, c.lon]) > LIMITE ? fora : dentro).push(c);
-    });
+    /* cidade muito longe do miolo fica fora do CALCULO DO ENQUADRAMENTO —
+       senao o zoom abre tanto que nao da pra ler a regiao de atendimento.
+       Ela continua desenhada no mapa, e so a moldura que a ignora. */
+    var dentro = cidM.filter(function(c){ return km(centro, [c.lat, c.lon]) <= 500; });
 
     if (MAPA){ MAPA.remove(); MAPA = null; }
     el("mapbox").innerHTML = "";
@@ -483,18 +477,15 @@
       attribution: '&copy; OpenStreetMap &copy; CARTO'
     }).addTo(MAPA);
 
-    var ouro = "#BE9A5A", azul = estaEscuro() ? "#6FA7DC" : "#2F6DA8", vermelho = "#C0453C";
+    var ouro = "#BE9A5A", azul = estaEscuro() ? "#6FA7DC" : "#2F6DA8";
 
     /* raios do Meta — a sobreposicao das areas e o que desenha a mancha */
-    dentro.concat(fora).forEach(function(c){
-      var f = fora.indexOf(c) >= 0;
+    cidM.forEach(function(c){
       L.circle([c.lat, c.lon], {
         radius: Math.max(c.raio || 15, 8) * 1000,
-        color: f ? vermelho : ouro, weight: 1.2, opacity: f ? .9 : .7,
-        fillColor: f ? vermelho : ouro, fillOpacity: f ? .14 : .13
+        color: ouro, weight: 1.2, opacity: .7, fillColor: ouro, fillOpacity: .13
       }).addTo(MAPA).bindPopup(
-        "<b>" + c.n + "</b><br>" + c.uf + (f ? " · fora da área de atendimento" : "") +
-        "<br>raio de " + (c.raio || "?") + " km · Meta Ads");
+        "<b>" + c.n + "</b><br>" + c.uf + "<br>raio de " + (c.raio || "?") + " km · Meta Ads");
     });
     custom.forEach(function(c){
       L.circle([c.lat, c.lon], {radius: Math.max(c.raio||10,5)*1000, color: ouro,
@@ -565,11 +556,6 @@
       ((G.regioes||[]).length ? (G.regioes||[]).join(", ") + " · " : "") +
       cidG.length + " cidades já alcançadas no Google";
 
-    el("avisoGeo").innerHTML = fora.length
-      ? '<div class="aviso-geo"><b>Fora da área:</b> ' + fora.map(function(c){
-          return c.n + "/" + c.uf + " (" + Math.round(km(centro,[c.lat,c.lon])) + " km)";
-        }).join(", ") + ' — conferir a segmentação desses conjuntos.</div>'
-      : "";
   }
 
   function regioes(){
