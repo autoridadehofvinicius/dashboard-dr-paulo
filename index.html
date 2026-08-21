@@ -644,9 +644,13 @@
   function detalheGoogle(per, rotuloPer){
     /* --- anuncios no ar --- */
     var ads = D.google_ads || [];
+    var perAd = {};
+    somaPor(D.google_ads_dia, per, function(l){ return l.id; })
+      .forEach(function(a){ perAd[a.k] = a; });
     var cx = el("gAds");
     if (cx){
       cx.innerHTML = ads.length ? ads.map(function(a){
+        var m = perAd[a.id] || {im:0, cl:0, sp:0};
         var cls = /Aprovado \(/.test(a.aprov) ? "rev"
                 : (/^Aprovado/.test(a.aprov) ? "on" : (/revis/i.test(a.aprov) ? "rev" : "no"));
         return '<div class="ad">' +
@@ -657,15 +661,15 @@
               return '<span class="t">'+esc(t)+'</span>'; }).join("")+'</div>' +
           ((a.desc||[]).length ? '<div class="ds">'+(a.desc||[]).map(function(d){
               return '<i>'+esc(d)+'</i>'; }).join("")+'</div>' : "") +
-          '<div class="pe"><span><b>'+NUM(a.im)+'</b> impressões</span>' +
-          '<span><b>'+NUM(a.cl)+'</b> visitas</span>' +
-          '<span><b>'+BRL(a.sp)+'</b> investido</span></div>' +
+          '<div class="pe"><span><b>'+NUM(m.im)+'</b> impressões</span>' +
+          '<span><b>'+NUM(m.cl)+'</b> visitas</span>' +
+          '<span><b>'+BRL(m.sp)+'</b> investido</span></div>' +
           (a.url ? '<div class="url">'+esc(a.url)+'</div>' : "") +
         '</div>';
       }).join("") : '<div class="vazio">Nenhum anúncio ativo no Google.</div>';
       var nA = el("notaAds");
       if (nA) nA.textContent = ads.length
-        ? (ads.length + " anúncios responsivos · desempenho dos últimos 30 dias")
+        ? (ads.length + " anúncios responsivos · desempenho " + rotuloPer)
         : "";
     }
 
