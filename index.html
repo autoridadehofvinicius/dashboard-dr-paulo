@@ -174,6 +174,40 @@
   .chip.on{background:rgba(14,159,110,.14);color:var(--good)}
   .chip.off{background:var(--grid);color:var(--muted)}
   .vazio{color:var(--muted);padding:28px 20px;text-align:center;font-size:13px}
+
+  /* ===== ABAS ===== */
+  .abas{display:inline-flex;background:var(--surface);border:1px solid var(--grid);
+    border-radius:11px;padding:3px;box-shadow:var(--sh);margin-right:auto}
+  .abas button{all:unset;cursor:pointer;padding:8px 18px;border-radius:8px;font-size:13px;
+    font-weight:600;color:var(--ink2s)}
+  .abas button[aria-selected="true"]{background:var(--navy);color:#fff}
+  :root[data-theme="dark"] .abas button[aria-selected="true"]{background:var(--gold);color:#0A1C30}
+  .aba{display:none} .aba.on{display:block}
+
+  /* ===== STORIES ===== */
+  .st-topo{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;
+    flex-wrap:wrap;margin-bottom:6px}
+  .st-topo h2{font-size:21px;font-weight:700;letter-spacing:-.02em}
+  .st-topo .quando{font-size:12.5px;color:var(--muted)}
+  .st-intro{font-size:14px;color:var(--ink2s);line-height:1.6;margin-top:8px;max-width:62ch}
+  .sts{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px;margin-top:18px}
+  .st{padding:22px 22px 20px;position:relative;overflow:hidden}
+  .st::before{content:"";position:absolute;left:0;top:18px;bottom:18px;width:3px;
+    border-radius:3px;background:var(--gold)}
+  .st .n{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;
+    border-radius:8px;background:var(--gold);color:#0A1C30;font-weight:800;font-size:13px}
+  .st h3{margin-top:12px;font-size:17.5px;font-weight:700;letter-spacing:-.015em;line-height:1.3}
+  .st .rot{font-size:10.5px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;
+    color:var(--muted);margin-top:16px;margin-bottom:6px}
+  .st .gancho{font-size:15.5px;line-height:1.55;font-weight:600;color:var(--ink);
+    padding:12px 14px;border-radius:10px;background:var(--gold-soft);
+    border:1px solid rgba(190,154,90,.3)}
+  .st ol{margin:0;padding-left:18px}
+  .st ol li{font-size:14.5px;line-height:1.6;color:var(--ink2s);margin-top:7px;padding-left:3px}
+  .st .fecha{font-size:14.5px;line-height:1.55;color:var(--ink);font-style:italic}
+  .st .porque{margin-top:16px;padding-top:13px;border-top:1px solid var(--grid);
+    font-size:12.5px;line-height:1.55;color:var(--muted)}
+  .st .porque b{color:var(--ink2s);font-weight:700}
   .chip.rev{background:rgba(190,154,90,.16);color:var(--gold-d)}
   :root[data-theme="dark"] .chip.rev{color:var(--gold-l)}
   .chip.no{background:rgba(192,69,60,.14);color:#C0453C}
@@ -241,6 +275,15 @@
     </div>
     <span class="fnote" id="fnote"></span>
   </div>
+
+  <div class="filters" style="margin-top:-6px">
+    <div class="abas" role="tablist" aria-label="Seções">
+      <button role="tab" data-a="desempenho" aria-selected="true">Desempenho</button>
+      <button role="tab" data-a="stories" aria-selected="false">Stories de hoje</button>
+    </div>
+  </div>
+
+  <div class="aba on" id="aba-desempenho">
 
   <div class="kpis">
     <div class="card kpi hero">
@@ -350,6 +393,22 @@
       <tbody></tbody></table></div>
   </div>
 
+  </div><!-- /aba-desempenho -->
+
+  <div class="aba" id="aba-stories">
+    <div class="card" style="padding:22px 24px 20px">
+      <span class="kicker">Sugestões do dia</span>
+      <div class="st-topo">
+        <h2>O que gravar hoje</h2>
+        <span class="quando" id="stQuando"></span>
+      </div>
+      <p class="st-intro">Três sugestões montadas a partir do que as pessoas da sua região
+      realmente pesquisaram no Google nos últimos 14 dias e dos temas que mais geram contato
+      nas suas campanhas. Cada uma cabe em até 60 segundos.</p>
+    </div>
+    <div class="sts" id="stLista"></div>
+  </div>
+
   <footer>
     <b>Dr. Paulo Igor Rauen</b> · CRM-PR 22859 · RQE 720 — Umuarama, Campo Mourão e Palotina<br>
     Desenvolvido por <b>Vinicius Augusto de Souza</b> · Gestor de Tráfego<br>
@@ -367,6 +426,70 @@
   var el = function(id){ return document.getElementById(id); };
 
   if (D.foto) el("foto").src = D.foto;
+
+  /* ---------- abas ---------- */
+  document.querySelectorAll(".abas button").forEach(function(b){
+    b.addEventListener("click", function(){
+      var a = b.dataset.a;
+      document.querySelectorAll(".abas button").forEach(function(o){
+        o.setAttribute("aria-selected", String(o === b));
+      });
+      document.querySelectorAll(".aba").forEach(function(s){
+        s.classList.toggle("on", s.id === "aba-" + a);
+      });
+      /* o mapa precisa se remedir: enquanto a aba estava escondida ele
+         tinha altura zero e o Leaflet nao consegue calcular o enquadramento */
+      if (a === "desempenho" && window.__enq) setTimeout(window.__enq, 60);
+      try { history.replaceState(null, "", a === "stories" ? "#stories" : "#"); } catch(e){}
+    });
+  });
+  if (location.hash === "#stories"){
+    var bs = document.querySelector('.abas button[data-a="stories"]');
+    if (bs) bs.click();
+  }
+
+  /* ---------- stories ---------- */
+  function stories(){
+    var S = D.stories || {};
+    var itens = S.itens || [];
+    var cx = el("stLista");
+    if (!cx) return;
+
+    var q = el("stQuando");
+    if (q){
+      if (S.gerado_em){
+        var d = new Date(S.gerado_em);
+        var hoje = new Date();
+        var mesmo = d.toDateString() === hoje.toDateString();
+        q.textContent = (mesmo ? "geradas hoje às " : "geradas em " +
+          String(d.getDate()).padStart(2,"0") + "/" + String(d.getMonth()+1).padStart(2,"0") + " às ") +
+          String(d.getHours()).padStart(2,"0") + ":" + String(d.getMinutes()).padStart(2,"0");
+      } else {
+        q.textContent = "";
+      }
+    }
+
+    if (!itens.length){
+      cx.innerHTML = '<div class="card vazio">As sugestões de hoje ainda não foram geradas. ' +
+        'Elas são montadas automaticamente na primeira coleta da manhã.</div>';
+      return;
+    }
+
+    cx.innerHTML = itens.map(function(it, i){
+      var falar = (it.falar || []).map(function(f){
+        return "<li>" + esc(f) + "</li>"; }).join("");
+      return '<article class="card st">' +
+        '<span class="n">' + (i+1) + '</span>' +
+        '<h3>' + esc(it.titulo || "") + '</h3>' +
+        '<div class="rot">Comece falando</div>' +
+        '<div class="gancho">' + esc(it.gancho || "") + '</div>' +
+        (falar ? '<div class="rot">Depois explique</div><ol>' + falar + '</ol>' : "") +
+        (it.fechamento ? '<div class="rot">Feche assim</div>' +
+          '<div class="fecha">' + esc(it.fechamento) + '</div>' : "") +
+        (it.porque ? '<div class="porque"><b>Por que hoje:</b> ' + esc(it.porque) + '</div>' : "") +
+      '</article>';
+    }).join("");
+  }
 
   /* ---------- tema ---------- */
   el("tema").addEventListener("click", function(){
@@ -818,7 +941,7 @@
     el("fnote").textContent = "Meta + Google · nível campanha · " + rotuloPer;
     var nc = el("notaConv");
     if (nc) nc.textContent = "todas as ativas · " + rotuloPer;
-    mapa(); regioes();
+    mapa(); regioes(); stories();
   }
 
   /* ---------- frescor ---------- */
