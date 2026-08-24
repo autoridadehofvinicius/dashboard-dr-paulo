@@ -215,7 +215,9 @@
   :root[data-theme="dark"] .st .fonte.busca{color:var(--gold-l)}
   .st .fonte.oftalmo{background:var(--meta-s);color:var(--meta)}
   .st .fonte.atualidade{background:rgba(14,159,110,.14);color:var(--good)}
-  .st .ref{margin-top:9px;font-size:12px;line-height:1.5;color:var(--muted);font-style:italic}
+  .st .ref{margin-top:9px;font-size:12px;line-height:1.5;color:var(--muted)}
+  .st .ref a{color:var(--meta);text-decoration:none;border-bottom:1px solid currentColor}
+  .st .ref .vei{font-weight:700;color:var(--ink2s)}
   .sts{align-items:start}
   .chip.rev{background:rgba(190,154,90,.16);color:var(--gold-d)}
   :root[data-theme="dark"] .chip.rev{color:var(--gold-l)}
@@ -504,7 +506,15 @@
         (it.fechamento ? '<div class="rot">Feche assim</div>' +
           '<div class="fecha">' + esc(it.fechamento) + '</div>' : "") +
         (it.porque ? '<div class="porque"><b>Por que hoje:</b> ' + esc(it.porque) +
-          (it.referencia ? '<div class="ref">Fonte: ' + esc(it.referencia) + '</div>' : "") +
+          (it.referencia
+            ? '<div class="ref">Fonte: ' +
+              (it.veiculo ? '<span class="vei">' + esc(it.veiculo) + '</span> · ' : "") +
+              (it.link
+                ? '<a href="' + esc(it.link) + '" target="_blank" rel="noopener">' +
+                  esc(it.referencia) + '</a>'
+                : esc(it.referencia)) +
+              '</div>'
+            : "") +
           '</div>' : "") +
       '</article>';
     }).join("");
