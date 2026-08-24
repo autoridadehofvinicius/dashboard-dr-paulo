@@ -208,6 +208,15 @@
   .st .porque{margin-top:16px;padding-top:13px;border-top:1px solid var(--grid);
     font-size:12.5px;line-height:1.55;color:var(--muted)}
   .st .porque b{color:var(--ink2s);font-weight:700}
+  .st .fonte{display:inline-flex;align-items:center;gap:6px;font-size:10.5px;font-weight:800;
+    letter-spacing:.09em;text-transform:uppercase;padding:4px 10px;border-radius:999px;
+    margin-left:9px;vertical-align:2px}
+  .st .fonte.busca{background:var(--gold-soft);color:var(--gold-d)}
+  :root[data-theme="dark"] .st .fonte.busca{color:var(--gold-l)}
+  .st .fonte.oftalmo{background:var(--meta-s);color:var(--meta)}
+  .st .fonte.atualidade{background:rgba(14,159,110,.14);color:var(--good)}
+  .st .ref{margin-top:9px;font-size:12px;line-height:1.5;color:var(--muted);font-style:italic}
+  .sts{align-items:start}
   .chip.rev{background:rgba(190,154,90,.16);color:var(--gold-d)}
   :root[data-theme="dark"] .chip.rev{color:var(--gold-l)}
   .chip.no{background:rgba(192,69,60,.14);color:#C0453C}
@@ -402,9 +411,10 @@
         <h2>O que gravar hoje</h2>
         <span class="quando" id="stQuando"></span>
       </div>
-      <p class="st-intro">Três sugestões montadas a partir do que as pessoas da sua região
-      realmente pesquisaram no Google nos últimos 14 dias e dos temas que mais geram contato
-      nas suas campanhas. Cada uma cabe em até 60 segundos.</p>
+      <p class="st-intro">Quatro sugestões: duas do que as pessoas da sua região realmente
+      pesquisaram no Google nos últimos 14 dias, uma do que está em alta na oftalmologia
+      mundial e na imprensa, e uma de gancho com a notícia do dia. Cada uma cabe em até
+      60 segundos.</p>
     </div>
     <div class="sts" id="stLista"></div>
   </div>
@@ -478,15 +488,24 @@
     cx.innerHTML = itens.map(function(it, i){
       var falar = (it.falar || []).map(function(f){
         return "<li>" + esc(f) + "</li>"; }).join("");
+      var fontes = {
+        busca:      ["busca", "das buscas da região"],
+        oftalmo:    ["oftalmo", "em alta na oftalmologia"],
+        atualidade: ["atualidade", "notícia do dia"]
+      };
+      var fo = fontes[it.fonte] || fontes.busca;
       return '<article class="card st">' +
         '<span class="n">' + (i+1) + '</span>' +
+        '<span class="fonte ' + fo[0] + '">' + fo[1] + '</span>' +
         '<h3>' + esc(it.titulo || "") + '</h3>' +
         '<div class="rot">Comece falando</div>' +
         '<div class="gancho">' + esc(it.gancho || "") + '</div>' +
         (falar ? '<div class="rot">Depois explique</div><ol>' + falar + '</ol>' : "") +
         (it.fechamento ? '<div class="rot">Feche assim</div>' +
           '<div class="fecha">' + esc(it.fechamento) + '</div>' : "") +
-        (it.porque ? '<div class="porque"><b>Por que hoje:</b> ' + esc(it.porque) + '</div>' : "") +
+        (it.porque ? '<div class="porque"><b>Por que hoje:</b> ' + esc(it.porque) +
+          (it.referencia ? '<div class="ref">Fonte: ' + esc(it.referencia) + '</div>' : "") +
+          '</div>' : "") +
       '</article>';
     }).join("");
   }
