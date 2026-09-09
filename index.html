@@ -199,8 +199,17 @@
   .nw-copiar.ok{background:#1f7a4d}
   /* pre para o texto sair EXATAMENTE como vai para o WhatsApp — as quebras de
      linha e as linhas em branco fazem parte da mensagem, nao sao decoracao */
-  .nw-texto{margin:0;padding:20px 22px;font-family:inherit;font-size:15px;line-height:1.72;color:var(--ink);
+  .nw-texto{margin:0;padding:0;flex:1;font-family:inherit;font-size:15px;line-height:1.72;color:var(--ink);
     white-space:pre-wrap;word-wrap:break-word;max-width:44rem}
+  .nw-corpo{display:flex;gap:26px;padding:20px 22px;align-items:flex-start}
+  .nw-img{flex:none;width:268px;margin:0}
+  .nw-img img{width:100%;display:block;border-radius:10px;
+    border:1px solid var(--grid);background:var(--page)}
+  .nw-baixar{display:block;margin-top:10px;text-align:center;padding:9px 0;
+    border:1px solid var(--grid);border-radius:8px;font-size:12.5px;
+    font-weight:600;color:var(--ink);text-decoration:none}
+  .nw-baixar:hover{border-color:var(--gold);color:var(--gold)}
+  @media(max-width:860px){.nw-corpo{flex-direction:column}.nw-img{width:100%;max-width:320px}}
   .nw-pe{padding:12px 22px 16px;border-top:1px solid var(--grid);display:flex;
     justify-content:space-between;gap:14px;flex-wrap:wrap;font-size:11.5px;color:var(--muted)}
   @media(max-width:640px){.nw-copiar{width:100%}}
@@ -464,9 +473,16 @@
         </div>
         <button type="button" class="nw-copiar" id="nwCopiar">Copiar mensagem</button>
       </div>
-      <pre class="nw-texto" id="nwTexto"></pre>
-      <div class="nw-pe"><span id="nwPalavras"></span><span class="nw-aviso">O negrito
-        do WhatsApp usa *asterisco* — ele aparece formatado quando você envia.</span></div>
+      <div class="nw-corpo">
+        <figure class="nw-img" id="nwImgBox">
+          <img id="nwImg" alt="Cartão da newsletter do dia">
+          <a id="nwBaixar" class="nw-baixar" download="newsletter.png">Baixar imagem</a>
+        </figure>
+        <pre class="nw-texto" id="nwTexto"></pre>
+      </div>
+      <div class="nw-pe"><span id="nwPalavras"></span><span class="nw-aviso">Envie a imagem
+        <b>com o texto na legenda</b> — quem tem baixa visão não consegue ampliar
+        letra dentro de foto. O negrito usa *asterisco* e aparece formatado no envio.</span></div>
     </div>
   </div>
 
@@ -524,6 +540,15 @@
       var bc = el("nwCopiar"); if (bc) bc.style.display = "none";
       return;
     }
+
+    var cx2 = el("nwImgBox");
+    if (N.imagem){
+      /* o carimbo evita cartao velho preso no cache do navegador — a pagina
+         se atualiza sozinha e o arquivo tem sempre o mesmo nome */
+      var src = N.imagem + "?v=" + encodeURIComponent(N.gerado_em || "");
+      el("nwImg").src = src;
+      el("nwBaixar").href = src;
+    } else if (cx2){ cx2.style.display = "none"; }
 
     el("nwAssunto").textContent = N.assunto || "—";
     cx.textContent = N.texto;
