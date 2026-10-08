@@ -514,10 +514,14 @@ function filtrarConversas(de, ate){
   });
 }
 
-/* funil a partir dos leads filtrados */
-var ESCADA = D.escada || [];
-var ROTULOS = D.rotulos || {};
+/* funil a partir dos leads filtrados
+   ESCADA e ROTULOS saem de D na HORA DO USO, não na carga do script. Na
+   versão protegida por senha o D só chega depois de descriptografar: lidos uma
+   vez no início, ficavam vazios para sempre e o funil quebrava procurando um
+   degrau que não existia. */
 function montarFunil(leads){
+  var ESCADA = D.escada || [];
+  var ROTULOS = D.rotulos || {};
   var conta = {}, perdidos = 0;
   leads.forEach(function(l){
     if (l.g === "perdido") { perdidos++; return; }
@@ -1135,7 +1139,7 @@ function pintar(){
         "diz mais sobre o roteiro do robô do que sobre a pessoa.");
     }
 
-    var comRee = cs.filter(function(c){
+    var comRee = convs.filter(function(c){
       return c.ia && (c.ia.reescrita || "").length > 40; });
     if (comRee.length) exemploTxt = comRee[0].ia.reescrita;
 

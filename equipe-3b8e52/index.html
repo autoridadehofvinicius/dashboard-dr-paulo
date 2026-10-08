@@ -396,17 +396,27 @@ footer{color:var(--texto2);font-size:12px;padding:30px 0 50px;line-height:1.75;
   form.addEventListener("submit", async function(ev){
     ev.preventDefault();
     erro.textContent = ""; bt.disabled = true; bt.textContent = "abrindo...";
+    // Decifrar e desenhar sao erros DIFERENTES e precisam de mensagens
+    // diferentes. Um catch unico em volta dos dois ja' custou caro: um erro
+    // de desenho aparecia como "senha incorreta", e a pessoa ficava digitando
+    // de novo uma senha que estava certa.
+    var js;
     try {
-      var js = await abrir(campo.value);
+      js = await abrir(campo.value);
+    } catch (e) {
+      erro.textContent = "Senha incorreta.";
+      bt.disabled = false; bt.textContent = "Entrar";
+      campo.select();
+      return;
+    }
+    try {
       window.aplicarDados(js);
       document.getElementById("trava").remove();
       try { sessionStorage.setItem("s", campo.value); } catch(x){}
     } catch (e) {
-      // Não distingue "senha errada" de "arquivo corrompido" para quem olha
-      // de fora, mas para a equipe a causa provável é uma só.
-      erro.textContent = "Senha incorreta.";
-      bt.disabled = false; bt.textContent = "Entrar";
-      campo.select();
+      erro.textContent = "A senha funcionou, mas a página falhou ao montar: " +
+        (e && e.message ? e.message : e);
+      bt.disabled = false; bt.textContent = "Tentar de novo";
     }
   });
 
@@ -609,10 +619,14 @@ function filtrarConversas(de, ate){
   });
 }
 
-/* funil a partir dos leads filtrados */
-var ESCADA = D.escada || [];
-var ROTULOS = D.rotulos || {};
+/* funil a partir dos leads filtrados
+   ESCADA e ROTULOS saem de D na HORA DO USO, não na carga do script. Na
+   versão protegida por senha o D só chega depois de descriptografar: lidos uma
+   vez no início, ficavam vazios para sempre e o funil quebrava procurando um
+   degrau que não existia. */
 function montarFunil(leads){
+  var ESCADA = D.escada || [];
+  var ROTULOS = D.rotulos || {};
   var conta = {}, perdidos = 0;
   leads.forEach(function(l){
     if (l.g === "perdido") { perdidos++; return; }
@@ -1230,7 +1244,7 @@ function pintar(){
         "diz mais sobre o roteiro do robô do que sobre a pessoa.");
     }
 
-    var comRee = cs.filter(function(c){
+    var comRee = convs.filter(function(c){
       return c.ia && (c.ia.reescrita || "").length > 40; });
     if (comRee.length) exemploTxt = comRee[0].ia.reescrita;
 
@@ -1340,8 +1354,6 @@ try {
           el("bTema").setAttribute("aria-pressed", t === "dark"); }
 } catch(x){}
 
-montarControles();
-pintar();
 
 /* Entregue pela tela de senha depois de descriptografar. */
 window.aplicarDados = function(txt){
@@ -1351,6 +1363,12 @@ window.aplicarDados = function(txt){
   el("fOrigem").value = estado.origem; el("fSdr").value = estado.sdr;
   pintar();
 };
+
+/* Sem dado ainda: quem desenha e' o aplicarDados, depois da senha. */
+if (window.DADOS && (window.DADOS.conversas || window.DADOS.leads)) {
+  montarControles();
+  pintar();
+}
 
 /* Relê os dados sem recarregar a página, preservando filtro e conversas abertas. */
 setInterval(function(){
