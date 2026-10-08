@@ -933,51 +933,88 @@ function pintar(){
       'Nenhuma conversa do período teve resposta de uma pessoa.</div>';
 
   /* ------------------------------------------------------ qualidade */
-  var dim = D.dimensoes || {}, temDim = Object.keys(dim).length;
-  var usarEx = estado.exemplo && !temDim;
-  var fonte = temDim ? dim : (usarEx ? EXEMPLO.dimensoes : null);
-  el("sQualidade").hidden = false;
-  if (fonte){
-    var ks = Object.keys(fonte);
-    var media = ks.reduce(function(a,k){ return a + (temDim ? fonte[k]/10 : fonte[k]); },0)/ks.length;
-    el("qualidade").innerHTML = (usarEx ? tarja("A IA ainda não leu nenhuma conversa.") : "") +
+  var IA = D.ia || {};
+  var dims = IA.dimensoes || [];
+  var usarEx = estado.exemplo && !dims.length;
+  if (dims.length || usarEx){
+    var fonte = dims.length ? dims
+      : Object.keys(EXEMPLO.dimensoes).map(function(k){
+          return {rotulo:k, nota:EXEMPLO.dimensoes[k], base:0}; });
+    var media = dims.length ? IA.nota_geral
+      : fonte.reduce(function(a,d){ return a+d.nota; },0)/fonte.length;
+    var cmp = IA.comparacao || {};
+    el("qualidade").innerHTML =
+      (usarEx ? tarja("O agente ainda não leu nenhuma conversa.") : "") +
       '<div class="cartao" style="padding:20px">' +
-      '<div style="display:flex;align-items:baseline;gap:12px;margin-bottom:18px">' +
+      '<div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;' +
+        'margin-bottom:18px">' +
         '<span style="font-family:var(--serif);font-size:38px;line-height:1">' +
         n1(media) + '</span><span style="color:var(--texto2)">/10 · ' +
-        'Conversation Quality Score</span></div>' +
-      '<div class="comps" style="gap:11px 26px">' + ks.map(function(k){
-        var v = temDim ? fonte[k]/10 : fonte[k];
+        'nota de qualidade das conversas</span>' +
+        (dims.length ? '<span class="chip">' + IA.lidas + ' conversas lidas</span>' : '') +
+        (cmp.bot != null ? '<span class="chip">robô ' + n1(cmp.bot) + '</span>' : '') +
+        (cmp.humano != null ? '<span class="chip v">pessoa ' + n1(cmp.humano) + '</span>' : '') +
+      '</div>' +
+      '<div class="comps" style="gap:11px 26px">' + fonte.map(function(d){
+        var v = d.nota;
         var cor = v >= 8 ? "var(--verde)" : v >= 6 ? "var(--ambar)" : "var(--vermelho)";
         return '<div class="comp"><div class="l" style="color:var(--texto2)">' +
-          '<span>' + esc(k) + '</span><b style="color:var(--texto)">' + n1(v) +
+          '<span>' + esc(d.rotulo) + '</span><b style="color:var(--texto)">' + n1(v) +
           '</b></div><div class="t" style="background:var(--borda-sutil)">' +
           '<span style="width:' + v*10 + '%;background:' + cor + '"></span></div></div>';
       }).join("") + '</div></div>';
   } else {
-    el("qualidade").innerHTML = semDado("A IA ainda não avaliou nenhuma conversa",
-      !msgs.respondidas
-        ? "Não há nenhuma mensagem de atendente para ler: todas as conversas do período seguem sem resposta humana."
-        : "Falta a chave da API no arquivo .env para ligar a leitura conversa a conversa.");
+    el("qualidade").innerHTML = semDado("O agente ainda não leu as conversas",
+      "Falta a chave da API no arquivo .env. Com ela, o agente lê as " +
+      (D.conversas||[]).length + " conversas e os áudios já transcritos, " +
+      "e preenche esta seção, os erros e as objeções.");
   }
 
   /* ---------------------------------------------------------- erros */
-  var usarExErros = estado.exemplo;
-  el("erros").innerHTML = usarExErros
-    ? tarja("Depende da leitura da IA sobre respostas do atendente.") +
-      '<div class="cartao" style="overflow:hidden"><table class="t"><thead><tr>' +
-      '<th>Erro</th><th>Ocorrências</th><th>% das conversas</th><th>Impacto</th>' +
-      '<th>Prioridade</th></tr></thead><tbody>' + EXEMPLO.erros.map(function(e){
-        return '<tr><td class="forte">' + e.erro + '</td><td class="tab">' + e.n +
-          '</td><td class="tab">' + e.pctConv + '%</td><td>' + e.impacto + '</td>' +
-          '<td><span class="chip ' + (e.prio === "alta" ? "r" : "a") + '">' +
-          (e.prio === "alta" ? "Alta" : "Média") + '</span></td></tr>';
+  var erros = IA.erros || [];
+  el("erros").innerHTML = erros.length
+    ? '<div class="cartao" style="overflow:hidden"><table class="t"><thead><tr>' +
+      '<th>Padrão</th><th>Conversas</th><th>% das lidas</th><th>Prioridade</th>' +
+      '</tr></thead><tbody>' + erros.map(function(e){
+        var c = e.prioridade === "alta" ? "r" : e.prioridade === "media" ? "a" : "";
+        return '<tr><td class="forte">' + esc(e.rotulo) + '</td>' +
+          '<td class="tab">' + e.n + '</td><td class="tab">' + e.pct + '%</td>' +
+          '<td><span class="chip ' + c + '">' + e.prioridade + '</span></td></tr>';
       }).join("") + '</tbody></table></div>'
-    : semDado("Nenhum padrão de erro identificado ainda",
-        "Esta seção lê as respostas do atendente e agrupa o que se repete. Sem mensagem de atendente capturada, não há o que agrupar.");
+    : (estado.exemplo
+      ? tarja("Depende da leitura do agente sobre as respostas.") +
+        '<div class="cartao" style="overflow:hidden"><table class="t"><thead><tr>' +
+        '<th>Erro</th><th>Ocorrências</th><th>% das conversas</th><th>Impacto</th>' +
+        '<th>Prioridade</th></tr></thead><tbody>' + EXEMPLO.erros.map(function(e){
+          return '<tr><td class="forte">' + e.erro + '</td><td class="tab">' + e.n +
+            '</td><td class="tab">' + e.pctConv + '%</td><td>' + e.impacto + '</td>' +
+            '<td><span class="chip ' + (e.prio === "alta" ? "r" : "a") + '">' +
+            (e.prio === "alta" ? "Alta" : "Média") + '</span></td></tr>';
+        }).join("") + '</tbody></table></div>'
+      : semDado("O agente ainda não agrupou os padrões",
+          "Cada conversa lida devolve os erros cometidos a partir de uma lista " +
+          "fechada — é isso que permite somar o que se repete entre as " +
+          (D.conversas||[]).length + " conversas. Falta a chave da API."));
 
   /* ------------------------------------------------------- objeções */
-  el("objecoes").innerHTML = estado.exemplo
+  var objs = IA.objecoes || [];
+  el("objecoes").innerHTML = objs.length
+    ? '<div class="cartao" style="overflow:hidden"><table class="t"><thead><tr>' +
+      '<th>Objeção</th><th>Conversas</th><th>% das lidas</th>' +
+      '<th>Bem tratada</th><th>Situação</th></tr></thead><tbody>' +
+      objs.map(function(o){
+        var bom = o.taxa_recuperacao >= 50;
+        return '<tr><td class="forte">' + esc(o.rotulo) + '</td>' +
+          '<td class="tab">' + o.n + '</td><td class="tab">' + o.pct + '%</td>' +
+          '<td class="tab">' + o.taxa_recuperacao + '%</td>' +
+          '<td><span class="chip ' + (bom ? "v" : "r") + '">' +
+          (bom ? "tratando bem" : "perdendo") + '</span></td></tr>';
+      }).join("") + '</tbody></table>' +
+      '<p class="sub" style="padding:14px 16px 16px;margin:0">' +
+      '“Bem tratada” é a conversa em que o agente deu nota 7 ou mais à dimensão ' +
+      'de tratamento de objeções. Não é taxa de fechamento — o CRM ainda não ' +
+      'liga a conversa ao agendamento.</p></div>'
+    : estado.exemplo
     ? tarja("Depende de detectar objeção no texto das respostas.") +
       '<div class="cartao" style="overflow:hidden"><table class="t"><thead><tr>' +
       '<th>Objeção</th><th>Ocorrências</th><th>Recuperação</th>' +
@@ -989,8 +1026,9 @@ function pintar(){
           '%</td><td><span class="chip ' + (bom ? "v" : "r") + '">' +
           (bom ? "tratando bem" : "perdendo") + '</span></td></tr>';
       }).join("") + '</tbody></table></div>'
-    : semDado("Nenhuma objeção detectada ainda",
-        "Objeção se detecta na conversa, comparando o que o paciente levantou com o que o atendente respondeu.");
+    : semDado("O agente ainda não mapeou as objeções",
+        "Objeção se detecta lendo a conversa: o que o paciente levantou e o que " +
+        "o atendente fez com aquilo. Falta a chave da API.");
 
   /* ------------------------------------------------------ follow-up */
   var comH = convs.filter(function(c){ return c.n_humano > 0; });
