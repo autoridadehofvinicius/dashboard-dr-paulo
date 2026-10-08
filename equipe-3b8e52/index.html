@@ -1190,7 +1190,56 @@ function pintar(){
 
   /* ---------------------------------------------------------- coach */
   var bem = [], gargaloTxt = "", corrigir = "", treino = "", metaProx = "", exemploTxt = "";
-  if (!msgs.respondidas && convs.length){
+
+  // Com a leitura do agente disponível, o Coach fala do que ele achou — e não
+  // mais das métricas de relógio. Dimensão mais fraca e erro mais frequente
+  // saem dos dados, não de texto fixo: o diagnóstico anterior ("ninguém
+  // responde") virou mentira assim que a classificação foi corrigida, e texto
+  // fixo não se corrige sozinho.
+  if (dims.length){
+    var ord = dims.slice().sort(function(a,b){ return a.nota - b.nota; });
+    var pior = ord[0], pior2 = ord[1], melhor = ord[ord.length-1];
+    var topo = (IA.erros || [])[0], topo2 = (IA.erros || [])[1];
+    var cmp2 = IA.comparacao || {};
+
+    bem.push("A maior nota é " + esc(melhor.rotulo).toLowerCase() + " (" +
+      n1(melhor.nota) + "/10).");
+    if (msgs.tprMediano != null)
+      bem.push("A primeira resposta sai em " + dur(msgs.tprMediano) +
+        " na mediana — velocidade não é o problema.");
+
+    gargaloTxt = "As duas notas mais baixas são " + esc(pior.rotulo).toLowerCase() +
+      " (" + n1(pior.nota) + ") e " + esc(pior2.rotulo).toLowerCase() +
+      " (" + n1(pior2.nota) + "). A conversa informa, mas não leva a lugar nenhum.";
+
+    if (topo) corrigir = esc(topo.rotulo) + " aparece em " + topo.pct +
+      "% das conversas lidas" + (topo2 ? ", e " + esc(topo2.rotulo).toLowerCase() +
+      " em " + topo2.pct + "%" : "") + ". São os dois padrões que mais se repetem.";
+
+    treino = "Toda resposta termina oferecendo dois horários concretos, com dia " +
+      "e hora. Antes de informar qualquer coisa, uma pergunta de investigação: " +
+      "cidade, convênio, há quanto tempo o sintoma apareceu.";
+
+    if (topo) metaProx = "Reduzir “" + esc(topo.rotulo).toLowerCase() +
+      "” de " + topo.pct + "% para menos de " + Math.max(10, Math.round(topo.pct/2)) +
+      "% das conversas.";
+
+    if (cmp2.bot != null && cmp2.humano != null){
+      bem.push("Atendimento por pessoa pontua " + n1(cmp2.humano) +
+        " contra " + n1(cmp2.bot) + " do robô — a diferença é pequena, e isso " +
+        "diz mais sobre o roteiro do robô do que sobre a pessoa.");
+    }
+
+    var comRee = cs.filter(function(c){
+      return c.ia && (c.ia.reescrita || "").length > 40; });
+    if (comRee.length) exemploTxt = comRee[0].ia.reescrita;
+
+    if (IA.riscos) {
+      corrigir += " Além disso, " + IA.riscos + " conversa(s) têm frase de risco " +
+        "de conformidade — valor de consulta dito no chat e especulação de " +
+        "diagnóstico antes da avaliação.";
+    }
+  } else if (!msgs.respondidas && convs.length){
     gargaloTxt = "Não é velocidade nem técnica: é presença. Das " + convs.length +
       " conversas do período, nenhuma teve resposta escrita por uma pessoa, e " +
       msgs.naoLidas + " nem foram abertas no Kommo.";

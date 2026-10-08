@@ -1,23 +1,23 @@
 window.DADOS = {
  "geral": {
-  "atualizado": "08/10/2026 16:07",
+  "atualizado": "08/10/2026 16:48",
   "sla_minutos": 15,
   "expediente": "8h as 19h",
-  "conversas": 218,
-  "linhas_planilha": 844,
+  "conversas": 219,
+  "linhas_planilha": 847,
   "atendidas": 53,
   "tpr_mediano": 2153,
   "tpr_p90": 42826,
   "dentro_sla": 11,
-  "sem_resposta": 165,
+  "sem_resposta": 166,
   "nao_lidas": 38,
-  "abandonados": 37,
-  "so_bot": 157,
+  "abandonados": 38,
+  "so_bot": 158,
   "audios": 135,
   "audios_lidos": 134,
-  "msgs_bot": 349,
+  "msgs_bot": 351,
   "msgs_humano": 119,
-  "msgs_paciente": 365,
+  "msgs_paciente": 366,
   "com_agenda": 9,
   "perguntou_preco": 7,
   "preco_sem_agenda": 5,
@@ -28,7 +28,7 @@ window.DADOS = {
    "velocidade": 13,
    "cobertura": 24,
    "continuidade": 83,
-   "conducao": 17
+   "conducao": 16
   },
   "pesos": {
    "velocidade": 35,
@@ -36,17 +36,280 @@ window.DADOS = {
    "continuidade": 20,
    "conducao": 20
   },
-  "ia_avaliadas": 0,
-  "ia_aviso": "falta a chave da API no .env — sem ela o agente não lê as conversas e as três seções de análise ficam vazias",
+  "ia_avaliadas": 146,
+  "ia_aviso": "",
   "anonimo": true
  },
  "pilares": {
   "velocidade": 13,
   "cobertura": 24,
   "continuidade": 83,
-  "conducao": 17
+  "conducao": 16
  },
- "ia": {},
+ "ia": {
+  "lidas": 146,
+  "nota_geral": 2.9,
+  "dimensoes": [
+   {
+    "chave": "personalizacao",
+    "rotulo": "Personalização",
+    "nota": 2.9,
+    "base": 139
+   },
+   {
+    "chave": "clareza",
+    "rotulo": "Clareza",
+    "nota": 4.7,
+    "base": 128
+   },
+   {
+    "chave": "empatia",
+    "rotulo": "Empatia",
+    "nota": 2.4,
+    "base": 121
+   },
+   {
+    "chave": "investigacao",
+    "rotulo": "Investigação da necessidade",
+    "nota": 2.9,
+    "base": 117
+   },
+   {
+    "chave": "qualificacao",
+    "rotulo": "Qualificação",
+    "nota": 2.0,
+    "base": 92
+   },
+   {
+    "chave": "gerar_valor",
+    "rotulo": "Gerar valor",
+    "nota": 1.9,
+    "base": 87
+   },
+   {
+    "chave": "conducao",
+    "rotulo": "Condução da conversa",
+    "nota": 3.7,
+    "base": 139
+   },
+   {
+    "chave": "objecoes",
+    "rotulo": "Tratamento de objeções",
+    "nota": 2.3,
+    "base": 25
+   },
+   {
+    "chave": "urgencia",
+    "rotulo": "Gerar urgência",
+    "nota": 1.3,
+    "base": 74
+   },
+   {
+    "chave": "cta",
+    "rotulo": "CTA para próximo passo",
+    "nota": 2.4,
+    "base": 131
+   },
+   {
+    "chave": "follow_up",
+    "rotulo": "Follow-up",
+    "nota": 4.3,
+    "base": 65
+   },
+   {
+    "chave": "prob_conversao",
+    "rotulo": "Probabilidade de conversão",
+    "nota": 2.6,
+    "base": 141
+   }
+  ],
+  "erros": [
+   {
+    "chave": "resposta_generica",
+    "rotulo": "Respondeu de forma genérica",
+    "n": 105,
+    "pct": 72,
+    "prioridade": "alta"
+   },
+   {
+    "chave": "cta_fraco",
+    "rotulo": "CTA fraco ou ausente",
+    "n": 101,
+    "pct": 69,
+    "prioridade": "alta"
+   },
+   {
+    "chave": "nao_investigou",
+    "rotulo": "Não investigou a necessidade",
+    "n": 63,
+    "pct": 43,
+    "prioridade": "alta"
+   },
+   {
+    "chave": "nao_ofereceu_horario",
+    "rotulo": "Não ofereceu horário concreto",
+    "n": 54,
+    "pct": 37,
+    "prioridade": "alta"
+   },
+   {
+    "chave": "sem_acolhimento",
+    "rotulo": "Foi direto ao ponto sem acolher",
+    "n": 51,
+    "pct": 35,
+    "prioridade": "alta"
+   },
+   {
+    "chave": "ignorou_pergunta",
+    "rotulo": "Ignorou uma pergunta do paciente",
+    "n": 38,
+    "pct": 26,
+    "prioridade": "media"
+   },
+   {
+    "chave": "mensagem_copiada",
+    "rotulo": "Mensagem claramente copiada e colada",
+    "n": 25,
+    "pct": 17,
+    "prioridade": "media"
+   },
+   {
+    "chave": "abandonou_conversa",
+    "rotulo": "Deixou a conversa morrer",
+    "n": 25,
+    "pct": 17,
+    "prioridade": "media"
+   },
+   {
+    "chave": "demorou_responder",
+    "rotulo": "Demorou a responder dentro da conversa",
+    "n": 19,
+    "pct": 13,
+    "prioridade": "media"
+   },
+   {
+    "chave": "nao_tratou_objecao",
+    "rotulo": "Não tratou a objeção levantada",
+    "n": 15,
+    "pct": 10,
+    "prioridade": "baixa"
+   },
+   {
+    "chave": "sem_follow_up",
+    "rotulo": "Não fez follow-up",
+    "n": 8,
+    "pct": 5,
+    "prioridade": "baixa"
+   },
+   {
+    "chave": "texto_longo_demais",
+    "rotulo": "Parede de texto",
+    "n": 6,
+    "pct": 4,
+    "prioridade": "baixa"
+   },
+   {
+    "chave": "falou_preco_sem_contexto",
+    "rotulo": "Deu o preço sem construir valor antes",
+    "n": 1,
+    "pct": 1,
+    "prioridade": "baixa"
+   }
+  ],
+  "objecoes": [
+   {
+    "chave": "distancia",
+    "rotulo": "Distância",
+    "n": 12,
+    "pct": 8,
+    "recuperou": 0,
+    "taxa_recuperacao": 0
+   },
+   {
+    "chave": "preco",
+    "rotulo": "Preço",
+    "n": 11,
+    "pct": 8,
+    "recuperou": 0,
+    "taxa_recuperacao": 0
+   },
+   {
+    "chave": "convenio",
+    "rotulo": "Convênio não atendido",
+    "n": 3,
+    "pct": 2,
+    "recuperou": 0,
+    "taxa_recuperacao": 0
+   },
+   {
+    "chave": "sem_tempo",
+    "rotulo": "Falta de tempo ou agenda",
+    "n": 3,
+    "pct": 2,
+    "recuperou": 0,
+    "taxa_recuperacao": 0
+   },
+   {
+    "chave": "medo",
+    "rotulo": "Medo do procedimento",
+    "n": 2,
+    "pct": 1,
+    "recuperou": 0,
+    "taxa_recuperacao": 0
+   },
+   {
+    "chave": "ja_tem_medico",
+    "rotulo": "Já tem médico",
+    "n": 2,
+    "pct": 1,
+    "recuperou": 0,
+    "taxa_recuperacao": 0
+   },
+   {
+    "chave": "comparando_outro",
+    "rotulo": "Comparando com outro",
+    "n": 1,
+    "pct": 1,
+    "recuperou": 0,
+    "taxa_recuperacao": 0
+   },
+   {
+    "chave": "preciso_pensar",
+    "rotulo": "Preciso pensar",
+    "n": 1,
+    "pct": 1,
+    "recuperou": 0,
+    "taxa_recuperacao": 0
+   },
+   {
+    "chave": "falar_com_familiar",
+    "rotulo": "Falar com cônjuge ou filho",
+    "n": 1,
+    "pct": 1,
+    "recuperou": 0,
+    "taxa_recuperacao": 0
+   },
+   {
+    "chave": "desconfianca",
+    "rotulo": "Desconfiança",
+    "n": 1,
+    "pct": 1,
+    "recuperou": 0,
+    "taxa_recuperacao": 0
+   }
+  ],
+  "quem_atendeu": {
+   "bot": 94,
+   "ambos": 28,
+   "humano": 18,
+   "ninguem": 6
+  },
+  "comparacao": {
+   "bot": 2.6,
+   "humano": 3.3
+  },
+  "riscos": 6
+ },
  "equipe": [
   {
    "uid": "app",
@@ -63,7 +326,7 @@ window.DADOS = {
   },
   {
    "uid": "15854015",
-   "nome": "Atendimento",
+   "nome": "Paciente BW",
    "conversas": 12,
    "mensagens": 28,
    "abandonos": 5,
@@ -87,7 +350,7 @@ window.DADOS = {
   {
    "t": 1790970019,
    "g": "respondido",
-   "e": "Em Atendimento",
+   "e": "Em Paciente BW",
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
@@ -135,7 +398,7 @@ window.DADOS = {
   {
    "t": 1790972422,
    "g": "respondido",
-   "e": "Em Atendimento",
+   "e": "Em Paciente BW",
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
@@ -143,7 +406,7 @@ window.DADOS = {
   {
    "t": 1790970541,
    "g": "respondido",
-   "e": "Em Atendimento",
+   "e": "Em Paciente BW",
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
@@ -151,7 +414,7 @@ window.DADOS = {
   {
    "t": 1790978352,
    "g": "respondido",
-   "e": "Em Atendimento",
+   "e": "Em Paciente BW",
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
@@ -159,7 +422,7 @@ window.DADOS = {
   {
    "t": 1791022640,
    "g": "respondido",
-   "e": "Em Atendimento",
+   "e": "Em Paciente BW",
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
@@ -167,7 +430,7 @@ window.DADOS = {
   {
    "t": 1790999160,
    "g": "respondido",
-   "e": "Em Atendimento",
+   "e": "Em Paciente BW",
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
@@ -175,7 +438,7 @@ window.DADOS = {
   {
    "t": 1790977910,
    "g": "respondido",
-   "e": "Em Atendimento",
+   "e": "Em Paciente BW",
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
@@ -183,7 +446,7 @@ window.DADOS = {
   {
    "t": 1790996768,
    "g": "respondido",
-   "e": "Em Atendimento",
+   "e": "Em Paciente BW",
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
@@ -191,7 +454,7 @@ window.DADOS = {
   {
    "t": 1790985620,
    "g": "respondido",
-   "e": "Em Atendimento",
+   "e": "Em Paciente BW",
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
@@ -199,7 +462,7 @@ window.DADOS = {
   {
    "t": 1790984338,
    "g": "respondido",
-   "e": "Em Atendimento",
+   "e": "Em Paciente BW",
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
@@ -207,7 +470,7 @@ window.DADOS = {
   {
    "t": 1791015897,
    "g": "respondido",
-   "e": "Em Atendimento",
+   "e": "Em Paciente BW",
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
@@ -215,7 +478,7 @@ window.DADOS = {
   {
    "t": 1790987398,
    "g": "respondido",
-   "e": "Em Atendimento",
+   "e": "Em Paciente BW",
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
@@ -223,7 +486,7 @@ window.DADOS = {
   {
    "t": 1790982312,
    "g": "respondido",
-   "e": "Em Atendimento",
+   "e": "Em Paciente BW",
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
@@ -2911,7 +3174,7 @@ window.DADOS = {
   {
    "t": 1791029666,
    "g": "respondido",
-   "e": "Em Atendimento",
+   "e": "Em Paciente BW",
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
@@ -2919,7 +3182,7 @@ window.DADOS = {
   {
    "t": 1791055331,
    "g": "respondido",
-   "e": "Em Atendimento",
+   "e": "Em Paciente BW",
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
@@ -2927,7 +3190,7 @@ window.DADOS = {
   {
    "t": 1791078052,
    "g": "respondido",
-   "e": "Em Atendimento",
+   "e": "Em Paciente BW",
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
@@ -2935,7 +3198,7 @@ window.DADOS = {
   {
    "t": 1791083725,
    "g": "respondido",
-   "e": "Em Atendimento",
+   "e": "Em Paciente BW",
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
@@ -2943,7 +3206,7 @@ window.DADOS = {
   {
    "t": 1791132369,
    "g": "respondido",
-   "e": "Em Atendimento",
+   "e": "Em Paciente BW",
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
@@ -2951,7 +3214,7 @@ window.DADOS = {
   {
    "t": 1791071677,
    "g": "respondido",
-   "e": "Em Atendimento",
+   "e": "Em Paciente BW",
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
@@ -2959,7 +3222,7 @@ window.DADOS = {
   {
    "t": 1791089188,
    "g": "respondido",
-   "e": "Em Atendimento",
+   "e": "Em Paciente BW",
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
@@ -2967,7 +3230,7 @@ window.DADOS = {
   {
    "t": 1791114091,
    "g": "respondido",
-   "e": "Em Atendimento",
+   "e": "Em Paciente BW",
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
@@ -3679,7 +3942,7 @@ window.DADOS = {
   {
    "t": 1790969510,
    "g": "respondido",
-   "e": "Em Atendimento",
+   "e": "Em Paciente BW",
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
@@ -5967,7 +6230,7 @@ window.DADOS = {
   {
    "t": 1791029642,
    "g": "respondido",
-   "e": "Em Atendimento",
+   "e": "Em Paciente BW",
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
@@ -5975,7 +6238,7 @@ window.DADOS = {
   {
    "t": 1791036272,
    "g": "respondido",
-   "e": "Em Atendimento",
+   "e": "Em Paciente BW",
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
@@ -5991,7 +6254,7 @@ window.DADOS = {
   {
    "t": 1791308690,
    "g": "respondido",
-   "e": "Em Atendimento",
+   "e": "Em Paciente BW",
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
@@ -5999,7 +6262,7 @@ window.DADOS = {
   {
    "t": 1791029620,
    "g": "respondido",
-   "e": "Em Atendimento",
+   "e": "Em Paciente BW",
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
@@ -6021,14 +6284,6 @@ window.DADOS = {
    "p": 0
   },
   {
-   "t": 1791312966,
-   "g": "respondido",
-   "e": "Em Atendimento",
-   "o": "WhatsApp",
-   "u": "15854015",
-   "p": 0
-  },
-  {
    "t": 1791217557,
    "g": "agendado",
    "e": "Consulta Agendada",
@@ -6037,33 +6292,9 @@ window.DADOS = {
    "p": 450
   },
   {
-   "t": 1791129510,
-   "g": "respondido",
-   "e": "Em Atendimento",
-   "o": "WhatsApp",
-   "u": "15854015",
-   "p": 0
-  },
-  {
-   "t": 1791303508,
-   "g": "respondido",
-   "e": "Em Atendimento",
-   "o": "WhatsApp",
-   "u": "15854015",
-   "p": 0
-  },
-  {
-   "t": 1791387556,
-   "g": "respondido",
-   "e": "Em Atendimento",
-   "o": "WhatsApp",
-   "u": "15854015",
-   "p": 0
-  },
-  {
    "t": 1791049736,
    "g": "respondido",
-   "e": "Em Atendimento",
+   "e": "Em Paciente BW",
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
@@ -6071,7 +6302,7 @@ window.DADOS = {
   {
    "t": 1791333396,
    "g": "respondido",
-   "e": "Em Atendimento",
+   "e": "Em Paciente BW",
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
@@ -6085,33 +6316,9 @@ window.DADOS = {
    "p": 0
   },
   {
-   "t": 1791286430,
-   "g": "respondido",
-   "e": "Em Atendimento",
-   "o": "WhatsApp",
-   "u": "15854015",
-   "p": 0
-  },
-  {
-   "t": 1791399926,
-   "g": "respondido",
-   "e": "Em Atendimento",
-   "o": "WhatsApp",
-   "u": "15854015",
-   "p": 0
-  },
-  {
-   "t": 1791125030,
-   "g": "qualificado",
-   "e": "Follow-Up",
-   "o": "WhatsApp",
-   "u": "15854015",
-   "p": 0
-  },
-  {
    "t": 1791139395,
    "g": "respondido",
-   "e": "Em Atendimento",
+   "e": "Em Paciente BW",
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
@@ -6119,15 +6326,7 @@ window.DADOS = {
   {
    "t": 1791383637,
    "g": "respondido",
-   "e": "Em Atendimento",
-   "o": "WhatsApp",
-   "u": "15854015",
-   "p": 0
-  },
-  {
-   "t": 1791155315,
-   "g": "qualificado",
-   "e": "Follow-Up",
+   "e": "Em Paciente BW",
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
@@ -6143,7 +6342,7 @@ window.DADOS = {
   {
    "t": 1791149038,
    "g": "respondido",
-   "e": "Em Atendimento",
+   "e": "Em Paciente BW",
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
@@ -6151,7 +6350,7 @@ window.DADOS = {
   {
    "t": 1791159436,
    "g": "respondido",
-   "e": "Em Atendimento",
+   "e": "Em Paciente BW",
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
@@ -6159,7 +6358,7 @@ window.DADOS = {
   {
    "t": 1791362175,
    "g": "respondido",
-   "e": "Em Atendimento",
+   "e": "Em Paciente BW",
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
@@ -6199,7 +6398,7 @@ window.DADOS = {
   {
    "t": 1790970707,
    "g": "respondido",
-   "e": "Em Atendimento",
+   "e": "Em Paciente BW",
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
@@ -6223,7 +6422,7 @@ window.DADOS = {
   {
    "t": 1791054772,
    "g": "respondido",
-   "e": "Em Atendimento",
+   "e": "Em Paciente BW",
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
@@ -6239,7 +6438,7 @@ window.DADOS = {
   {
    "t": 1791290627,
    "g": "respondido",
-   "e": "Em Atendimento",
+   "e": "Em Paciente BW",
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
@@ -6287,7 +6486,7 @@ window.DADOS = {
   {
    "t": 1791161141,
    "g": "respondido",
-   "e": "Em Atendimento",
+   "e": "Em Paciente BW",
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
@@ -6303,16 +6502,8 @@ window.DADOS = {
   {
    "t": 1790970250,
    "g": "respondido",
-   "e": "Em Atendimento",
+   "e": "Em Paciente BW",
    "o": "WhatsApp",
-   "u": "15854015",
-   "p": 0
-  },
-  {
-   "t": 1791412507,
-   "g": "respondido",
-   "e": "Em Engajamento",
-   "o": "Instagram",
    "u": "15854015",
    "p": 0
   },
@@ -6509,14 +6700,6 @@ window.DADOS = {
    "p": 0
   },
   {
-   "t": 1790971780,
-   "g": "qualificado",
-   "e": "Follow-Up",
-   "o": "WhatsApp",
-   "u": "15854015",
-   "p": 0
-  },
-  {
    "t": 1791310179,
    "g": "qualificado",
    "e": "Follow-Up",
@@ -6583,15 +6766,7 @@ window.DADOS = {
   {
    "t": 1791201385,
    "g": "respondido",
-   "e": "Em Atendimento",
-   "o": "WhatsApp",
-   "u": "15854015",
-   "p": 0
-  },
-  {
-   "t": 1791362769,
-   "g": "qualificado",
-   "e": "Follow-Up",
+   "e": "Em Paciente BW",
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
@@ -6615,7 +6790,7 @@ window.DADOS = {
   {
    "t": 1791285431,
    "g": "respondido",
-   "e": "Em Atendimento",
+   "e": "Em Paciente BW",
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
@@ -6735,7 +6910,7 @@ window.DADOS = {
   {
    "t": 1791278609,
    "g": "respondido",
-   "e": "Em Atendimento",
+   "e": "Em Paciente BW",
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
@@ -6805,14 +6980,6 @@ window.DADOS = {
    "p": 0
   },
   {
-   "t": 1791412321,
-   "g": "respondido",
-   "e": "Em Engajamento",
-   "o": "Instagram",
-   "u": "15854015",
-   "p": 0
-  },
-  {
    "t": 1791459201,
    "g": "respondido",
    "e": "Em Engajamento",
@@ -6833,14 +7000,6 @@ window.DADOS = {
    "g": "respondido",
    "e": "Em Engajamento",
    "o": "Instagram",
-   "u": "15854015",
-   "p": 0
-  },
-  {
-   "t": 1791172018,
-   "g": "respondido",
-   "e": "Em Atendimento",
-   "o": "WhatsApp",
    "u": "15854015",
    "p": 0
   },
@@ -6887,7 +7046,7 @@ window.DADOS = {
   {
    "t": 1791252697,
    "g": "respondido",
-   "e": "Em Atendimento",
+   "e": "Em Paciente BW",
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
@@ -8135,7 +8294,7 @@ window.DADOS = {
   {
    "t": 1791200777,
    "g": "respondido",
-   "e": "Em Atendimento",
+   "e": "Em Paciente BW",
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
@@ -8167,7 +8326,7 @@ window.DADOS = {
   {
    "t": 1791365506,
    "g": "respondido",
-   "e": "Em Atendimento",
+   "e": "Em Paciente BW",
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
@@ -8215,7 +8374,7 @@ window.DADOS = {
   {
    "t": 1791027576,
    "g": "respondido",
-   "e": "Em Atendimento",
+   "e": "Em Paciente BW",
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
@@ -8255,7 +8414,7 @@ window.DADOS = {
   {
    "t": 1791037002,
    "g": "respondido",
-   "e": "Em Atendimento",
+   "e": "Em Paciente BW",
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
@@ -8311,7 +8470,7 @@ window.DADOS = {
   {
    "t": 1791310880,
    "g": "respondido",
-   "e": "Em Atendimento",
+   "e": "Em Paciente BW",
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
@@ -8439,7 +8598,7 @@ window.DADOS = {
   {
    "t": 1790970481,
    "g": "respondido",
-   "e": "Em Atendimento",
+   "e": "Em Paciente BW",
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
@@ -8461,25 +8620,9 @@ window.DADOS = {
    "p": 0
   },
   {
-   "t": 1791387649,
-   "g": "respondido",
-   "e": "Em Atendimento",
-   "o": "WhatsApp",
-   "u": "15854015",
-   "p": 0
-  },
-  {
-   "t": 1791385257,
-   "g": "respondido",
-   "e": "Em Atendimento",
-   "o": "WhatsApp",
-   "u": "15854015",
-   "p": 0
-  },
-  {
    "t": 1791394267,
    "g": "respondido",
-   "e": "Em Atendimento",
+   "e": "Em Paciente BW",
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
@@ -8503,7 +8646,7 @@ window.DADOS = {
   {
    "t": 1791392280,
    "g": "respondido",
-   "e": "Em Atendimento",
+   "e": "Em Paciente BW",
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
@@ -8519,15 +8662,7 @@ window.DADOS = {
   {
    "t": 1791391436,
    "g": "respondido",
-   "e": "Em Atendimento",
-   "o": "WhatsApp",
-   "u": "15854015",
-   "p": 0
-  },
-  {
-   "t": 1791376639,
-   "g": "respondido",
-   "e": "Em Atendimento",
+   "e": "Em Paciente BW",
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
@@ -8543,7 +8678,7 @@ window.DADOS = {
   {
    "t": 1791203048,
    "g": "respondido",
-   "e": "Em Atendimento",
+   "e": "Em Paciente BW",
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
@@ -8551,7 +8686,7 @@ window.DADOS = {
   {
    "t": 1791371051,
    "g": "respondido",
-   "e": "Em Atendimento",
+   "e": "Em Paciente BW",
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
@@ -8567,7 +8702,7 @@ window.DADOS = {
   {
    "t": 1791296172,
    "g": "respondido",
-   "e": "Em Atendimento",
+   "e": "Em Paciente BW",
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
@@ -8587,14 +8722,6 @@ window.DADOS = {
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
-  },
-  {
-   "t": 1791043478,
-   "g": "agendado",
-   "e": "Consulta Agendada",
-   "o": "WhatsApp",
-   "u": "15854015",
-   "p": 450
   },
   {
    "t": 1791482430,
@@ -8623,7 +8750,7 @@ window.DADOS = {
   {
    "t": 1791391598,
    "g": "respondido",
-   "e": "Em Atendimento",
+   "e": "Em Paciente BW",
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
@@ -8655,7 +8782,7 @@ window.DADOS = {
   {
    "t": 1791393375,
    "g": "respondido",
-   "e": "Em Atendimento",
+   "e": "Em Paciente BW",
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
@@ -8701,14 +8828,6 @@ window.DADOS = {
    "p": 0
   },
   {
-   "t": 1791338490,
-   "g": "qualificado",
-   "e": "Follow-Up",
-   "o": "WhatsApp",
-   "u": "15854015",
-   "p": 0
-  },
-  {
    "t": 1791484634,
    "g": "entrada",
    "e": "Pacientes Novos",
@@ -8733,17 +8852,9 @@ window.DADOS = {
    "p": 0
   },
   {
-   "t": 1790970462,
-   "g": "qualificado",
-   "e": "Follow-Up",
-   "o": "WhatsApp",
-   "u": "15854015",
-   "p": 0
-  },
-  {
    "t": 1791383430,
    "g": "respondido",
-   "e": "Em Atendimento",
+   "e": "Em Paciente BW",
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
@@ -8763,43 +8874,219 @@ window.DADOS = {
    "o": "WhatsApp",
    "u": "15854015",
    "p": 0
+  },
+  {
+   "t": 1790971780,
+   "g": "respondido",
+   "e": "Em Paciente BW",
+   "o": "WhatsApp",
+   "u": "15854015",
+   "p": 0
+  },
+  {
+   "t": 1791399926,
+   "g": "qualificado",
+   "e": "Follow-Up",
+   "o": "WhatsApp",
+   "u": "15854015",
+   "p": 0
+  },
+  {
+   "t": 1791125030,
+   "g": "qualificado",
+   "e": "Follow-Up",
+   "o": "WhatsApp",
+   "u": "15854015",
+   "p": 0
+  },
+  {
+   "t": 1791362769,
+   "g": "qualificado",
+   "e": "Follow-Up",
+   "o": "WhatsApp",
+   "u": "15854015",
+   "p": 0
+  },
+  {
+   "t": 1791486950,
+   "g": "entrada",
+   "e": "Pacientes Novos",
+   "o": "WhatsApp",
+   "u": "15854015",
+   "p": 0
+  },
+  {
+   "t": 1791487251,
+   "g": "entrada",
+   "e": "Pacientes Novos",
+   "o": "WhatsApp",
+   "u": "15854015",
+   "p": 0
+  },
+  {
+   "t": 1791312966,
+   "g": "qualificado",
+   "e": "Follow-Up",
+   "o": "WhatsApp",
+   "u": "15854015",
+   "p": 0
+  },
+  {
+   "t": 1790970462,
+   "g": "respondido",
+   "e": "Em Paciente BW",
+   "o": "WhatsApp",
+   "u": "15854015",
+   "p": 0
+  },
+  {
+   "t": 1791043478,
+   "g": "agendado",
+   "e": "Consulta Agendada",
+   "o": "WhatsApp",
+   "u": "15854015",
+   "p": 450
+  },
+  {
+   "t": 1791376639,
+   "g": "respondido",
+   "e": "Em Paciente BW",
+   "o": "WhatsApp",
+   "u": "15854015",
+   "p": 0
+  },
+  {
+   "t": 1791172018,
+   "g": "respondido",
+   "e": "Em Paciente BW",
+   "o": "WhatsApp",
+   "u": "15854015",
+   "p": 0
+  },
+  {
+   "t": 1791387649,
+   "g": "qualificado",
+   "e": "Follow-Up",
+   "o": "WhatsApp",
+   "u": "15854015",
+   "p": 0
+  },
+  {
+   "t": 1791487528,
+   "g": "entrada",
+   "e": "Pacientes Novos",
+   "o": "WhatsApp",
+   "u": "15854015",
+   "p": 0
+  },
+  {
+   "t": 1791412321,
+   "g": "respondido",
+   "e": "Em Engajamento",
+   "o": "Instagram",
+   "u": "15854015",
+   "p": 0
+  },
+  {
+   "t": 1791155315,
+   "g": "qualificado",
+   "e": "Follow-Up",
+   "o": "WhatsApp",
+   "u": "15854015",
+   "p": 0
+  },
+  {
+   "t": 1791412507,
+   "g": "respondido",
+   "e": "Em Engajamento",
+   "o": "Instagram",
+   "u": "15854015",
+   "p": 0
+  },
+  {
+   "t": 1791129510,
+   "g": "qualificado",
+   "e": "Follow-Up",
+   "o": "WhatsApp",
+   "u": "15854015",
+   "p": 0
+  },
+  {
+   "t": 1791385257,
+   "g": "qualificado",
+   "e": "Follow-Up",
+   "o": "WhatsApp",
+   "u": "15854015",
+   "p": 0
+  },
+  {
+   "t": 1791303508,
+   "g": "qualificado",
+   "e": "Follow-Up",
+   "o": "WhatsApp",
+   "u": "15854015",
+   "p": 0
+  },
+  {
+   "t": 1791338490,
+   "g": "qualificado",
+   "e": "Follow-Up",
+   "o": "WhatsApp",
+   "u": "15854015",
+   "p": 0
+  },
+  {
+   "t": 1791286430,
+   "g": "respondido",
+   "e": "Em Paciente BW",
+   "o": "WhatsApp",
+   "u": "15854015",
+   "p": 0
+  },
+  {
+   "t": 1791387556,
+   "g": "qualificado",
+   "e": "Follow-Up",
+   "o": "WhatsApp",
+   "u": "15854015",
+   "p": 0
   }
  ],
  "crm": {
-  "total": 1086,
+  "total": 1089,
   "perdidos": 705,
-  "taxa_perda": 64.9,
+  "taxa_perda": 64.7,
   "funil": [
    {
     "chave": "recebido",
     "rotulo": "Leads recebidos",
-    "n": 1086,
+    "n": 1089,
     "pct_total": 100.0,
     "conv": null
    },
    {
     "chave": "respondido",
-    "rotulo": "Em atendimento",
+    "rotulo": "Em Paciente BW",
     "n": 352,
-    "pct_total": 32.4,
-    "conv": 32.4,
-    "perdeu": 734
+    "pct_total": 32.3,
+    "conv": 32.3,
+    "perdeu": 737
    },
    {
     "chave": "qualificado",
     "rotulo": "Qualificados",
-    "n": 100,
-    "pct_total": 9.2,
-    "conv": 28.4,
-    "perdeu": 252
+    "n": 105,
+    "pct_total": 9.6,
+    "conv": 29.8,
+    "perdeu": 247
    },
    {
     "chave": "interessado",
     "rotulo": "Interessados",
     "n": 5,
     "pct_total": 0.5,
-    "conv": 5.0,
-    "perdeu": 95
+    "conv": 4.8,
+    "perdeu": 100
    },
    {
     "chave": "agendado",
@@ -8843,10 +9130,10 @@ window.DADOS = {
    },
    {
     "origem": "WhatsApp",
-    "n": 196,
+    "n": 199,
     "agendado": 5,
     "perdido": 0,
-    "taxa": 2.6,
+    "taxa": 2.5,
     "perda": 0.0
    }
   ],
@@ -8889,7 +9176,7 @@ window.DADOS = {
    },
    {
     "dia": "2026-10-08",
-    "recebidos": 32,
+    "recebidos": 35,
     "agendados": 1,
     "perdidos": 0
    }
@@ -8915,7 +9202,7 @@ window.DADOS = {
  ],
  "rotulos": {
   "recebido": "Leads recebidos",
-  "respondido": "Em atendimento",
+  "respondido": "Em Paciente BW",
   "qualificado": "Qualificados",
   "interessado": "Interessados",
   "agendado": "Consulta agendada",
@@ -8955,9 +9242,9 @@ window.DADOS = {
   }
  },
  "usuarios": {
-  "12813479": "Igor Sousa",
+  "12813479": "Paciente BW Sousa",
   "15853899": "Gestão",
-  "15854015": "Atendimento",
+  "15854015": "Paciente BW",
   "app": "Equipe (pelo app do celular)"
  },
  "faixas": [
@@ -8983,7 +9270,7 @@ window.DADOS = {
   },
   {
    "rot": "sem resposta",
-   "n": 165
+   "n": 166
   }
  ],
  "mapa": {
@@ -9012,7 +9299,8 @@ window.DADOS = {
   "3-12": 19,
   "3-13": 5,
   "3-14": 17,
-  "3-15": 19
+  "3-15": 19,
+  "3-16": 1
  },
  "horas": [
   {
@@ -9079,8 +9367,8 @@ window.DADOS = {
  "canais": [
   {
    "canal": "waba",
-   "n": 148,
-   "sem_resposta": 102,
+   "n": 149,
+   "sem_resposta": 103,
    "nao_lidas": 37,
    "tpr": 2197,
    "nota": 33
@@ -9136,15 +9424,123 @@ window.DADOS = {
   {
    "dia": "2026-10-07",
    "nota": 31,
-   "n": 86
+   "n": 85
   },
   {
    "dia": "2026-10-08",
    "nota": 30,
-   "n": 132
+   "n": 134
   }
  ],
  "conversas": [
+  {
+   "chave": "8720",
+   "lead": "",
+   "talk": "",
+   "paciente": "Paciente BU",
+   "canal": "waba",
+   "lida": null,
+   "em_atendimento": null,
+   "inicio": "2026-10-07T16:10:19",
+   "fim": "2026-10-08T16:10:20",
+   "hora_entrada": 16,
+   "dia_semana": 2,
+   "fora_expediente": false,
+   "sdr_uid": "",
+   "n_paciente": 0,
+   "n_humano": 0,
+   "n_bot": 2,
+   "n_audio": 0,
+   "n_transcrito": 0,
+   "tpr": null,
+   "tpr_corrido": null,
+   "dentro_sla": false,
+   "espera_mediana": null,
+   "espera_pior": null,
+   "followups": 0,
+   "sem_resposta_humana": true,
+   "parado_no_paciente": false,
+   "abandonado": false,
+   "horas_parado": 0.0,
+   "espera_util_atual": 0,
+   "so_bot": true,
+   "perguntou_preco": false,
+   "perguntou_convenio": false,
+   "perguntou_local": false,
+   "urgencia": false,
+   "ofereceu_agenda": false,
+   "respondeu_preco": false,
+   "temas": [],
+   "chars_sdr": 0,
+   "perguntas_sdr": 0,
+   "mensagens": [],
+   "nota": 20,
+   "pilares": {
+    "velocidade": 0,
+    "cobertura": 0,
+    "continuidade": 100,
+    "conducao": 0
+   },
+   "porques": [
+    "ninguém humano respondeu",
+    "só o robô falou com este paciente"
+   ],
+   "sdr": "(nenhum humano)"
+  },
+  {
+   "chave": "7843",
+   "lead": "",
+   "talk": "",
+   "paciente": "Paciente HK",
+   "canal": "waba",
+   "lida": null,
+   "em_atendimento": null,
+   "inicio": "2026-10-08T16:06:25",
+   "fim": "2026-10-08T16:09:02",
+   "hora_entrada": 16,
+   "dia_semana": 3,
+   "fora_expediente": false,
+   "sdr_uid": "",
+   "n_paciente": 1,
+   "n_humano": 0,
+   "n_bot": 1,
+   "n_audio": 0,
+   "n_transcrito": 0,
+   "tpr": null,
+   "tpr_corrido": null,
+   "dentro_sla": false,
+   "espera_mediana": null,
+   "espera_pior": null,
+   "followups": 0,
+   "sem_resposta_humana": true,
+   "parado_no_paciente": true,
+   "abandonado": false,
+   "horas_parado": 0.1,
+   "espera_util_atual": 237,
+   "so_bot": true,
+   "perguntou_preco": false,
+   "perguntou_convenio": false,
+   "perguntou_local": false,
+   "urgencia": false,
+   "ofereceu_agenda": false,
+   "respondeu_preco": false,
+   "temas": [],
+   "chars_sdr": 0,
+   "perguntas_sdr": 0,
+   "mensagens": [],
+   "nota": 16,
+   "pilares": {
+    "velocidade": 0,
+    "cobertura": 0,
+    "continuidade": 80,
+    "conducao": 0
+   },
+   "porques": [
+    "ninguém humano respondeu",
+    "só o robô falou com este paciente"
+   ],
+   "sdr": "(nenhum humano)"
+  },
   {
    "chave": "9811",
    "lead": "",
@@ -9173,7 +9569,7 @@ window.DADOS = {
    "sem_resposta_humana": false,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 0.1,
+   "horas_parado": 0.2,
    "espera_util_atual": 0,
    "so_bot": false,
    "perguntou_preco": false,
@@ -9226,7 +9622,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 0.2,
+   "horas_parado": 0.3,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -9280,8 +9676,8 @@ window.DADOS = {
    "sem_resposta_humana": false,
    "parado_no_paciente": true,
    "abandonado": false,
-   "horas_parado": 0.3,
-   "espera_util_atual": 1088,
+   "horas_parado": 0.4,
+   "espera_util_atual": 1444,
    "so_bot": false,
    "perguntou_preco": true,
    "perguntou_convenio": false,
@@ -9308,7 +9704,7 @@ window.DADOS = {
     "ninguém puxou para agendamento",
     "paciente perguntou valor e a conversa morreu ali"
    ],
-   "sdr": "Atendimento"
+   "sdr": "Paciente BW"
   },
   {
    "chave": "7827",
@@ -9338,7 +9734,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 0.3,
+   "horas_parado": 0.4,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -9392,7 +9788,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 0.4,
+   "horas_parado": 0.5,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -9446,7 +9842,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 0.5,
+   "horas_parado": 0.6,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -9505,7 +9901,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 0.6,
+   "horas_parado": 0.7,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -9559,7 +9955,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 0.8,
+   "horas_parado": 0.9,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -9613,7 +10009,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 0.8,
+   "horas_parado": 0.9,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -9667,7 +10063,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 0.8,
+   "horas_parado": 0.9,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -9721,8 +10117,8 @@ window.DADOS = {
    "sem_resposta_humana": false,
    "parado_no_paciente": true,
    "abandonado": false,
-   "horas_parado": 0.9,
-   "espera_util_atual": 3092,
+   "horas_parado": 1.0,
+   "espera_util_atual": 3448,
    "so_bot": false,
    "perguntou_preco": false,
    "perguntou_convenio": false,
@@ -9781,7 +10177,7 @@ window.DADOS = {
    "sem_resposta_humana": false,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 0.9,
+   "horas_parado": 1.0,
    "espera_util_atual": 0,
    "so_bot": false,
    "perguntou_preco": false,
@@ -9834,7 +10230,7 @@ window.DADOS = {
    "sem_resposta_humana": false,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 0.9,
+   "horas_parado": 1.0,
    "espera_util_atual": 0,
    "so_bot": false,
    "perguntou_preco": false,
@@ -9887,7 +10283,7 @@ window.DADOS = {
    "sem_resposta_humana": false,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 1.0,
+   "horas_parado": 1.1,
    "espera_util_atual": 0,
    "so_bot": false,
    "perguntou_preco": false,
@@ -9910,7 +10306,7 @@ window.DADOS = {
    "porques": [
     "ninguém puxou para agendamento"
    ],
-   "sdr": "Atendimento"
+   "sdr": "Paciente BW"
   },
   {
    "chave": "9828",
@@ -9940,7 +10336,7 @@ window.DADOS = {
    "sem_resposta_humana": false,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 1.0,
+   "horas_parado": 1.1,
    "espera_util_atual": 0,
    "so_bot": false,
    "perguntou_preco": true,
@@ -10001,7 +10397,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 1.1,
+   "horas_parado": 1.2,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -10056,7 +10452,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 1.1,
+   "horas_parado": 1.2,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -10110,7 +10506,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 1.1,
+   "horas_parado": 1.2,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -10164,7 +10560,7 @@ window.DADOS = {
    "sem_resposta_humana": false,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 1.2,
+   "horas_parado": 1.3,
    "espera_util_atual": 0,
    "so_bot": false,
    "perguntou_preco": false,
@@ -10221,7 +10617,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 1.2,
+   "horas_parado": 1.3,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -10275,7 +10671,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 1.2,
+   "horas_parado": 1.3,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -10329,8 +10725,8 @@ window.DADOS = {
    "sem_resposta_humana": false,
    "parado_no_paciente": true,
    "abandonado": false,
-   "horas_parado": 1.3,
-   "espera_util_atual": 4504,
+   "horas_parado": 1.4,
+   "espera_util_atual": 4860,
    "so_bot": false,
    "perguntou_preco": false,
    "perguntou_convenio": true,
@@ -10382,7 +10778,7 @@ window.DADOS = {
    "sem_resposta_humana": false,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 1.3,
+   "horas_parado": 1.4,
    "espera_util_atual": 0,
    "so_bot": false,
    "perguntou_preco": false,
@@ -10437,8 +10833,8 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": true,
    "abandonado": false,
-   "horas_parado": 1.3,
-   "espera_util_atual": 4617,
+   "horas_parado": 1.4,
+   "espera_util_atual": 4973,
    "so_bot": true,
    "perguntou_preco": false,
    "perguntou_convenio": false,
@@ -10494,8 +10890,8 @@ window.DADOS = {
    "sem_resposta_humana": false,
    "parado_no_paciente": true,
    "abandonado": false,
-   "horas_parado": 1.3,
-   "espera_util_atual": 4765,
+   "horas_parado": 1.4,
+   "espera_util_atual": 5121,
    "so_bot": false,
    "perguntou_preco": false,
    "perguntou_convenio": false,
@@ -10521,7 +10917,7 @@ window.DADOS = {
     "maior silêncio no meio da conversa: 12,8h",
     "ninguém puxou para agendamento"
    ],
-   "sdr": "Atendimento"
+   "sdr": "Paciente BW"
   },
   {
    "chave": "9827",
@@ -10551,8 +10947,8 @@ window.DADOS = {
    "sem_resposta_humana": false,
    "parado_no_paciente": true,
    "abandonado": false,
-   "horas_parado": 1.3,
-   "espera_util_atual": 4809,
+   "horas_parado": 1.4,
+   "espera_util_atual": 5165,
    "so_bot": false,
    "perguntou_preco": false,
    "perguntou_convenio": false,
@@ -10607,7 +11003,7 @@ window.DADOS = {
    "sem_resposta_humana": false,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 1.4,
+   "horas_parado": 1.5,
    "espera_util_atual": 0,
    "so_bot": false,
    "perguntou_preco": false,
@@ -10662,7 +11058,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 1.5,
+   "horas_parado": 1.6,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -10716,7 +11112,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 1.5,
+   "horas_parado": 1.6,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -10770,8 +11166,8 @@ window.DADOS = {
    "sem_resposta_humana": false,
    "parado_no_paciente": true,
    "abandonado": false,
-   "horas_parado": 1.5,
-   "espera_util_atual": 5338,
+   "horas_parado": 1.6,
+   "espera_util_atual": 5694,
    "so_bot": false,
    "perguntou_preco": false,
    "perguntou_convenio": false,
@@ -10825,7 +11221,7 @@ window.DADOS = {
    "sem_resposta_humana": false,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 1.5,
+   "horas_parado": 1.6,
    "espera_util_atual": 0,
    "so_bot": false,
    "perguntou_preco": false,
@@ -10880,7 +11276,7 @@ window.DADOS = {
    "sem_resposta_humana": false,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 1.5,
+   "horas_parado": 1.6,
    "espera_util_atual": 0,
    "so_bot": false,
    "perguntou_preco": true,
@@ -10939,7 +11335,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 1.5,
+   "horas_parado": 1.6,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -10993,7 +11389,7 @@ window.DADOS = {
    "sem_resposta_humana": false,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 1.6,
+   "horas_parado": 1.7,
    "espera_util_atual": 0,
    "so_bot": false,
    "perguntou_preco": false,
@@ -11048,7 +11444,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 1.6,
+   "horas_parado": 1.7,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -11102,8 +11498,8 @@ window.DADOS = {
    "sem_resposta_humana": false,
    "parado_no_paciente": true,
    "abandonado": false,
-   "horas_parado": 1.7,
-   "espera_util_atual": 6255,
+   "horas_parado": 1.8,
+   "espera_util_atual": 6611,
    "so_bot": false,
    "perguntou_preco": false,
    "perguntou_convenio": false,
@@ -11157,8 +11553,8 @@ window.DADOS = {
    "sem_resposta_humana": false,
    "parado_no_paciente": true,
    "abandonado": false,
-   "horas_parado": 1.8,
-   "espera_util_atual": 6385,
+   "horas_parado": 1.9,
+   "espera_util_atual": 6741,
    "so_bot": false,
    "perguntou_preco": false,
    "perguntou_convenio": false,
@@ -11212,7 +11608,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 1.8,
+   "horas_parado": 1.9,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -11266,7 +11662,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 1.9,
+   "horas_parado": 2.0,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -11320,8 +11716,8 @@ window.DADOS = {
    "sem_resposta_humana": false,
    "parado_no_paciente": true,
    "abandonado": false,
-   "horas_parado": 2.0,
-   "espera_util_atual": 7255,
+   "horas_parado": 2.1,
+   "espera_util_atual": 7611,
    "so_bot": false,
    "perguntou_preco": false,
    "perguntou_convenio": false,
@@ -11345,7 +11741,7 @@ window.DADOS = {
    "porques": [
     "maior silêncio no meio da conversa: 4,3h"
    ],
-   "sdr": "Atendimento"
+   "sdr": "Paciente BW"
   },
   {
    "chave": "9884",
@@ -11375,7 +11771,7 @@ window.DADOS = {
    "sem_resposta_humana": false,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 2.1,
+   "horas_parado": 2.2,
    "espera_util_atual": 0,
    "so_bot": false,
    "perguntou_preco": false,
@@ -11431,7 +11827,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 2.2,
+   "horas_parado": 2.3,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -11485,7 +11881,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 2.3,
+   "horas_parado": 2.4,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -11539,7 +11935,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 2.3,
+   "horas_parado": 2.4,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -11593,7 +11989,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 2.4,
+   "horas_parado": 2.5,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -11647,8 +12043,8 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": true,
    "abandonado": false,
-   "horas_parado": 2.7,
-   "espera_util_atual": 9637,
+   "horas_parado": 2.8,
+   "espera_util_atual": 9993,
    "so_bot": false,
    "perguntou_preco": false,
    "perguntou_convenio": false,
@@ -11701,7 +12097,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 2.8,
+   "horas_parado": 2.9,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -11756,7 +12152,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 2.8,
+   "horas_parado": 2.9,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -11810,7 +12206,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 2.9,
+   "horas_parado": 3.0,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -11863,9 +12259,9 @@ window.DADOS = {
    "followups": 0,
    "sem_resposta_humana": true,
    "parado_no_paciente": true,
-   "abandonado": false,
-   "horas_parado": 3.0,
-   "espera_util_atual": 10631,
+   "abandonado": true,
+   "horas_parado": 3.1,
+   "espera_util_atual": 10987,
    "so_bot": true,
    "perguntou_preco": false,
    "perguntou_convenio": false,
@@ -11877,17 +12273,18 @@ window.DADOS = {
    "chars_sdr": 0,
    "perguntas_sdr": 0,
    "mensagens": [],
-   "nota": 16,
+   "nota": 9,
    "pilares": {
     "velocidade": 0,
     "cobertura": 0,
-    "continuidade": 80,
+    "continuidade": 45,
     "conducao": 0
    },
    "porques": [
     "ninguém humano respondeu",
     "conversa nunca foi nem aberta no Kommo",
-    "só o robô falou com este paciente"
+    "só o robô falou com este paciente",
+    "paciente falou por último há 3h e ninguém voltou"
    ],
    "sdr": "(nenhum humano)"
   },
@@ -11919,7 +12316,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 3.0,
+   "horas_parado": 3.1,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -11973,7 +12370,7 @@ window.DADOS = {
    "sem_resposta_humana": false,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 3.1,
+   "horas_parado": 3.2,
    "espera_util_atual": 0,
    "so_bot": false,
    "perguntou_preco": false,
@@ -12029,8 +12426,8 @@ window.DADOS = {
    "sem_resposta_humana": false,
    "parado_no_paciente": true,
    "abandonado": true,
-   "horas_parado": 3.2,
-   "espera_util_atual": 11556,
+   "horas_parado": 3.3,
+   "espera_util_atual": 11912,
    "so_bot": false,
    "perguntou_preco": false,
    "perguntou_convenio": true,
@@ -12085,7 +12482,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 3.3,
+   "horas_parado": 3.4,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -12142,7 +12539,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 3.5,
+   "horas_parado": 3.6,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -12196,7 +12593,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 3.5,
+   "horas_parado": 3.6,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -12250,8 +12647,8 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": true,
    "abandonado": true,
-   "horas_parado": 3.6,
-   "espera_util_atual": 12889,
+   "horas_parado": 3.7,
+   "espera_util_atual": 13245,
    "so_bot": true,
    "perguntou_preco": false,
    "perguntou_convenio": false,
@@ -12306,7 +12703,7 @@ window.DADOS = {
    "sem_resposta_humana": false,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 3.6,
+   "horas_parado": 3.7,
    "espera_util_atual": 0,
    "so_bot": false,
    "perguntou_preco": false,
@@ -12329,7 +12726,7 @@ window.DADOS = {
    "porques": [
     "ninguém puxou para agendamento"
    ],
-   "sdr": "Atendimento"
+   "sdr": "Paciente BW"
   },
   {
    "chave": "9483",
@@ -12359,7 +12756,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 3.8,
+   "horas_parado": 3.9,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -12413,7 +12810,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 3.9,
+   "horas_parado": 4.0,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -12467,7 +12864,7 @@ window.DADOS = {
    "sem_resposta_humana": false,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 4.1,
+   "horas_parado": 4.2,
    "espera_util_atual": 0,
    "so_bot": false,
    "perguntou_preco": false,
@@ -12521,8 +12918,8 @@ window.DADOS = {
    "sem_resposta_humana": false,
    "parado_no_paciente": true,
    "abandonado": true,
-   "horas_parado": 4.1,
-   "espera_util_atual": 14600,
+   "horas_parado": 4.2,
+   "espera_util_atual": 14956,
    "so_bot": false,
    "perguntou_preco": false,
    "perguntou_convenio": false,
@@ -12549,7 +12946,7 @@ window.DADOS = {
     "ninguém puxou para agendamento",
     "uma única mensagem do atendente para várias do paciente"
    ],
-   "sdr": "Atendimento"
+   "sdr": "Paciente BW"
   },
   {
    "chave": "9442",
@@ -12579,7 +12976,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 4.1,
+   "horas_parado": 4.2,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -12633,7 +13030,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 4.2,
+   "horas_parado": 4.3,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -12687,7 +13084,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 4.2,
+   "horas_parado": 4.3,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -12741,8 +13138,8 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": true,
    "abandonado": true,
-   "horas_parado": 4.2,
-   "espera_util_atual": 15167,
+   "horas_parado": 4.3,
+   "espera_util_atual": 15523,
    "so_bot": false,
    "perguntou_preco": true,
    "perguntou_convenio": false,
@@ -12798,7 +13195,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 4.4,
+   "horas_parado": 4.5,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -12853,8 +13250,8 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": true,
    "abandonado": true,
-   "horas_parado": 4.4,
-   "espera_util_atual": 15770,
+   "horas_parado": 4.5,
+   "espera_util_atual": 16126,
    "so_bot": true,
    "perguntou_preco": false,
    "perguntou_convenio": false,
@@ -12909,7 +13306,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 4.4,
+   "horas_parado": 4.5,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -12963,7 +13360,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 4.4,
+   "horas_parado": 4.5,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -13017,7 +13414,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 4.4,
+   "horas_parado": 4.5,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -13072,7 +13469,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 4.5,
+   "horas_parado": 4.6,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -13126,8 +13523,8 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": true,
    "abandonado": true,
-   "horas_parado": 4.5,
-   "espera_util_atual": 16095,
+   "horas_parado": 4.6,
+   "espera_util_atual": 16451,
    "so_bot": true,
    "perguntou_preco": false,
    "perguntou_convenio": false,
@@ -13151,7 +13548,7 @@ window.DADOS = {
    "porques": [
     "ninguém humano respondeu",
     "só o robô falou com este paciente",
-    "paciente falou por último há 4h e ninguém voltou"
+    "paciente falou por último há 5h e ninguém voltou"
    ],
    "sdr": "(nenhum humano)"
   },
@@ -13183,7 +13580,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 4.5,
+   "horas_parado": 4.6,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -13240,7 +13637,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 4.6,
+   "horas_parado": 4.7,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -13294,7 +13691,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 4.6,
+   "horas_parado": 4.7,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -13348,7 +13745,7 @@ window.DADOS = {
    "sem_resposta_humana": false,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 4.9,
+   "horas_parado": 5.0,
    "espera_util_atual": 0,
    "so_bot": false,
    "perguntou_preco": false,
@@ -13401,7 +13798,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 5.0,
+   "horas_parado": 5.1,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -13455,7 +13852,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 5.0,
+   "horas_parado": 5.1,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -13509,7 +13906,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 5.0,
+   "horas_parado": 5.1,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -13563,7 +13960,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 5.0,
+   "horas_parado": 5.1,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -13617,7 +14014,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 5.1,
+   "horas_parado": 5.2,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -13671,7 +14068,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 5.1,
+   "horas_parado": 5.2,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -13725,7 +14122,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 5.5,
+   "horas_parado": 5.6,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -13779,7 +14176,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 5.6,
+   "horas_parado": 5.7,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -13833,7 +14230,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 5.9,
+   "horas_parado": 6.0,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -13887,7 +14284,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 5.9,
+   "horas_parado": 6.0,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -13941,7 +14338,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 5.9,
+   "horas_parado": 6.0,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -13995,8 +14392,8 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": true,
    "abandonado": true,
-   "horas_parado": 6.0,
-   "espera_util_atual": 21482,
+   "horas_parado": 6.1,
+   "espera_util_atual": 21838,
    "so_bot": true,
    "perguntou_preco": false,
    "perguntou_convenio": false,
@@ -14051,7 +14448,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 6.0,
+   "horas_parado": 6.1,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -14105,7 +14502,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 6.0,
+   "horas_parado": 6.1,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -14159,7 +14556,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 6.3,
+   "horas_parado": 6.4,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -14213,7 +14610,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 6.4,
+   "horas_parado": 6.5,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -14267,7 +14664,7 @@ window.DADOS = {
    "sem_resposta_humana": false,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 6.4,
+   "horas_parado": 6.5,
    "espera_util_atual": 0,
    "so_bot": false,
    "perguntou_preco": false,
@@ -14290,7 +14687,7 @@ window.DADOS = {
    "porques": [
     "ninguém puxou para agendamento"
    ],
-   "sdr": "Atendimento"
+   "sdr": "Paciente BW"
   },
   {
    "chave": "9758",
@@ -14320,7 +14717,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 6.4,
+   "horas_parado": 6.5,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -14374,8 +14771,8 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": true,
    "abandonado": true,
-   "horas_parado": 6.4,
-   "espera_util_atual": 23206,
+   "horas_parado": 6.5,
+   "espera_util_atual": 23562,
    "so_bot": true,
    "perguntou_preco": false,
    "perguntou_convenio": false,
@@ -14429,7 +14826,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 6.5,
+   "horas_parado": 6.6,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -14483,7 +14880,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 6.8,
+   "horas_parado": 6.9,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -14537,7 +14934,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 7.0,
+   "horas_parado": 7.1,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -14591,7 +14988,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 7.0,
+   "horas_parado": 7.1,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -14645,7 +15042,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 7.1,
+   "horas_parado": 7.2,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -14699,7 +15096,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 7.1,
+   "horas_parado": 7.2,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -14753,8 +15150,8 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": true,
    "abandonado": true,
-   "horas_parado": 7.2,
-   "espera_util_atual": 25939,
+   "horas_parado": 7.3,
+   "espera_util_atual": 26295,
    "so_bot": true,
    "perguntou_preco": false,
    "perguntou_convenio": false,
@@ -14808,7 +15205,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 7.3,
+   "horas_parado": 7.4,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -14862,7 +15259,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 7.4,
+   "horas_parado": 7.5,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -14916,7 +15313,7 @@ window.DADOS = {
    "sem_resposta_humana": false,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 7.5,
+   "horas_parado": 7.6,
    "espera_util_atual": 0,
    "so_bot": false,
    "perguntou_preco": false,
@@ -14972,7 +15369,7 @@ window.DADOS = {
    "sem_resposta_humana": false,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 7.6,
+   "horas_parado": 7.7,
    "espera_util_atual": 0,
    "so_bot": false,
    "perguntou_preco": false,
@@ -15029,7 +15426,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 7.6,
+   "horas_parado": 7.7,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -15083,7 +15480,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 7.6,
+   "horas_parado": 7.7,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -15137,7 +15534,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 7.6,
+   "horas_parado": 7.7,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -15191,7 +15588,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 7.7,
+   "horas_parado": 7.8,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -15246,7 +15643,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 7.9,
+   "horas_parado": 8.0,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -15300,7 +15697,7 @@ window.DADOS = {
    "sem_resposta_humana": false,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 7.9,
+   "horas_parado": 8.0,
    "espera_util_atual": 0,
    "so_bot": false,
    "perguntou_preco": false,
@@ -15353,7 +15750,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 8.0,
+   "horas_parado": 8.1,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -15407,7 +15804,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 8.0,
+   "horas_parado": 8.1,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -15461,7 +15858,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 8.0,
+   "horas_parado": 8.1,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -15515,7 +15912,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 8.0,
+   "horas_parado": 8.1,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -15569,7 +15966,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 8.0,
+   "horas_parado": 8.1,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -15623,7 +16020,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 8.6,
+   "horas_parado": 8.7,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -15677,8 +16074,8 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": true,
    "abandonado": true,
-   "horas_parado": 8.8,
-   "espera_util_atual": 29223,
+   "horas_parado": 8.9,
+   "espera_util_atual": 29579,
    "so_bot": true,
    "perguntou_preco": false,
    "perguntou_convenio": true,
@@ -15736,7 +16133,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 9.0,
+   "horas_parado": 9.1,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -15791,8 +16188,8 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": true,
    "abandonado": true,
-   "horas_parado": 9.1,
-   "espera_util_atual": 29223,
+   "horas_parado": 9.2,
+   "espera_util_atual": 29579,
    "so_bot": true,
    "perguntou_preco": false,
    "perguntou_convenio": false,
@@ -15850,8 +16247,8 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": true,
    "abandonado": true,
-   "horas_parado": 10.0,
-   "espera_util_atual": 29223,
+   "horas_parado": 10.1,
+   "espera_util_atual": 29579,
    "so_bot": true,
    "perguntou_preco": false,
    "perguntou_convenio": false,
@@ -15906,7 +16303,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 12.2,
+   "horas_parado": 12.3,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -15961,7 +16358,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 12.2,
+   "horas_parado": 12.3,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": true,
@@ -16018,7 +16415,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 12.5,
+   "horas_parado": 12.6,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -16073,7 +16470,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 14.6,
+   "horas_parado": 14.7,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -16127,7 +16524,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 14.6,
+   "horas_parado": 14.7,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -16181,7 +16578,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 15.4,
+   "horas_parado": 15.5,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -16235,7 +16632,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 15.5,
+   "horas_parado": 15.6,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -16291,7 +16688,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 16.0,
+   "horas_parado": 16.1,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -16345,7 +16742,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 16.0,
+   "horas_parado": 16.1,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -16401,7 +16798,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 16.6,
+   "horas_parado": 16.7,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -16456,7 +16853,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 17.3,
+   "horas_parado": 17.4,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -16510,7 +16907,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 17.4,
+   "horas_parado": 17.5,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -16564,7 +16961,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 17.5,
+   "horas_parado": 17.6,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -16620,7 +17017,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 17.5,
+   "horas_parado": 17.6,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -16675,7 +17072,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 17.6,
+   "horas_parado": 17.7,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -16729,8 +17126,8 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": true,
    "abandonado": true,
-   "horas_parado": 17.7,
-   "espera_util_atual": 29223,
+   "horas_parado": 17.8,
+   "espera_util_atual": 29579,
    "so_bot": false,
    "perguntou_preco": false,
    "perguntou_convenio": false,
@@ -16783,7 +17180,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 18.1,
+   "horas_parado": 18.2,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -16837,7 +17234,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 18.1,
+   "horas_parado": 18.2,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -16891,7 +17288,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 18.2,
+   "horas_parado": 18.3,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -16945,7 +17342,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 18.2,
+   "horas_parado": 18.3,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -16999,7 +17396,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 18.9,
+   "horas_parado": 19.0,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -17053,7 +17450,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 18.9,
+   "horas_parado": 19.0,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -17107,7 +17504,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 19.1,
+   "horas_parado": 19.2,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -17161,7 +17558,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 19.1,
+   "horas_parado": 19.2,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -17215,7 +17612,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 19.3,
+   "horas_parado": 19.4,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -17269,7 +17666,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 19.3,
+   "horas_parado": 19.4,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -17323,7 +17720,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 19.3,
+   "horas_parado": 19.4,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -17378,7 +17775,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 19.5,
+   "horas_parado": 19.6,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -17432,7 +17829,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 19.5,
+   "horas_parado": 19.6,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -17486,7 +17883,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 19.7,
+   "horas_parado": 19.8,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -17540,7 +17937,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 19.7,
+   "horas_parado": 19.8,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -17594,7 +17991,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 19.8,
+   "horas_parado": 19.9,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -17648,7 +18045,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 19.9,
+   "horas_parado": 20.0,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -17704,7 +18101,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 20.0,
+   "horas_parado": 20.1,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -17758,7 +18155,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 20.1,
+   "horas_parado": 20.2,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -17812,7 +18209,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 20.1,
+   "horas_parado": 20.2,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -17866,7 +18263,7 @@ window.DADOS = {
    "sem_resposta_humana": false,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 20.5,
+   "horas_parado": 20.6,
    "espera_util_atual": 0,
    "so_bot": false,
    "perguntou_preco": false,
@@ -17919,7 +18316,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 20.6,
+   "horas_parado": 20.7,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -17973,8 +18370,8 @@ window.DADOS = {
    "sem_resposta_humana": false,
    "parado_no_paciente": true,
    "abandonado": true,
-   "horas_parado": 21.0,
-   "espera_util_atual": 29223,
+   "horas_parado": 21.1,
+   "espera_util_atual": 29579,
    "so_bot": false,
    "perguntou_preco": false,
    "perguntou_convenio": false,
@@ -18027,8 +18424,8 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": true,
    "abandonado": true,
-   "horas_parado": 21.8,
-   "espera_util_atual": 31777,
+   "horas_parado": 21.9,
+   "espera_util_atual": 32133,
    "so_bot": true,
    "perguntou_preco": false,
    "perguntou_convenio": false,
@@ -18082,7 +18479,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 21.8,
+   "horas_parado": 21.9,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -18137,7 +18534,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 21.9,
+   "horas_parado": 22.0,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -18192,7 +18589,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 22.2,
+   "horas_parado": 22.3,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -18246,7 +18643,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 22.3,
+   "horas_parado": 22.4,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -18301,7 +18698,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 22.3,
+   "horas_parado": 22.4,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -18355,7 +18752,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 22.3,
+   "horas_parado": 22.4,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -18409,7 +18806,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 22.4,
+   "horas_parado": 22.5,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -18463,7 +18860,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 22.5,
+   "horas_parado": 22.6,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -18517,7 +18914,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 22.5,
+   "horas_parado": 22.6,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -18571,8 +18968,8 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": true,
    "abandonado": true,
-   "horas_parado": 22.5,
-   "espera_util_atual": 34345,
+   "horas_parado": 22.6,
+   "espera_util_atual": 34701,
    "so_bot": false,
    "perguntou_preco": false,
    "perguntou_convenio": false,
@@ -18594,7 +18991,7 @@ window.DADOS = {
    "porques": [
     "ninguém humano respondeu",
     "conversa nunca foi nem aberta no Kommo",
-    "paciente falou por último há 22h e ninguém voltou"
+    "paciente falou por último há 23h e ninguém voltou"
    ],
    "sdr": "(nenhum humano)"
   },
@@ -18626,7 +19023,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 22.6,
+   "horas_parado": 22.7,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -18680,8 +19077,8 @@ window.DADOS = {
    "sem_resposta_humana": false,
    "parado_no_paciente": true,
    "abandonado": true,
-   "horas_parado": 22.7,
-   "espera_util_atual": 34967,
+   "horas_parado": 22.8,
+   "espera_util_atual": 35323,
    "so_bot": false,
    "perguntou_preco": false,
    "perguntou_convenio": false,
@@ -18709,7 +19106,7 @@ window.DADOS = {
     "ninguém puxou para agendamento",
     "paciente sinalizou urgência e esperou mais de 30 min"
    ],
-   "sdr": "Atendimento"
+   "sdr": "Paciente BW"
   },
   {
    "chave": "9725",
@@ -18739,7 +19136,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 22.7,
+   "horas_parado": 22.8,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -18793,7 +19190,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 22.7,
+   "horas_parado": 22.8,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -18847,7 +19244,7 @@ window.DADOS = {
    "sem_resposta_humana": false,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 22.8,
+   "horas_parado": 22.9,
    "espera_util_atual": 0,
    "so_bot": false,
    "perguntou_preco": false,
@@ -18901,7 +19298,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 23.0,
+   "horas_parado": 23.1,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -18955,7 +19352,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 23.0,
+   "horas_parado": 23.1,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -19009,7 +19406,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 23.1,
+   "horas_parado": 23.2,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -19063,7 +19460,7 @@ window.DADOS = {
    "sem_resposta_humana": false,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 23.1,
+   "horas_parado": 23.2,
    "espera_util_atual": 0,
    "so_bot": false,
    "perguntou_preco": false,
@@ -19116,7 +19513,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 23.1,
+   "horas_parado": 23.2,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -19170,8 +19567,8 @@ window.DADOS = {
    "sem_resposta_humana": false,
    "parado_no_paciente": true,
    "abandonado": true,
-   "horas_parado": 23.2,
-   "espera_util_atual": 36601,
+   "horas_parado": 23.3,
+   "espera_util_atual": 36957,
    "so_bot": false,
    "perguntou_preco": false,
    "perguntou_convenio": false,
@@ -19229,7 +19626,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 23.3,
+   "horas_parado": 23.4,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -19283,8 +19680,8 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": true,
    "abandonado": true,
-   "horas_parado": 23.3,
-   "espera_util_atual": 37046,
+   "horas_parado": 23.4,
+   "espera_util_atual": 37402,
    "so_bot": true,
    "perguntou_preco": false,
    "perguntou_convenio": false,
@@ -19340,7 +19737,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 23.3,
+   "horas_parado": 23.4,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -19394,8 +19791,8 @@ window.DADOS = {
    "sem_resposta_humana": false,
    "parado_no_paciente": true,
    "abandonado": true,
-   "horas_parado": 23.4,
-   "espera_util_atual": 37301,
+   "horas_parado": 23.5,
+   "espera_util_atual": 37657,
    "so_bot": false,
    "perguntou_preco": false,
    "perguntou_convenio": false,
@@ -19415,7 +19812,7 @@ window.DADOS = {
     "conducao": 70
    },
    "porques": [
-    "paciente falou por último há 23h e ninguém voltou",
+    "paciente falou por último há 24h e ninguém voltou",
     "ninguém puxou para agendamento"
    ],
    "sdr": "Equipe (pelo app do celular)"
@@ -19448,8 +19845,8 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": true,
    "abandonado": true,
-   "horas_parado": 23.5,
-   "espera_util_atual": 37852,
+   "horas_parado": 23.6,
+   "espera_util_atual": 38208,
    "so_bot": false,
    "perguntou_preco": false,
    "perguntou_convenio": false,
@@ -19503,7 +19900,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 23.6,
+   "horas_parado": 23.7,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -19557,8 +19954,8 @@ window.DADOS = {
    "sem_resposta_humana": false,
    "parado_no_paciente": true,
    "abandonado": true,
-   "horas_parado": 23.6,
-   "espera_util_atual": 38152,
+   "horas_parado": 23.7,
+   "espera_util_atual": 38508,
    "so_bot": false,
    "perguntou_preco": true,
    "perguntou_convenio": true,
@@ -19618,8 +20015,8 @@ window.DADOS = {
    "sem_resposta_humana": false,
    "parado_no_paciente": true,
    "abandonado": true,
-   "horas_parado": 23.7,
-   "espera_util_atual": 38493,
+   "horas_parado": 23.8,
+   "espera_util_atual": 38849,
    "so_bot": false,
    "perguntou_preco": false,
    "perguntou_convenio": false,
@@ -19644,60 +20041,6 @@ window.DADOS = {
     "ninguém puxou para agendamento"
    ],
    "sdr": "Equipe (pelo app do celular)"
-  },
-  {
-   "chave": "8720",
-   "lead": "",
-   "talk": "",
-   "paciente": "Paciente BU",
-   "canal": "waba",
-   "lida": null,
-   "em_atendimento": null,
-   "inicio": "2026-10-07T16:10:19",
-   "fim": "2026-10-07T16:10:19",
-   "hora_entrada": 16,
-   "dia_semana": 2,
-   "fora_expediente": false,
-   "sdr_uid": "",
-   "n_paciente": 0,
-   "n_humano": 0,
-   "n_bot": 1,
-   "n_audio": 0,
-   "n_transcrito": 0,
-   "tpr": null,
-   "tpr_corrido": null,
-   "dentro_sla": false,
-   "espera_mediana": null,
-   "espera_pior": null,
-   "followups": 0,
-   "sem_resposta_humana": true,
-   "parado_no_paciente": false,
-   "abandonado": false,
-   "horas_parado": 23.9,
-   "espera_util_atual": 0,
-   "so_bot": true,
-   "perguntou_preco": false,
-   "perguntou_convenio": false,
-   "perguntou_local": false,
-   "urgencia": false,
-   "ofereceu_agenda": false,
-   "respondeu_preco": false,
-   "temas": [],
-   "chars_sdr": 0,
-   "perguntas_sdr": 0,
-   "mensagens": [],
-   "nota": 20,
-   "pilares": {
-    "velocidade": 0,
-    "cobertura": 0,
-    "continuidade": 100,
-    "conducao": 0
-   },
-   "porques": [
-    "ninguém humano respondeu",
-    "só o robô falou com este paciente"
-   ],
-   "sdr": "(nenhum humano)"
   },
   {
    "chave": "9837",
@@ -19727,7 +20070,7 @@ window.DADOS = {
    "sem_resposta_humana": false,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 24.0,
+   "horas_parado": 24.1,
    "espera_util_atual": 0,
    "so_bot": false,
    "perguntou_preco": false,
@@ -19780,8 +20123,8 @@ window.DADOS = {
    "sem_resposta_humana": false,
    "parado_no_paciente": true,
    "abandonado": true,
-   "horas_parado": 24.4,
-   "espera_util_atual": 41205,
+   "horas_parado": 24.5,
+   "espera_util_atual": 41561,
    "so_bot": false,
    "perguntou_preco": false,
    "perguntou_convenio": false,
@@ -19807,7 +20150,7 @@ window.DADOS = {
     "ninguém puxou para agendamento",
     "uma única mensagem do atendente para várias do paciente"
    ],
-   "sdr": "Atendimento"
+   "sdr": "Paciente BW"
   },
   {
    "chave": "8036",
@@ -19837,7 +20180,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 24.6,
+   "horas_parado": 24.7,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -19891,8 +20234,8 @@ window.DADOS = {
    "sem_resposta_humana": false,
    "parado_no_paciente": true,
    "abandonado": true,
-   "horas_parado": 24.7,
-   "espera_util_atual": 42026,
+   "horas_parado": 24.8,
+   "espera_util_atual": 42382,
    "so_bot": false,
    "perguntou_preco": false,
    "perguntou_convenio": false,
@@ -19918,7 +20261,7 @@ window.DADOS = {
     "ninguém puxou para agendamento",
     "paciente sinalizou urgência e esperou mais de 30 min"
    ],
-   "sdr": "Atendimento"
+   "sdr": "Paciente BW"
   },
   {
    "chave": "8324",
@@ -19948,8 +20291,8 @@ window.DADOS = {
    "sem_resposta_humana": false,
    "parado_no_paciente": true,
    "abandonado": true,
-   "horas_parado": 24.9,
-   "espera_util_atual": 42794,
+   "horas_parado": 25.0,
+   "espera_util_atual": 43150,
    "so_bot": false,
    "perguntou_preco": false,
    "perguntou_convenio": false,
@@ -19972,7 +20315,7 @@ window.DADOS = {
     "paciente falou por último há 25h e ninguém voltou",
     "ninguém puxou para agendamento"
    ],
-   "sdr": "Atendimento"
+   "sdr": "Paciente BW"
   },
   {
    "chave": "8317",
@@ -20002,7 +20345,7 @@ window.DADOS = {
    "sem_resposta_humana": false,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 25.0,
+   "horas_parado": 25.1,
    "espera_util_atual": 0,
    "so_bot": false,
    "perguntou_preco": false,
@@ -20025,7 +20368,7 @@ window.DADOS = {
    "porques": [
     "ninguém puxou para agendamento"
    ],
-   "sdr": "Atendimento"
+   "sdr": "Paciente BW"
   },
   {
    "chave": "9814",
@@ -20055,8 +20398,8 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": true,
    "abandonado": true,
-   "horas_parado": 25.4,
-   "espera_util_atual": 44773,
+   "horas_parado": 25.5,
+   "espera_util_atual": 45129,
    "so_bot": false,
    "perguntou_preco": false,
    "perguntou_convenio": false,
@@ -20077,7 +20420,7 @@ window.DADOS = {
    },
    "porques": [
     "ninguém humano respondeu",
-    "paciente falou por último há 25h e ninguém voltou"
+    "paciente falou por último há 26h e ninguém voltou"
    ],
    "sdr": "(nenhum humano)"
   },
@@ -20109,8 +20452,8 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": true,
    "abandonado": true,
-   "horas_parado": 25.6,
-   "espera_util_atual": 45334,
+   "horas_parado": 25.7,
+   "espera_util_atual": 45690,
    "so_bot": true,
    "perguntou_preco": false,
    "perguntou_convenio": false,
@@ -20166,7 +20509,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 25.6,
+   "horas_parado": 25.7,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -20222,7 +20565,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 26.2,
+   "horas_parado": 26.3,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -20276,7 +20619,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 26.2,
+   "horas_parado": 26.3,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -20332,8 +20675,8 @@ window.DADOS = {
    "sem_resposta_humana": false,
    "parado_no_paciente": true,
    "abandonado": true,
-   "horas_parado": 26.4,
-   "espera_util_atual": 48094,
+   "horas_parado": 26.5,
+   "espera_util_atual": 48450,
    "so_bot": false,
    "perguntou_preco": false,
    "perguntou_convenio": false,
@@ -20389,8 +20732,8 @@ window.DADOS = {
    "sem_resposta_humana": false,
    "parado_no_paciente": true,
    "abandonado": true,
-   "horas_parado": 26.4,
-   "espera_util_atual": 48159,
+   "horas_parado": 26.5,
+   "espera_util_atual": 48515,
    "so_bot": false,
    "perguntou_preco": false,
    "perguntou_convenio": false,
@@ -20442,8 +20785,8 @@ window.DADOS = {
    "sem_resposta_humana": false,
    "parado_no_paciente": true,
    "abandonado": true,
-   "horas_parado": 26.5,
-   "espera_util_atual": 48576,
+   "horas_parado": 26.6,
+   "espera_util_atual": 48932,
    "so_bot": false,
    "perguntou_preco": false,
    "perguntou_convenio": true,
@@ -20465,7 +20808,7 @@ window.DADOS = {
     "conducao": 100
    },
    "porques": [
-    "paciente falou por último há 26h e ninguém voltou"
+    "paciente falou por último há 27h e ninguém voltou"
    ],
    "sdr": "Equipe (pelo app do celular)"
   },
@@ -20497,7 +20840,7 @@ window.DADOS = {
    "sem_resposta_humana": false,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 26.5,
+   "horas_parado": 26.6,
    "espera_util_atual": 0,
    "so_bot": false,
    "perguntou_preco": true,
@@ -20552,8 +20895,8 @@ window.DADOS = {
    "sem_resposta_humana": false,
    "parado_no_paciente": true,
    "abandonado": true,
-   "horas_parado": 26.8,
-   "espera_util_atual": 49609,
+   "horas_parado": 26.9,
+   "espera_util_atual": 49965,
    "so_bot": false,
    "perguntou_preco": false,
    "perguntou_convenio": false,
@@ -20606,7 +20949,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 26.8,
+   "horas_parado": 26.9,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -20660,7 +21003,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 27.4,
+   "horas_parado": 27.5,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -20715,7 +21058,7 @@ window.DADOS = {
    "parado_no_paciente": true,
    "abandonado": true,
    "horas_parado": 27.5,
-   "espera_util_atual": 52022,
+   "espera_util_atual": 52378,
    "so_bot": false,
    "perguntou_preco": false,
    "perguntou_convenio": false,
@@ -20770,8 +21113,8 @@ window.DADOS = {
    "sem_resposta_humana": false,
    "parado_no_paciente": true,
    "abandonado": true,
-   "horas_parado": 27.6,
-   "espera_util_atual": 52428,
+   "horas_parado": 27.7,
+   "espera_util_atual": 52784,
    "so_bot": false,
    "perguntou_preco": false,
    "perguntou_convenio": false,
@@ -20824,8 +21167,8 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": true,
    "abandonado": true,
-   "horas_parado": 27.8,
-   "espera_util_atual": 53457,
+   "horas_parado": 27.9,
+   "espera_util_atual": 53813,
    "so_bot": false,
    "perguntou_preco": false,
    "perguntou_convenio": false,
@@ -20878,8 +21221,8 @@ window.DADOS = {
    "sem_resposta_humana": false,
    "parado_no_paciente": true,
    "abandonado": true,
-   "horas_parado": 28.1,
-   "espera_util_atual": 54269,
+   "horas_parado": 28.2,
+   "espera_util_atual": 54625,
    "so_bot": false,
    "perguntou_preco": false,
    "perguntou_convenio": false,
@@ -20932,7 +21275,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 28.2,
+   "horas_parado": 28.3,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -20986,7 +21329,7 @@ window.DADOS = {
    "sem_resposta_humana": true,
    "parado_no_paciente": false,
    "abandonado": false,
-   "horas_parado": 28.2,
+   "horas_parado": 28.3,
    "espera_util_atual": 0,
    "so_bot": true,
    "perguntou_preco": false,
@@ -21041,7 +21384,7 @@ window.DADOS = {
    "parado_no_paciente": true,
    "abandonado": true,
    "horas_parado": 29.0,
-   "espera_util_atual": 57420,
+   "espera_util_atual": 57776,
    "so_bot": false,
    "perguntou_preco": false,
    "perguntou_convenio": false,
@@ -21070,13 +21413,18 @@ window.DADOS = {
  "recomendacoes": [
   {
    "peso": "critico",
+   "t": "6 Paciente BW(s) com risco de conformidade",
+   "d": "Frase do atendente prometendo resultado, dando conduta ou garantindo prazo. Em consultório médico isso responde pelo CRM do Dr. Paciente BW, não pelo atendente. Veja a frase exata na conversa: Paciente K Paciente BV, Ana Paciente BV, Paciente FE - Paciente FE Paciente CW ., Paciente BW."
+  },
+  {
+   "peso": "critico",
    "t": "26 conversa(s) sem ninguém ter aberto",
    "d": "Não é demora, é ausência: 25 em waba, 1 em instagram_business. A mais antiga espera 24h. Paciente que manda mensagem e não recebe nada costuma ligar para o próximo da lista de busca."
   },
   {
    "peso": "critico",
-   "t": "165 de 218 conversas sem nenhuma resposta humana",
-   "d": "76% da demanda não foi atendida por gente. Antes de cobrar qualidade de atendimento, resolver presença: não adianta treinar quem não está na conversa."
+   "t": "166 de 219 conversas sem nenhuma resposta humana",
+   "d": "76% da demanda não foi atendida por gente. Antes de cobrar qualidade de Paciente BW, resolver presença: não adianta treinar quem não está na conversa."
   },
   {
    "peso": "critico",
@@ -21085,7 +21433,7 @@ window.DADOS = {
   },
   {
    "peso": "alto",
-   "t": "37 conversa(s) paradas no paciente",
+   "t": "38 conversa(s) paradas no paciente",
    "d": "O paciente falou por último e ninguém voltou. A pior é (sem nome) (29h). Essas são as mais baratas de recuperar: a pessoa já demonstrou interesse e está esperando."
   },
   {
@@ -21095,23 +21443,23 @@ window.DADOS = {
   },
   {
    "peso": "medio",
-   "t": "23 atendimento(s) fora da meta de 15 min",
+   "t": "23 Paciente BW(s) fora da meta de 15 min",
    "d": "Mediana de primeira resposta: 36min (descontada noite e domingo). Em clínica oftalmológica o paciente costuma estar com sintoma: quem responde primeiro marca a consulta."
   },
   {
    "peso": "medio",
-   "t": "44 atendimento(s) sem nenhuma oferta de horário",
-   "d": "Conversa que informa mas não convida não fecha agenda. Toda resposta deveria terminar oferecendo dois horários concretos, não um 'qualquer dúvida estou à disposição'."
+   "t": "44 Paciente BW(s) sem nenhuma oferta de horário",
+   "d": "Conversa que informa mas não Paciente FE não fecha agenda. Toda resposta deveria terminar oferecendo dois horários concretos, não um 'qualquer dúvida estou à disposição'."
   },
   {
    "peso": "medio",
    "t": "O buraco do dia é às 13h",
-   "d": "Mediana de 11,8h para a primeira resposta nesse horário, sobre 6 atendimento(s). Se a demanda ali é constante, é escala, não esforço: ninguém melhora sozinho um horário em que não tem gente."
+   "d": "Mediana de 11,8h para a primeira resposta nesse horário, sobre 6 Paciente BW(s). Se a demanda ali é constante, é escala, não esforço: ninguém melhora sozinho um horário em que não tem gente."
   },
   {
    "peso": "info",
    "t": "135 áudio(s) recebido(s), 134 transcrito(s)",
-   "d": "Paciente que manda áudio costuma mandar contexto clínico longo. Esses áudios entram transcritos na análise, então o atendimento por áudio não fica invisível na nota."
+   "d": "Paciente que manda áudio costuma mandar contexto clínico longo. Esses áudios entram transcritos na análise, então o Paciente BW por áudio não fica invisível na nota."
   }
  ]
 };
