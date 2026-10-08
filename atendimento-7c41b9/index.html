@@ -1,0 +1,1186 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Atendimento em Números</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap">
+<style>
+/* ============================================================ paleta
+   Tinta quase preta azulada, papel quente, latão como acento da marca do
+   Dr. Paulo. Os semânticos (verde/âmbar/vermelho) são dessaturados para não
+   competir com o latão: num painel de gestão, cor é informação, não enfeite. */
+:root{
+  --ink:#0a1a28; --ink-2:#13293c; --ink-3:#1a3243;
+  --papel:#f4f2ec; --superficie:#fffdf9; --superficie2:#faf8f3;
+  --borda:#e4dfd4; --borda-sutil:#eeeae1;
+  --texto:#13202c; --texto2:#5c6874; --texto3:#8a949e;
+  --latao:#b8914b; --latao-claro:#e8d6ac; --latao-fundo:#f7f0df;
+  --verde:#2f7a55; --verde-f:#e5f0ea;
+  --ambar:#9d7314; --ambar-f:#faf0d8;
+  --vermelho:#a5372a; --vermelho-f:#f8e6e1;
+  --azul:#2b5a85; --azul-f:#e6eef5;
+  --sombra:0 1px 2px rgba(10,26,40,.04), 0 2px 8px rgba(10,26,40,.04);
+  --sombra2:0 2px 4px rgba(10,26,40,.05), 0 8px 24px rgba(10,26,40,.07);
+  --serif:"Fraunces",Georgia,serif;
+  --sans:"Inter",-apple-system,"Segoe UI",sans-serif;
+  --raio:12px;
+}
+:root:not([data-theme="light"]) { }
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --papel:#0a141d; --superficie:#101e2a; --superficie2:#152533;
+    --borda:#1f3344; --borda-sutil:#1a2c3b;
+    --texto:#e8eef3; --texto2:#9fb0bf; --texto3:#73889a;
+    --latao-fundo:#2a2415; --latao-claro:#d4b878;
+    --verde-f:#142a20; --ambar-f:#2b2412; --vermelho-f:#2e1715; --azul-f:#132536;
+    --verde:#5fb186; --ambar:#d4a53c; --vermelho:#dd7a68; --azul:#7bb0dd;
+    --sombra:0 1px 2px rgba(0,0,0,.3); --sombra2:0 8px 24px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  --papel:#0a141d; --superficie:#101e2a; --superficie2:#152533;
+  --borda:#1f3344; --borda-sutil:#1a2c3b;
+  --texto:#e8eef3; --texto2:#9fb0bf; --texto3:#73889a;
+  --latao-fundo:#2a2415; --latao-claro:#d4b878;
+  --verde-f:#142a20; --ambar-f:#2b2412; --vermelho-f:#2e1715; --azul-f:#132536;
+  --verde:#5fb186; --ambar:#d4a53c; --vermelho:#dd7a68; --azul:#7bb0dd;
+  --sombra:0 1px 2px rgba(0,0,0,.3); --sombra2:0 8px 24px rgba(0,0,0,.35);
+}
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--papel);color:var(--texto);font-family:var(--sans);
+  font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding:0 22px}
+.tab{font-variant-numeric:tabular-nums}
+button{font:inherit}
+h2{font-family:var(--serif);font-weight:600;font-size:20px;margin:0 0 3px;
+  letter-spacing:-.012em;color:var(--texto)}
+.sub{color:var(--texto2);font-size:13px;margin:0 0 16px;max-width:76ch}
+section{margin-top:40px;scroll-margin-top:96px}
+.cartao{background:var(--superficie);border:1px solid var(--borda);
+  border-radius:var(--raio);box-shadow:var(--sombra)}
+
+/* ========================================================= barra de topo */
+.barra{position:sticky;top:0;z-index:40;background:var(--ink);color:#fff;
+  border-bottom:1px solid rgba(255,255,255,.07)}
+.barra-in{display:flex;align-items:center;gap:16px;padding:11px 0;flex-wrap:wrap}
+.marca{display:flex;align-items:center;gap:10px;margin-right:auto}
+.selo{width:30px;height:30px;border-radius:8px;background:var(--latao);
+  display:grid;place-items:center;font-family:var(--serif);font-weight:600;
+  color:#1a1405;font-size:15px;flex:0 0 auto}
+.marca b{font-size:14px;font-weight:600;display:block;line-height:1.2}
+.marca span{font-size:11px;color:#8ba0b4}
+.grupo{display:flex;gap:2px;background:rgba(255,255,255,.07);border-radius:9px;
+  padding:3px}
+.grupo button{background:none;border:none;color:#a7bccd;font-size:12.5px;
+  font-weight:600;padding:5px 11px;border-radius:7px;cursor:pointer;
+  white-space:nowrap}
+.grupo button:hover{color:#fff}
+.grupo button[aria-pressed="true"]{background:var(--latao);color:#1a1405}
+select{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);
+  color:#dce6ee;font-size:12.5px;font-weight:500;padding:6px 9px;border-radius:8px;
+  cursor:pointer;max-width:170px}
+select option{background:#13293c;color:#fff}
+.icone{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);
+  color:#dce6ee;width:32px;height:32px;border-radius:8px;cursor:pointer;
+  display:grid;place-items:center;font-size:14px}
+.icone:hover{background:rgba(255,255,255,.14)}
+.icone[aria-pressed="true"]{background:var(--latao);color:#1a1405;
+  border-color:var(--latao)}
+
+/* navegação por âncora */
+.ancoras{display:flex;gap:1px;overflow-x:auto;background:var(--ink-2);
+  scrollbar-width:none}
+.ancoras::-webkit-scrollbar{display:none}
+.ancoras a{color:#9db2c4;text-decoration:none;font-size:12.5px;font-weight:600;
+  padding:9px 14px;white-space:nowrap;border-bottom:2px solid transparent}
+.ancoras a:hover{color:#fff;background:rgba(255,255,255,.05)}
+
+/* ============================================================== exemplo */
+.fita-exemplo{background:repeating-linear-gradient(45deg,var(--latao-fundo),
+  var(--latao-fundo) 10px,transparent 10px,transparent 20px);
+  border:1px dashed var(--latao);border-radius:8px;padding:9px 13px;
+  font-size:12.5px;color:var(--texto2);margin-bottom:12px}
+.fita-exemplo b{color:var(--latao)}
+.marca-exemplo{display:inline-block;font-size:9.5px;letter-spacing:.1em;
+  text-transform:uppercase;font-weight:700;background:var(--latao-fundo);
+  color:var(--latao);border:1px dashed var(--latao);padding:1px 6px;
+  border-radius:4px;vertical-align:2px;margin-left:8px}
+
+/* ======================================================== bloco do score */
+.hero{background:var(--ink);color:#fff;padding-block:30px 0}
+.hero-grade{display:grid;gap:30px;grid-template-columns:minmax(260px,320px) 1fr;
+  align-items:start}
+@media (max-width:860px){ .hero-grade{grid-template-columns:1fr;gap:22px} }
+.hero .rotulo{font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--latao-claro);font-weight:700;margin:0 0 10px}
+.score{display:flex;align-items:baseline;gap:4px}
+.score .n{font-family:var(--serif);font-size:84px;line-height:.82;
+  letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.score .d{font-size:20px;color:#7b93a8;font-weight:500}
+.classe{display:inline-block;margin-top:14px;font-size:13px;font-weight:700;
+  padding:5px 13px;border-radius:30px}
+.c-excelente{background:#1d4a34;color:#86d6ab}
+.c-muitobom{background:#1b4231;color:#7ccfa0}
+.c-bom{background:#3d3a16;color:#e3c875}
+.c-melhorar{background:#46301a;color:#f0b377}
+.c-critico{background:#45201c;color:#f09a8a}
+.delta{font-size:13px;color:#9db2c4;margin-top:12px}
+.delta b.sobe{color:#7ccfa0} .delta b.desce{color:#f09a8a}
+
+/* os oito componentes da nota */
+.comps{display:grid;gap:11px 26px;grid-template-columns:repeat(auto-fit,minmax(215px,1fr))}
+.comp .l{display:flex;justify-content:space-between;align-items:baseline;gap:8px;
+  font-size:12.5px;color:#b3c5d4;margin-bottom:4px}
+.comp .l b{font-size:14px;color:#fff;font-variant-numeric:tabular-nums}
+.comp .l .sd{font-size:11px;color:#6e8498;font-style:italic;font-weight:400}
+.comp .t{height:5px;background:var(--ink-3);border-radius:4px;overflow:hidden}
+.comp .t span{display:block;height:100%;border-radius:4px;transition:width .6s ease}
+.comp .p{font-size:10px;color:#64798c;margin-top:3px}
+
+/* ================================================================== KPIs */
+.kpis{display:grid;gap:1px;background:var(--borda);border:1px solid var(--borda);
+  border-radius:var(--raio);overflow:hidden;
+  grid-template-columns:repeat(auto-fit,minmax(168px,1fr))}
+.kpi{background:var(--superficie);padding:15px 17px}
+.kpi .r{font-size:10px;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--texto2);font-weight:700;display:flex;align-items:center;gap:5px}
+.kpi .v{font-family:var(--serif);font-size:29px;line-height:1.1;margin:7px 0 2px;
+  font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.kpi .c{font-size:12px;color:var(--texto2);display:flex;align-items:center;gap:5px}
+.seta{font-weight:700;font-size:12px}
+.seta.sobe{color:var(--verde)} .seta.desce{color:var(--vermelho)}
+.seta.neutro{color:var(--texto3)}
+/* `risco`, não `alerta`: .alerta já é o cartão de aviso e tem display:flex,
+   que deitava o conteúdo do KPI de lado. */
+.kpi.risco .v{color:var(--vermelho)}
+.kpi.sem .v{color:var(--texto3);font-size:19px;font-family:var(--sans);
+  font-weight:500;margin-top:11px}
+
+/* ================================================================ funil */
+.funil-grade{display:grid;gap:20px;grid-template-columns:1fr 290px}
+@media (max-width:820px){ .funil-grade{grid-template-columns:1fr} }
+.degraus{display:grid;gap:7px}
+.degrau{display:grid;grid-template-columns:150px 1fr 120px;gap:14px;
+  align-items:center;font-size:13.5px}
+.degrau .nome{font-weight:500}
+.degrau .faixa{height:30px;background:var(--borda-sutil);border-radius:6px;
+  overflow:hidden;position:relative}
+.degrau .faixa span{display:block;height:100%;border-radius:6px;
+  background:linear-gradient(90deg,var(--ink-2),var(--azul));
+  transition:width .6s ease}
+.degrau.gargalo .faixa span{background:linear-gradient(90deg,#8a2f24,var(--vermelho))}
+.degrau .fim{text-align:right;font-size:12.5px;color:var(--texto2);
+  font-variant-numeric:tabular-nums}
+.degrau .fim b{color:var(--texto);font-size:16px;font-family:var(--serif)}
+.degrau .conv{display:inline-block;font-size:11px;font-weight:700;padding:1px 6px;
+  border-radius:4px;background:var(--borda-sutil);color:var(--texto2)}
+.degrau.gargalo .conv{background:var(--vermelho-f);color:var(--vermelho)}
+@media (max-width:620px){ .degrau{grid-template-columns:96px 1fr 86px;font-size:12.5px} }
+.caixa-gargalo{background:var(--vermelho-f);border:1px solid var(--vermelho);
+  border-radius:var(--raio);padding:17px}
+.caixa-gargalo .t{font-size:10px;letter-spacing:.13em;text-transform:uppercase;
+  font-weight:700;color:var(--vermelho);margin-bottom:7px}
+.caixa-gargalo .g{font-family:var(--serif);font-size:19px;line-height:1.25;
+  margin-bottom:7px;color:var(--texto)}
+.caixa-gargalo p{margin:0;font-size:13px;color:var(--texto2)}
+
+/* ========================================================= gráficos puros */
+.barras{display:flex;align-items:flex-end;gap:5px;height:140px;padding-top:8px}
+.barras .b{flex:1;display:flex;flex-direction:column;justify-content:flex-end;
+  align-items:center;gap:5px;min-width:0}
+.barras .b .v{width:100%;border-radius:4px 4px 0 0;background:var(--azul);
+  min-height:2px;transition:height .5s ease}
+.barras .b .x{font-size:10px;color:var(--texto3);white-space:nowrap}
+.linha-svg{width:100%;height:150px;display:block}
+.faixas-sla{display:flex;height:32px;border-radius:7px;overflow:hidden}
+.faixas-sla div{display:grid;place-items:center;font-size:11.5px;font-weight:700;
+  color:#fff;min-width:0}
+.legenda{display:flex;flex-wrap:wrap;gap:14px;margin-top:12px;font-size:12px;
+  color:var(--texto2)}
+.legenda i{display:inline-block;width:9px;height:9px;border-radius:2px;
+  margin-right:5px;vertical-align:0}
+
+.mapa-calor{overflow-x:auto}
+.mapa-calor table{border-collapse:separate;border-spacing:3px;margin:0 auto}
+.mapa-calor th,.mapa-calor td{font-size:10px;color:var(--texto3);text-align:center}
+.mapa-calor td.d{text-align:right;padding-right:6px;font-weight:600;
+  color:var(--texto2)}
+.cel{width:22px;height:22px;border-radius:4px;background:var(--borda-sutil)}
+
+/* ================================================================ tabelas */
+table.t{width:100%;border-collapse:collapse;font-size:13.5px}
+table.t th{text-align:left;padding:0 13px 9px;font-size:10px;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--texto2);font-weight:700;white-space:nowrap;
+  border-bottom:1px solid var(--borda)}
+table.t td{padding:11px 13px;border-bottom:1px solid var(--borda-sutil);
+  vertical-align:middle}
+table.t tbody tr:last-child td{border-bottom:none}
+table.t tbody tr:hover td{background:var(--superficie2)}
+.forte{font-weight:600}
+.fraco{font-size:12px;color:var(--texto2)}
+.lead{font-variant-numeric:tabular-nums;font-weight:600;color:var(--azul);
+  text-decoration:none;border-bottom:1px dotted currentColor}
+a.lead:hover{color:var(--latao)}
+.chip{display:inline-block;font-size:11px;font-weight:600;padding:2px 8px;
+  border-radius:5px;background:var(--borda-sutil);color:var(--texto2);
+  white-space:nowrap}
+.chip.v{background:var(--verde-f);color:var(--verde)}
+.chip.a{background:var(--ambar-f);color:var(--ambar)}
+.chip.r{background:var(--vermelho-f);color:var(--vermelho)}
+.nota{display:inline-grid;place-items:center;min-width:42px;height:26px;
+  font-weight:700;font-size:13px;border-radius:7px;font-variant-numeric:tabular-nums}
+.nota.v{background:var(--verde-f);color:var(--verde)}
+.nota.a{background:var(--ambar-f);color:var(--ambar)}
+.nota.r{background:var(--vermelho-f);color:var(--vermelho)}
+
+/* ================================================================= metas */
+.metas{display:grid;gap:1px;background:var(--borda);border:1px solid var(--borda);
+  border-radius:var(--raio);overflow:hidden;
+  grid-template-columns:repeat(auto-fit,minmax(215px,1fr))}
+.meta{background:var(--superficie);padding:15px 17px}
+.meta .r{font-size:12px;font-weight:600;color:var(--texto2);margin-bottom:8px;
+  display:flex;justify-content:space-between;gap:8px}
+.meta .valores{display:flex;align-items:baseline;gap:7px;margin-bottom:9px}
+.meta .real{font-family:var(--serif);font-size:25px;line-height:1;
+  font-variant-numeric:tabular-nums}
+.meta .alvo{font-size:12px;color:var(--texto3)}
+.meta .t{height:6px;background:var(--borda-sutil);border-radius:4px;overflow:hidden}
+.meta .t span{display:block;height:100%;border-radius:4px;transition:width .6s ease}
+.meta.atingida .t span{background:var(--verde)}
+.meta.perto .t span{background:var(--ambar)}
+.meta.longe .t span{background:var(--vermelho)}
+.meta.semdado .real{font-size:15px;font-family:var(--sans);color:var(--texto3);
+  font-weight:500}
+
+/* ============================================================== alertas */
+.alerta{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;
+  border-bottom:1px solid var(--borda-sutil)}
+.alerta:last-child{border-bottom:none}
+.alerta .ic{width:26px;height:26px;border-radius:7px;display:grid;place-items:center;
+  flex:0 0 auto;font-size:13px;font-weight:700}
+.alerta.alto .ic{background:var(--vermelho-f);color:var(--vermelho)}
+.alerta.medio .ic{background:var(--ambar-f);color:var(--ambar)}
+.alerta.info .ic{background:var(--azul-f);color:var(--azul)}
+.alerta .t{font-weight:600;font-size:14px}
+.alerta .d{font-size:13px;color:var(--texto2)}
+
+/* ================================================================ coach */
+.coach{background:linear-gradient(160deg,var(--ink),var(--ink-2));color:#fff;
+  border-radius:var(--raio);padding:26px 28px;box-shadow:var(--sombra2)}
+.coach .cab{display:flex;align-items:center;gap:11px;margin-bottom:17px}
+.coach .cab .av{width:36px;height:36px;border-radius:10px;background:var(--latao);
+  display:grid;place-items:center;font-size:17px}
+.coach .cab b{font-family:var(--serif);font-size:19px;font-weight:600}
+.coach .cab span{display:block;font-size:11.5px;color:#90a6b9}
+.coach-grade{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(245px,1fr))}
+.coach-bloco .r{font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--latao-claro);font-weight:700;margin-bottom:6px}
+.coach-bloco p{margin:0;font-size:13.5px;color:#d4e0ea;line-height:1.55}
+.coach .destaque{background:rgba(184,145,75,.13);border:1px solid rgba(184,145,75,.3);
+  border-radius:10px;padding:15px 17px;margin-top:18px}
+.coach .destaque .r{color:var(--latao-claro)}
+.coach .destaque p{color:#edf3f8}
+
+/* ============================================================= conversas */
+.conv{border-bottom:1px solid var(--borda-sutil)}
+.conv:last-child{border-bottom:none}
+.conv summary{padding:13px 16px;cursor:pointer;display:grid;gap:12px;
+  grid-template-columns:1fr auto auto auto;align-items:center;list-style:none}
+.conv summary::-webkit-details-marker{display:none}
+.conv summary:hover{background:var(--superficie2)}
+.conv[open] summary{background:var(--superficie2);
+  border-bottom:1px solid var(--borda-sutil)}
+.conv .tags{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:4px}
+.corpo{padding:18px;display:grid;gap:18px;
+  grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);background:var(--superficie2)}
+@media (max-width:840px){ .corpo{grid-template-columns:1fr} }
+.corpo h4{margin:0 0 9px;font-size:10px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--texto2);font-weight:700}
+.bolhas{display:flex;flex-direction:column;gap:7px}
+.bolha{padding:8px 12px;border-radius:13px;font-size:13.5px;max-width:88%}
+.b-paciente{background:var(--borda-sutil);border-bottom-left-radius:3px;
+  align-self:flex-start}
+.b-humano{background:var(--ink);color:#fff;border-bottom-right-radius:3px;
+  align-self:flex-end}
+.b-bot{background:var(--azul-f);color:var(--texto2);border:1px dashed var(--borda);
+  align-self:flex-end;border-bottom-right-radius:3px}
+.bolha .c{font-size:10px;letter-spacing:.07em;text-transform:uppercase;opacity:.75;
+  font-weight:700;margin-bottom:2px}
+.audio{display:inline-block;font-size:10px;background:var(--latao);color:#1a1405;
+  padding:1px 5px;border-radius:3px;font-weight:700;margin-left:5px}
+.lista-seca{margin:0;padding-left:17px;font-size:13.5px}
+.lista-seca li{margin-bottom:4px}
+.lista-seca.ruim li{color:var(--vermelho)}
+.lista-seca.boa li{color:var(--verde)}
+.sugestao{background:var(--verde-f);border-radius:9px;padding:12px 14px;
+  font-size:13.5px;margin-top:11px}
+.sugestao .r{font-size:10px;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--verde);font-weight:700;margin-bottom:4px}
+.critico-msg{background:var(--vermelho-f);border-radius:9px;padding:12px 14px;
+  font-size:13px;margin-top:11px;color:var(--vermelho)}
+
+.vazio{padding:34px 20px;text-align:center;color:var(--texto2);font-size:13.5px}
+.vazio b{color:var(--texto);display:block;margin-bottom:4px;font-size:14.5px}
+footer{color:var(--texto2);font-size:12px;padding:30px 0 50px;line-height:1.75;
+  border-top:1px solid var(--borda);margin-top:46px}
+</style>
+</head>
+<body>
+
+<div class="barra">
+  <div class="wrap barra-in">
+    <div class="marca">
+      <div class="selo">R</div>
+      <div><b>Performance do SDR</b><span id="legPeriodo">—</span></div>
+    </div>
+    <div class="grupo" id="gPeriodo" role="group" aria-label="Período"></div>
+    <select id="fOrigem" aria-label="Origem do lead"></select>
+    <select id="fSdr" aria-label="Atendente"></select>
+    <button class="icone" id="bExemplo" aria-pressed="false"
+            title="Mostrar dados de exemplo nas seções sem dado real">EX</button>
+    <button class="icone" id="bTema" aria-pressed="false" title="Tema claro ou escuro">◐</button>
+  </div>
+  <nav class="ancoras wrap" style="padding-top:0;padding-bottom:0">
+    <a href="#sScore">Score</a><a href="#sKpis">Indicadores</a>
+    <a href="#sFunil">Funil</a><a href="#sVelocidade">Velocidade</a>
+    <a href="#sQualidade">Qualidade</a><a href="#sErros">Erros</a>
+    <a href="#sObjecoes">Objeções</a><a href="#sFollow">Follow-up</a>
+    <a href="#sTempo">Evolução</a><a href="#sMapa">Heatmap</a>
+    <a href="#sMetas">Metas</a><a href="#sConversas">Conversas</a>
+    <a href="#sCoach">Coach</a>
+  </nav>
+</div>
+
+<header class="hero" id="sScore">
+  <div class="wrap">
+    <div class="hero-grade">
+      <div>
+        <p class="rotulo">Performance do SDR</p>
+        <div class="score"><span class="n" id="score">—</span><span class="d">/10</span></div>
+        <div id="classe"></div>
+        <div class="delta" id="deltaScore"></div>
+      </div>
+      <div>
+        <p class="rotulo">Como a nota se forma</p>
+        <div class="comps" id="comps"></div>
+      </div>
+    </div>
+    <div id="avisoHero" style="padding:18px 0 26px"></div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section id="sAlertas"></section>
+
+  <section id="sKpis">
+    <h2>Indicadores</h2>
+    <p class="sub">Valor do período escolhido, comparado com o período anterior de mesmo tamanho.</p>
+    <div class="kpis" id="kpis"></div>
+  </section>
+
+  <section id="sFunil">
+    <h2>Funil comercial</h2>
+    <p class="sub">Etapas reais do Kommo agrupadas em sete degraus. Quem chegou a um degrau conta em todos os de cima.</p>
+    <div class="funil-grade">
+      <div class="cartao" style="padding:20px"><div class="degraus" id="degraus"></div></div>
+      <div id="gargalo"></div>
+    </div>
+  </section>
+
+  <section id="sVelocidade">
+    <h2>Velocidade de resposta</h2>
+    <p class="sub">Relógio de expediente: quem escreve de madrugada ou domingo não conta contra o atendente.</p>
+    <div class="cartao" style="padding:20px" id="velocidade"></div>
+  </section>
+
+  <section id="sQualidade">
+    <h2>Qualidade das conversas</h2>
+    <p class="sub">Doze dimensões lidas pela IA em cada atendimento, de 0 a 10.</p>
+    <div id="qualidade"></div>
+  </section>
+
+  <section id="sErros">
+    <h2>Principais oportunidades de melhoria</h2>
+    <p class="sub">Padrões que se repetem nas conversas, em ordem de impacto.</p>
+    <div id="erros"></div>
+  </section>
+
+  <section id="sObjecoes">
+    <h2>Objeções</h2>
+    <p class="sub">O que trava a conversa, com que frequência, e quanto se recupera depois.</p>
+    <div id="objecoes"></div>
+  </section>
+
+  <section id="sFollow">
+    <h2>Follow-up</h2>
+    <p class="sub">Quem precisa de retorno, quem ficou para trás, e quanto o retorno converte.</p>
+    <div id="follow"></div>
+  </section>
+
+  <section id="sTempo">
+    <h2>Evolução no período</h2>
+    <p class="sub">Volume de leads e agendamentos por dia.</p>
+    <div class="cartao" style="padding:20px" id="evolucao"></div>
+  </section>
+
+  <section id="sMapa">
+    <h2>Quando o paciente procura</h2>
+    <p class="sub">Mensagens recebidas por dia da semana e hora. O quadrado mais escuro é o pico.</p>
+    <div class="cartao" style="padding:20px" id="mapa"></div>
+  </section>
+
+  <section id="sMetas">
+    <h2>Metas</h2>
+    <p class="sub">Indicador sem dado aparece como "sem dado" — nunca como 0% atingido, que leria como fracasso em vez de ausência.</p>
+    <div class="metas" id="metas"></div>
+  </section>
+
+  <section id="sConversas">
+    <h2>Conversa a conversa</h2>
+    <p class="sub">Clique para abrir a transcrição, o que pesou na nota e a análise detalhada.</p>
+    <div class="cartao" id="conversas" style="overflow:hidden"></div>
+  </section>
+
+  <section id="sCoach">
+    <div class="coach" id="coach"></div>
+  </section>
+
+  <footer>
+    <b>Como ler.</b> Tempo de resposta conta só mensagem escrita por pessoa — o SalesBot
+    nunca entra na conta — e desconta o período fora de expediente.
+    O funil vem das etapas do Kommo; o tempo de resposta e a qualidade vêm das mensagens.
+    Indicador sem base real aparece marcado, nunca preenchido com estimativa.<br>
+    <b>Versão sem identificação:</b> nome de paciente e texto das conversas não aparecem aqui, por se tratar de dado de saúde — os números são os mesmos da versão interna.<br>Dados atualizados em <span id="pe">—</span>. A página relê sozinha a cada 3 minutos.
+  </footer>
+</main>
+
+<script src="dados_publico.js"></script>
+<script>
+(function(){
+"use strict";
+var DIAS = ["seg","ter","qua","qui","sex","sáb","dom"];
+var D = window.DADOS || {};
+var estado = { dias: 30, origem: "todas", sdr: "todos", exemplo: false };
+
+function esc(s){ return String(s==null?"":s)
+  .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+function el(id){ return document.getElementById(id); }
+function dur(s){
+  if (s == null) return "—";
+  if (s < 90) return Math.round(s)+"s";
+  if (s < 5400) return Math.round(s/60)+"min";
+  if (s < 172800) return (s/3600).toFixed(1).replace(".",",")+"h";
+  return Math.round(s/86400)+"d";
+}
+function n1(v){ return (Math.round(v*10)/10).toString().replace(".",","); }
+function pct(a,b){ return b ? Math.round(1000*a/b)/10 : 0; }
+function classeNota(n){ return n>=8 ? "v" : n>=6 ? "a" : "r"; }
+
+/* O id do lead abre a ficha no Kommo. Na versão sem identificação o id sai do
+   arquivo, então aqui ele simplesmente não aparece — sem link quebrado. */
+function linkLead(id){
+  if (!id) return "";
+  var base = (D.geral || {}).kommo_lead;
+  var texto = "lead " + esc(id);
+  return (base
+    ? '<a class="lead" href="' + esc(base) + esc(id) + '" target="_blank" ' +
+      'rel="noopener" title="Abrir no Kommo">' + texto + '</a>'
+    : '<span class="lead">' + texto + '</span>') + ' · ';
+}
+
+/* ------------------------------------------------------------ filtragem
+   Os 1013 leads vão inteiros no arquivo justamente para o filtro rodar aqui:
+   trocar de período não exige rodar o coletor de novo. */
+function recorte(dias){
+  var ate = Date.now()/1000, de = ate - dias*86400;
+  return { de: de, ate: ate, deAnt: de - dias*86400, ateAnt: de };
+}
+function filtrarLeads(de, ate){
+  return (D.leads||[]).filter(function(l){
+    if (l.t < de || l.t > ate) return false;
+    if (estado.origem !== "todas" && l.o !== estado.origem) return false;
+    if (estado.sdr !== "todos" && l.u !== estado.sdr) return false;
+    return true;
+  });
+}
+function filtrarConversas(de, ate){
+  return (D.conversas||[]).filter(function(c){
+    var t = Date.parse(c.inicio)/1000;
+    return t >= de && t <= ate;
+  });
+}
+
+/* funil a partir dos leads filtrados */
+var ESCADA = D.escada || [];
+var ROTULOS = D.rotulos || {};
+function montarFunil(leads){
+  var conta = {}, perdidos = 0;
+  leads.forEach(function(l){
+    if (l.g === "perdido") { perdidos++; return; }
+    if (l.g === "entrada" || l.g === "?") return;
+    conta[l.g] = (conta[l.g]||0) + 1;
+  });
+  var total = leads.length, soma = 0, acum = {};
+  for (var i = ESCADA.length-1; i >= 0; i--){
+    soma += conta[ESCADA[i]] || 0; acum[ESCADA[i]] = soma;
+  }
+  var f = [{chave:"recebido", rotulo:"Leads recebidos", n:total, conv:null}], ant = total;
+  ESCADA.forEach(function(g){
+    var n = acum[g] || 0;
+    f.push({chave:g, rotulo:ROTULOS[g]||g, n:n, conv: ant ? pct(n,ant) : 0,
+            perdeu: ant - n, pctTotal: pct(n,total)});
+    ant = n;
+  });
+  // Gargalo só sai de degrau com base de verdade: a pior conversão do funil
+  // costuma estar num degrau de 2 leads, e apontar isso manda o gestor
+  // trabalhar onde não há o que ganhar.
+  var garg = null;
+  for (var j = 1; j < f.length; j++){
+    if (f[j-1].n >= 20 && (garg === null || f[j].conv < garg.conv)){
+      garg = {de:f[j-1].rotulo, para:f[j].rotulo, conv:f[j].conv,
+              perdeu:f[j].perdeu, i:j};
+    }
+  }
+  return {funil:f, perdidos:perdidos, total:total,
+          taxaPerda: pct(perdidos,total), gargalo:garg};
+}
+
+/* --------------------------------------------- a nota 0-10, como pedida
+   Componente sem base real NÃO vira zero: sai da conta e o peso é
+   redistribuído entre os que têm dado. Zerar o que não foi medido afunda a
+   nota por ausência de dado, não por desempenho — e aí a nota não significa
+   nada. O cartão mostra quais ficaram de fora. */
+var PESOS = [
+  ["velocidade","Velocidade de resposta",15],
+  ["resposta","Taxa de resposta",10],
+  ["qualidade","Qualidade da conversa",15],
+  ["qualificacao","Qualificação do lead",15],
+  ["agendamento","Conversão para agendamento",20],
+  ["objecoes","Tratamento de objeções",10],
+  ["followup","Follow-up",10],
+  ["crm","Organização no CRM",5]
+];
+function calcularScore(fun, convs, msgs){
+  var v = {};
+  // velocidade: 10 se mediana <= 5 min, cai até 0 em 4h
+  if (msgs.tprMediano != null){
+    var m = msgs.tprMediano/60;
+    v.velocidade = m <= 5 ? 10 : m <= 15 ? 8.5 : m <= 30 ? 7 : m <= 60 ? 5
+                 : m <= 240 ? 3 : 1;
+  }
+  // taxa de resposta: % de conversas com resposta humana
+  if (convs.length) v.resposta = 10 * (convs.filter(function(c){
+    return !c.sem_resposta_humana; }).length / convs.length);
+  // qualidade: média das dimensões da IA (0-100 -> 0-10)
+  var dim = D.dimensoes || {}, ks = Object.keys(dim);
+  if (ks.length) v.qualidade = ks.reduce(function(a,k){ return a+dim[k]; },0)/ks.length/10;
+  // Qualificação e agendamento, do funil real — com duas travas que o primeiro
+  // desenho não tinha e que inflaram a nota para 8/10 num período de zero
+  // respostas:
+  //   1. BASE MÍNIMA. "1 de 1 interessado agendou" virava 100% e nota 10.
+  //      Taxa sobre punhado de lead não é taxa, é coincidência.
+  //   2. QUALIFICAÇÃO SOBRE O TOTAL, não sobre quem entrou no funil. Medir
+  //      só entre os aproveitados esconde justamente o lead descartado, que
+  //      aqui são 70% da base.
+  var BASE_MIN = 20;
+  var passo = {};
+  fun.funil.forEach(function(x){ passo[x.chave] = x; });
+  if (fun.total >= BASE_MIN)
+    v.qualificacao = Math.min(10, (100*passo.qualificado.n/fun.total) / 40 * 10);
+  if (passo.qualificado.n >= BASE_MIN)
+    v.agendamento = Math.min(10, (100*passo.agendado.n/passo.qualificado.n) / 25 * 10);
+  // follow-up: conversas em que o atendente voltou sozinho
+  var comHumano = convs.filter(function(c){ return c.n_humano > 0; });
+  if (comHumano.length) v.followup = 10 * (comHumano.filter(function(c){
+    return c.followups > 0; }).length / comHumano.length);
+  // objeções: precisa da leitura da IA
+  // crm: % de leads que saíram da etapa de entrada
+  if (fun.total >= 10) v.crm = 10 * (1 - (fun.funil[0].n - fun.funil[1].n
+      - fun.perdidos) / Math.max(1, fun.total));
+
+  var somaPeso = 0, somaVal = 0, faltam = [];
+  PESOS.forEach(function(p){
+    if (v[p[0]] == null) { faltam.push(p[1]); return; }
+    somaPeso += p[2]; somaVal += v[p[0]] * p[2];
+  });
+  return { nota: somaPeso ? somaVal/somaPeso : null, partes: v,
+           faltam: faltam, cobertura: somaPeso };
+}
+function classificar(n){
+  if (n == null) return ["—","c-critico"];
+  if (n >= 9) return ["Excelente","c-excelente"];
+  if (n >= 8) return ["Muito bom","c-muitobom"];
+  if (n >= 7) return ["Bom","c-bom"];
+  if (n >= 6) return ["Precisa melhorar","c-melhorar"];
+  return ["Crítico","c-critico"];
+}
+
+/* métricas de mensagem sobre o recorte */
+function metricasMsg(convs){
+  var tprs = convs.filter(function(c){ return c.tpr != null; })
+                  .map(function(c){ return c.tpr; }).sort(function(a,b){ return a-b; });
+  return {
+    tprMediano: tprs.length ? tprs[Math.floor(tprs.length/2)] : null,
+    tprMedio: tprs.length ? tprs.reduce(function(a,b){return a+b;},0)/tprs.length : null,
+    respondidas: convs.filter(function(c){ return !c.sem_resposta_humana; }).length,
+    semResposta: convs.filter(function(c){ return c.sem_resposta_humana; }).length,
+    naoLidas: convs.filter(function(c){ return c.lida === false; }).length,
+    tprs: tprs
+  };
+}
+
+/* ------------------------------------------------------- dados de exemplo
+   Visíveis só com o botão EX ligado, e sempre com a tarja. Servem para ver a
+   forma da seção antes de existir dado — nunca para preencher buraco calado. */
+var EXEMPLO = {
+  dimensoes: {"Personalização":6.2,"Clareza":8.1,"Empatia":7.4,
+    "Investigação":5.1,"Qualificação":5.8,"Gerar valor":6.0,"Condução":6.4,
+    "Objeções":4.9,"Urgência":4.2,"CTA":5.5,"Follow-up":3.8,"Prob. conversão":5.2},
+  erros: [
+    {erro:"Não realizou follow-up", n:32, pctConv:48, impacto:"Alto", prio:"alta"},
+    {erro:"Respondeu de forma genérica", n:21, pctConv:31, impacto:"Alto", prio:"alta"},
+    {erro:"Não investigou a necessidade", n:18, pctConv:27, impacto:"Alto", prio:"alta"},
+    {erro:"Não tratou objeção de preço", n:14, pctConv:21, impacto:"Médio", prio:"media"},
+    {erro:"CTA fraco ou ausente", n:11, pctConv:16, impacto:"Médio", prio:"media"}
+  ],
+  objecoes: [
+    {o:"Preço", n:38, rec:34, conv:12}, {o:"Preciso pensar", n:26, rec:19, conv:8},
+    {o:"Falar com cônjuge", n:17, rec:41, conv:18}, {o:"Distância", n:14, rec:21, conv:7},
+    {o:"Tempo / agenda", n:12, rec:58, conv:25}, {o:"Medo do procedimento", n:9, rec:66, conv:33},
+    {o:"Comparando com outro", n:6, rec:16, conv:0}
+  ],
+  follow: {hoje:14, atrasados:9, sem:23, media:1.8,
+    porNumero:[{n:"1º",conv:11},{n:"2º",conv:19},{n:"3º",conv:24},{n:"4º ou +",conv:9}]}
+};
+
+function tarja(oque){
+  return '<div class="fita-exemplo"><b>Dados de exemplo.</b> ' + oque +
+    ' Nada aqui veio do Kommo — serve para ver o formato da seção. ' +
+    'Desligue no botão <b>EX</b> na barra do topo.</div>';
+}
+function semDado(titulo, porque){
+  return '<div class="cartao"><div class="vazio"><b>' + esc(titulo) + '</b>' +
+    esc(porque) + '<div style="margin-top:9px;font-size:12.5px;color:var(--texto3)">' +
+    'Ligue o botão <b>EX</b> na barra do topo para ver como a seção fica ' +
+    'quando houver dado.</div></div></div>';
+}
+
+/* ====================================================== desenho da tela */
+function pintar(){
+  var r = recorte(estado.dias);
+  var leads = filtrarLeads(r.de, r.ate), leadsAnt = filtrarLeads(r.deAnt, r.ateAnt);
+  var convs = filtrarConversas(r.de, r.ate), convsAnt = filtrarConversas(r.deAnt, r.ateAnt);
+  var fun = montarFunil(leads), funAnt = montarFunil(leadsAnt);
+  var msgs = metricasMsg(convs), msgsAnt = metricasMsg(convsAnt);
+  var sc = calcularScore(fun, convs, msgs);
+  var scAnt = calcularScore(funAnt, convsAnt, msgsAnt);
+  var g = D.geral || {};
+  var passo = {}; fun.funil.forEach(function(x){ passo[x.chave] = x; });
+
+  el("pe").textContent = g.atualizado || "—";
+  el("legPeriodo").textContent = leads.length + " leads · " + convs.length +
+    " conversas no período";
+
+  /* ---------------------------------------------------------- score */
+  el("score").textContent = sc.nota == null ? "—" : n1(sc.nota);
+  var cl = classificar(sc.nota);
+  el("classe").innerHTML = '<span class="classe ' + cl[1] + '">' + cl[0] + '</span>';
+  if (sc.nota != null && scAnt.nota != null){
+    var dd = sc.nota - scAnt.nota;
+    el("deltaScore").innerHTML = 'Período anterior: ' + n1(scAnt.nota) + '/10 · ' +
+      '<b class="' + (dd >= 0 ? "sobe" : "desce") + '">' +
+      (dd >= 0 ? "▲ +" : "▼ ") + n1(dd) + '</b>';
+  } else {
+    el("deltaScore").textContent = "Sem período anterior comparável.";
+  }
+
+  el("comps").innerHTML = PESOS.map(function(p){
+    var v = sc.partes[p[0]];
+    var cor = v == null ? "#425a70"
+            : v >= 8 ? "#4fa87a" : v >= 6 ? "#c9a227" : "#c4604f";
+    return '<div class="comp"><div class="l"><span>' + p[1] + '</span>' +
+      (v == null ? '<span class="sd">sem dado</span>' : '<b>' + n1(v) + '</b>') +
+      '</div><div class="t"><span style="width:' + (v == null ? 0 : v*10) +
+      '%;background:' + cor + '"></span></div>' +
+      '<div class="p">peso ' + p[2] + '%</div></div>';
+  }).join("");
+
+  var av = "";
+  if (sc.faltam.length){
+    av = '<div class="fita-exemplo" style="margin:0"><b>' + sc.faltam.length +
+      ' de 8 componentes sem dado:</b> ' + esc(sc.faltam.join(", ")) + '. ' +
+      'Esses ficaram fora da conta e o peso foi redistribuído — a nota ' +
+      'representa ' + sc.cobertura + '% do modelo, não os 100%. ' +
+      'Zerar o que não foi medido afundaria a nota por ausência de dado.</div>';
+  }
+  el("avisoHero").innerHTML = av;
+
+  /* -------------------------------------------------------- alertas */
+  var alertas = [];
+  if (msgs.naoLidas) alertas.push({n:"alto", t: msgs.naoLidas +
+    " conversa(s) sem ninguém ter aberto",
+    d:"Não é demora, é ausência: ninguém abriu a conversa no Kommo."});
+  if (fun.taxaPerda > 50) alertas.push({n:"alto",
+    t:"Taxa de perda em " + n1(fun.taxaPerda) + "%",
+    d: fun.perdidos + " de " + fun.total + " leads marcados como perdidos no período."});
+  if (funAnt.total >= 20 && fun.taxaPerda - funAnt.taxaPerda > 8)
+    alertas.push({n:"alto", t:"Perda subiu " + n1(fun.taxaPerda-funAnt.taxaPerda) +
+      " pontos", d:"De " + n1(funAnt.taxaPerda) + "% para " + n1(fun.taxaPerda) + "%."});
+  if (msgsAnt.tprMediano && msgs.tprMediano &&
+      (msgs.tprMediano - msgsAnt.tprMediano)/msgsAnt.tprMediano > 0.3)
+    alertas.push({n:"alto", t:"Tempo de primeira resposta subiu " +
+      Math.round(100*(msgs.tprMediano-msgsAnt.tprMediano)/msgsAnt.tprMediano) + "%",
+      d:"De " + dur(msgsAnt.tprMediano) + " para " + dur(msgs.tprMediano) + "."});
+  if (!msgs.respondidas && convs.length) alertas.push({n:"alto",
+    t:"Nenhuma resposta de atendente capturada", d:"Das " + convs.length +
+    " conversas do período, nenhuma teve mensagem escrita por uma pessoa. " +
+    "Enquanto isso durar, qualidade, objeção e follow-up ficam sem base."});
+  el("sAlertas").innerHTML = alertas.length
+    ? '<div class="cartao">' + alertas.map(function(a){
+        return '<div class="alerta ' + a.n + '"><div class="ic">!</div><div>' +
+          '<div class="t">' + esc(a.t) + '</div><div class="d">' + esc(a.d) +
+          '</div></div></div>'; }).join("") + '</div>'
+    : "";
+
+  /* ----------------------------------------------------------- KPIs */
+  function kpi(rot, val, comp, ruim){
+    var c = "";
+    if (comp && comp.ant != null && comp.ant !== 0){
+      var dl = Math.round(1000*(comp.at-comp.ant)/Math.abs(comp.ant))/10;
+      var bom = comp.menorMelhor ? dl < 0 : dl > 0;
+      c = '<span class="seta ' + (dl === 0 ? "neutro" : bom ? "sobe" : "desce") + '">' +
+        (dl > 0 ? "▲ +" : dl < 0 ? "▼ " : "— ") + n1(dl) + '%</span>' +
+        '<span>vs. anterior</span>';
+    } else { c = '<span style="color:var(--texto3)">sem base anterior</span>'; }
+    return '<div class="kpi' + (ruim ? " risco" : "") + '"><div class="r">' + rot +
+      '</div><div class="v">' + val + '</div><div class="c">' + c + '</div></div>';
+  }
+  function kpiSem(rot, porque){
+    return '<div class="kpi sem"><div class="r">' + rot + '</div>' +
+      '<div class="v">sem dado</div><div class="c">' + porque + '</div></div>';
+  }
+  var rec = D.crm && D.crm.receita;
+  el("kpis").innerHTML =
+    kpi("Leads recebidos", fun.total, {at:fun.total, ant:funAnt.total}) +
+    kpi("Conversas", convs.length, {at:convs.length, ant:convsAnt.length}) +
+    kpi("Leads respondidos", msgs.respondidas,
+        {at:msgs.respondidas, ant:msgsAnt.respondidas}, !msgs.respondidas) +
+    kpi("Taxa de resposta", pct(msgs.respondidas, convs.length) + "%",
+        {at:pct(msgs.respondidas,convs.length), ant:pct(msgsAnt.respondidas,convsAnt.length)},
+        pct(msgs.respondidas,convs.length) < 95) +
+    kpi("1ª resposta", dur(msgs.tprMediano),
+        {at:msgs.tprMediano, ant:msgsAnt.tprMediano, menorMelhor:true}) +
+    kpi("Qualificados", passo.qualificado.n,
+        {at:passo.qualificado.n, ant:funAnt.funil[2].n}) +
+    kpi("Agendamentos", passo.agendado.n,
+        {at:passo.agendado.n, ant:funAnt.funil[4].n}, passo.agendado.n === 0) +
+    // Agendamento sobre QUALIFICADOS, não sobre o degrau imediatamente acima:
+    // medir contra "interessados" dava 100% com um único lead.
+    kpi("Taxa de agendamento",
+        passo.qualificado.n >= 20 ? n1(pct(passo.agendado.n, passo.qualificado.n)) + "%" : "—",
+        {at:pct(passo.agendado.n, passo.qualificado.n),
+         ant:pct(funAnt.funil[4].n, funAnt.funil[2].n)},
+        passo.qualificado.n >= 20 && pct(passo.agendado.n, passo.qualificado.n) < 25) +
+    kpi("Compareceram", passo.compareceu.n, {at:passo.compareceu.n, ant:funAnt.funil[5].n}) +
+    kpi("Cirurgias agendadas", passo.vendeu.n, {at:passo.vendeu.n, ant:funAnt.funil[6].n}) +
+    kpi("Leads perdidos", n1(fun.taxaPerda) + "%",
+        {at:fun.taxaPerda, ant:funAnt.taxaPerda, menorMelhor:true}, fun.taxaPerda > 50) +
+    (rec && rec.tem_dado
+      ? kpi("Receita", "R$ " + rec.total.toLocaleString("pt-BR"), null)
+      : kpiSem("Receita", "só " + ((rec&&rec.leads_com_preco)||0) +
+               " lead com valor preenchido no CRM"));
+
+  /* ---------------------------------------------------------- funil */
+  var maxN = fun.funil[0].n || 1;
+  el("degraus").innerHTML = fun.funil.map(function(x,i){
+    var ehG = fun.gargalo && fun.gargalo.i === i;
+    return '<div class="degrau' + (ehG ? " gargalo" : "") + '">' +
+      '<div class="nome">' + esc(x.rotulo) + '</div>' +
+      '<div class="faixa"><span style="width:' +
+        Math.max(1, 100*x.n/maxN) + '%"></span></div>' +
+      '<div class="fim"><b>' + x.n + '</b>' +
+        (x.conv != null ? ' <span class="conv">' + n1(x.conv) + '%</span>' : '') +
+      '</div></div>';
+  }).join("");
+  el("gargalo").innerHTML = fun.gargalo
+    ? '<div class="caixa-gargalo"><div class="t">Maior gargalo</div>' +
+      '<div class="g">' + esc(fun.gargalo.de) + ' → ' + esc(fun.gargalo.para) +
+      '</div><p>Só <b>' + n1(fun.gargalo.conv) + '%</b> avançam. ' +
+      '<b>' + fun.gargalo.perdeu + '</b> lead(s) param aqui — é o degrau mais caro ' +
+      'do funil e onde uma hora de trabalho rende mais.</p>' +
+      '<p style="margin-top:10px">Perda declarada no CRM: <b>' + fun.perdidos +
+      '</b> lead(s), ' + n1(fun.taxaPerda) + '% do período.</p></div>'
+    : '<div class="cartao" style="padding:17px"><p class="sub" style="margin:0">' +
+      'Volume insuficiente para apontar gargalo com segurança.</p></div>';
+
+  /* ----------------------------------------------------- velocidade */
+  var FX = [["até 5 min",0,300],["5 a 15 min",300,900],["15 a 30 min",900,1800],
+            ["30 a 60 min",1800,3600],["mais de 1 hora",3600,1e9]];
+  var CORES = ["#2f7a55","#5a9b6f","#c9a227","#cf7a2c","#a5372a","#7b8894"];
+  var cont = FX.map(function(f){
+    return msgs.tprs.filter(function(t){ return t >= f[1] && t < f[2]; }).length; });
+  cont.push(msgs.semResposta);
+  var somaFx = cont.reduce(function(a,b){ return a+b; },0);
+  el("velocidade").innerHTML = somaFx
+    ? '<div class="faixas-sla">' + cont.map(function(q,i){
+        return q ? '<div style="width:' + (100*q/somaFx) + '%;background:' +
+          CORES[i] + '">' + (100*q/somaFx > 8 ? q : "") + '</div>' : ""; }).join("") +
+      '</div><div class="legenda">' +
+      FX.concat([["sem resposta"]]).map(function(f,i){
+        return '<span><i style="background:' + CORES[i] + '"></i>' + f[0] + ': <b>' +
+          cont[i] + '</b> · ' + n1(100*cont[i]/somaFx) + '%</span>'; }).join("") +
+      '</div>'
+    : '<div class="vazio"><b>Nenhuma primeira resposta medida</b>' +
+      'Nenhuma conversa do período teve resposta de uma pessoa.</div>';
+
+  /* ------------------------------------------------------ qualidade */
+  var dim = D.dimensoes || {}, temDim = Object.keys(dim).length;
+  var usarEx = estado.exemplo && !temDim;
+  var fonte = temDim ? dim : (usarEx ? EXEMPLO.dimensoes : null);
+  el("sQualidade").hidden = false;
+  if (fonte){
+    var ks = Object.keys(fonte);
+    var media = ks.reduce(function(a,k){ return a + (temDim ? fonte[k]/10 : fonte[k]); },0)/ks.length;
+    el("qualidade").innerHTML = (usarEx ? tarja("A IA ainda não leu nenhuma conversa.") : "") +
+      '<div class="cartao" style="padding:20px">' +
+      '<div style="display:flex;align-items:baseline;gap:12px;margin-bottom:18px">' +
+        '<span style="font-family:var(--serif);font-size:38px;line-height:1">' +
+        n1(media) + '</span><span style="color:var(--texto2)">/10 · ' +
+        'Conversation Quality Score</span></div>' +
+      '<div class="comps" style="gap:11px 26px">' + ks.map(function(k){
+        var v = temDim ? fonte[k]/10 : fonte[k];
+        var cor = v >= 8 ? "var(--verde)" : v >= 6 ? "var(--ambar)" : "var(--vermelho)";
+        return '<div class="comp"><div class="l" style="color:var(--texto2)">' +
+          '<span>' + esc(k) + '</span><b style="color:var(--texto)">' + n1(v) +
+          '</b></div><div class="t" style="background:var(--borda-sutil)">' +
+          '<span style="width:' + v*10 + '%;background:' + cor + '"></span></div></div>';
+      }).join("") + '</div></div>';
+  } else {
+    el("qualidade").innerHTML = semDado("A IA ainda não avaliou nenhuma conversa",
+      !msgs.respondidas
+        ? "Não há nenhuma mensagem de atendente para ler: todas as conversas do período seguem sem resposta humana."
+        : "Falta a chave da API no arquivo .env para ligar a leitura conversa a conversa.");
+  }
+
+  /* ---------------------------------------------------------- erros */
+  var usarExErros = estado.exemplo;
+  el("erros").innerHTML = usarExErros
+    ? tarja("Depende da leitura da IA sobre respostas do atendente.") +
+      '<div class="cartao" style="overflow:hidden"><table class="t"><thead><tr>' +
+      '<th>Erro</th><th>Ocorrências</th><th>% das conversas</th><th>Impacto</th>' +
+      '<th>Prioridade</th></tr></thead><tbody>' + EXEMPLO.erros.map(function(e){
+        return '<tr><td class="forte">' + e.erro + '</td><td class="tab">' + e.n +
+          '</td><td class="tab">' + e.pctConv + '%</td><td>' + e.impacto + '</td>' +
+          '<td><span class="chip ' + (e.prio === "alta" ? "r" : "a") + '">' +
+          (e.prio === "alta" ? "Alta" : "Média") + '</span></td></tr>';
+      }).join("") + '</tbody></table></div>'
+    : semDado("Nenhum padrão de erro identificado ainda",
+        "Esta seção lê as respostas do atendente e agrupa o que se repete. Sem mensagem de atendente capturada, não há o que agrupar.");
+
+  /* ------------------------------------------------------- objeções */
+  el("objecoes").innerHTML = estado.exemplo
+    ? tarja("Depende de detectar objeção no texto das respostas.") +
+      '<div class="cartao" style="overflow:hidden"><table class="t"><thead><tr>' +
+      '<th>Objeção</th><th>Ocorrências</th><th>Recuperação</th>' +
+      '<th>Conversão depois</th><th>Situação</th></tr></thead><tbody>' +
+      EXEMPLO.objecoes.map(function(o){
+        var bom = o.rec >= 40;
+        return '<tr><td class="forte">' + o.o + '</td><td class="tab">' + o.n +
+          '</td><td class="tab">' + o.rec + '%</td><td class="tab">' + o.conv +
+          '%</td><td><span class="chip ' + (bom ? "v" : "r") + '">' +
+          (bom ? "tratando bem" : "perdendo") + '</span></td></tr>';
+      }).join("") + '</tbody></table></div>'
+    : semDado("Nenhuma objeção detectada ainda",
+        "Objeção se detecta na conversa, comparando o que o paciente levantou com o que o atendente respondeu.");
+
+  /* ------------------------------------------------------ follow-up */
+  var comH = convs.filter(function(c){ return c.n_humano > 0; });
+  var fups = comH.reduce(function(a,c){ return a + (c.followups||0); }, 0);
+  var esperando = convs.filter(function(c){ return c.sem_resposta_humana; }).length;
+  var parados = convs.filter(function(c){ return c.abandonado; }).length;
+  el("follow").innerHTML = (estado.exemplo && !comH.length ?
+      tarja("Conversão por número de follow-up depende de agendamento registrado.") : "") +
+    '<div class="kpis">' +
+      '<div class="kpi' + (esperando ? " risco" : "") + '"><div class="r">Sem nenhuma resposta</div>' +
+      '<div class="v">' + esperando + '</div><div class="c">precisam de primeiro contato</div></div>' +
+      '<div class="kpi' + (parados ? " risco" : "") + '"><div class="r">Parados no paciente</div>' +
+      '<div class="v">' + parados + '</div><div class="c">o paciente falou por último</div></div>' +
+      '<div class="kpi"><div class="r">Follow-ups feitos</div><div class="v">' + fups +
+      '</div><div class="c">atendente voltou sem o paciente responder</div></div>' +
+      '<div class="kpi"><div class="r">Média por conversa</div><div class="v">' +
+      (comH.length ? n1(fups/comH.length) : "—") +
+      '</div><div class="c">sobre ' + comH.length + ' conversa(s) atendidas</div></div>' +
+    '</div>' +
+    (estado.exemplo && !comH.length
+      ? '<div class="cartao" style="padding:20px;margin-top:12px">' +
+        '<h4 style="margin:0 0 12px;font-size:10px;letter-spacing:.13em;' +
+        'text-transform:uppercase;color:var(--texto2)">Conversão por número de follow-up' +
+        '<span class="marca-exemplo">exemplo</span></h4><div class="barras">' +
+        EXEMPLO.follow.porNumero.map(function(f){
+          return '<div class="b"><div class="v" style="height:' + (f.conv*4) +
+            'px"></div><div class="x">' + f.n + '</div>' +
+            '<div class="x" style="color:var(--texto2);font-weight:600">' +
+            f.conv + '%</div></div>'; }).join("") + '</div></div>'
+      : "");
+
+  /* ------------------------------------------------------- evolução */
+  var porDia = {};
+  leads.forEach(function(l){
+    var k = new Date(l.t*1000).toISOString().slice(0,10);
+    porDia[k] = porDia[k] || {r:0,a:0};
+    porDia[k].r++;
+    if (l.g === "agendado" || l.g === "compareceu" || l.g === "vendeu") porDia[k].a++;
+  });
+  var dias = Object.keys(porDia).sort();
+  var maxDia = Math.max.apply(null, dias.map(function(d){ return porDia[d].r; }).concat([1]));
+  el("evolucao").innerHTML = dias.length
+    ? '<div class="barras" style="height:160px">' + dias.map(function(d){
+        var v = porDia[d];
+        return '<div class="b" title="' + d + ': ' + v.r + ' leads, ' + v.a +
+          ' agendados"><div class="v" style="height:' + (120*v.r/maxDia) +
+          'px"></div><div class="x" style="font-weight:600;color:var(--texto2)">' +
+          v.r + '</div><div class="x">' + d.slice(8,10) + "/" + d.slice(5,7) +
+          '</div></div>'; }).join("") + '</div>' +
+      '<p class="sub" style="margin:14px 0 0">Altura = leads recebidos no dia. ' +
+      'Agendamentos no período: <b>' + passo.agendado.n + '</b>.</p>'
+    : '<div class="vazio">Sem leads no período escolhido.</div>';
+
+  /* ---------------------------------------------------------- mapa */
+  var mp = D.mapa || {}, maxm = 0;
+  Object.keys(mp).forEach(function(k){ if (mp[k] > maxm) maxm = mp[k]; });
+  var hs = []; for (var h = 7; h <= 21; h++) hs.push(h);
+  el("mapa").innerHTML = maxm
+    ? '<div class="mapa-calor"><table><thead><tr><th></th>' + hs.map(function(h){
+        return '<th>' + h + '</th>'; }).join("") + '</tr></thead><tbody>' +
+      DIAS.map(function(d,di){
+        return '<tr><td class="d">' + d + '</td>' + hs.map(function(h){
+          var v = mp[di+"-"+h] || 0, a = v ? (0.18 + 0.82*v/maxm) : 0;
+          return '<td><div class="cel" title="' + d + ' ' + h + 'h: ' + v +
+            ' mensagem(ns)"' + (v ? ' style="background:rgba(43,90,133,' +
+            a.toFixed(2) + ')"' : '') + '></div></td>'; }).join("") + '</tr>';
+      }).join("") + '</tbody></table></div>'
+    : '<div class="vazio">Ainda sem volume de mensagens para desenhar o mapa.</div>';
+
+  /* ---------------------------------------------------------- metas */
+  var metasL = [
+    ["Taxa de resposta", 95, pct(msgs.respondidas, convs.length), "%", false],
+    ["1ª resposta", 5, msgs.tprMediano != null ? Math.round(msgs.tprMediano/60*10)/10 : null, "min", true],
+    ["Qualificação", 40, fun.total >= 20 ? pct(passo.qualificado.n, fun.total) : null, "%", false],
+    ["Agendamento", 25, passo.qualificado.n >= 20 ? pct(passo.agendado.n, passo.qualificado.n) : null, "%", false],
+    ["Comparecimento", 75, passo.agendado.n >= 20 ? passo.compareceu.conv : null, "%", false],
+    ["Conversão final", 20, fun.total >= 20 ? pct(passo.vendeu.n, fun.total) : null, "%", false]
+  ];
+  el("metas").innerHTML = metasL.map(function(m){
+    var rot = m[0], alvo = m[1], real = m[2], un = m[3], menor = m[4];
+    if (real == null){
+      return '<div class="meta semdado"><div class="r"><span>' + rot +
+        '</span><span class="chip">sem dado</span></div><div class="valores">' +
+        '<span class="real">sem base</span></div>' +
+        '<div class="t"><span style="width:0"></span></div></div>';
+    }
+    var at = menor ? (real ? Math.round(100*alvo/real) : 0) : Math.round(100*real/alvo);
+    var st = at >= 100 ? "atingida" : at >= 80 ? "perto" : "longe";
+    return '<div class="meta ' + st + '"><div class="r"><span>' + rot + '</span>' +
+      '<span class="chip ' + (st === "atingida" ? "v" : st === "perto" ? "a" : "r") +
+      '">' + Math.min(at,999) + '%</span></div><div class="valores">' +
+      '<span class="real">' + n1(real) + un + '</span>' +
+      '<span class="alvo">meta ' + (menor ? "< " : "") + alvo + un + '</span></div>' +
+      '<div class="t"><span style="width:' + Math.min(100,at) + '%"></span></div></div>';
+  }).join("");
+
+  /* ------------------------------------------------------ conversas */
+  el("conversas").innerHTML = convs.length ? convs.map(function(c){
+    var bolhas = (c.mensagens||[]).map(function(m){
+      var cls = m.p === "paciente" ? "b-paciente" : m.p === "bot" ? "b-bot" : "b-humano";
+      var quem = m.p === "paciente" ? (m.n || "Paciente")
+               : m.p === "bot" ? "Robô" : (m.n || "Atendente");
+      return '<div class="bolha ' + cls + '"><div class="c">' + esc(quem) + ' · ' +
+        esc(m.h) + (m.a ? '<span class="audio">áudio transcrito</span>' : '') +
+        '</div>' + esc(m.t) + '</div>';
+    }).join("") || '<p class="sub">Sem mensagens guardadas nesta conversa.</p>';
+
+    var tags = [];
+    if (c.lida === false) tags.push(["r","nunca aberta"]);
+    if (c.sem_resposta_humana) tags.push(["r","sem resposta"]);
+    if (c.so_bot) tags.push(["r","só o robô"]);
+    if (c.urgencia) tags.push(["r","urgência"]);
+    if (c.perguntou_preco && !c.ofereceu_agenda) tags.push(["r","valor sem agenda"]);
+    if (c.ofereceu_agenda) tags.push(["v","puxou agenda"]);
+    if (c.n_audio) tags.push(["", c.n_audio + " áudio"]);
+    (c.temas||[]).forEach(function(t){ tags.push(["", t]); });
+
+    var ia = "";
+    if (c.ia){
+      var dd = c.ia.notas || {};
+      ia = '<h4>Análise detalhada</h4>' +
+        (c.ia.resumo ? '<p style="margin:0 0 11px;font-size:13.5px">' +
+          esc(c.ia.resumo) + '</p>' : "") +
+        ((c.ia.fortes||[]).length ? '<h4>Pontos positivos</h4><ul class="lista-seca boa">' +
+          c.ia.fortes.map(function(x){ return '<li>' + esc(x) + '</li>'; }).join("") +
+          '</ul>' : "") +
+        ((c.ia.erros||[]).length ? '<h4 style="margin-top:12px">Pontos a melhorar</h4>' +
+          '<ul class="lista-seca ruim">' + c.ia.erros.map(function(e){
+            return '<li>' + esc(e.o_que) + (e.frase ? ' <span class="fraco">— “' +
+              esc(e.frase) + '”</span>' : "") + '</li>'; }).join("") + '</ul>' : "") +
+        (c.ia.reescrita && c.ia.reescrita.no_lugar_de
+          ? '<div class="critico-msg"><b>Momento crítico:</b> “' +
+            esc(c.ia.reescrita.no_lugar_de) + '”</div>' : "") +
+        (c.ia.reescrita && c.ia.reescrita.escreva
+          ? '<div class="sugestao"><div class="r">Resposta melhor</div>' +
+            esc(c.ia.reescrita.escreva) + '</div>' : "") +
+        (c.ia.risco_conformidade ? '<div class="critico-msg" style="margin-top:9px">' +
+          '<b>Conformidade:</b> ' + esc(c.ia.risco_conformidade) + '</div>' : "");
+    } else if ((c.porques||[]).length){
+      ia = '<h4>O que pesou na nota</h4><ul class="lista-seca ruim">' +
+        c.porques.map(function(p){ return '<li>' + esc(p) + '</li>'; }).join("") + '</ul>';
+    }
+
+    return '<details class="conv"><summary>' +
+      '<div><div class="forte">' + esc(c.paciente) + '</div><div class="fraco">' +
+        linkLead(c.lead) +
+        esc(c.canal) + ' · ' + esc((c.inicio||"").replace("T"," ").slice(5,16)) +
+        ' · ' + c.n_paciente + ' do paciente / ' + c.n_humano + ' do atendente</div></div>' +
+      '<div class="fraco tab">' + dur(c.tpr) + '</div>' +
+      '<span class="nota ' + classeNota(c.nota/10) + '">' + n1(c.nota/10) + '</span>' +
+      '<span class="chip">abrir</span>' +
+      '<div class="tags">' + tags.map(function(t){
+        return '<span class="chip ' + t[0] + '">' + esc(t[1]) + '</span>'; }).join("") +
+      '</div></summary><div class="corpo">' +
+      '<div><h4>A conversa</h4><div class="bolhas">' + bolhas + '</div></div>' +
+      '<div>' + ia + '</div></div></details>';
+  }).join("") : '<div class="vazio"><b>Nenhuma conversa no período</b>' +
+    'Troque o período na barra do topo.</div>';
+
+  /* ---------------------------------------------------------- coach */
+  var bem = [], gargaloTxt = "", corrigir = "", treino = "", metaProx = "", exemploTxt = "";
+  if (!msgs.respondidas && convs.length){
+    gargaloTxt = "Não é velocidade nem técnica: é presença. Das " + convs.length +
+      " conversas do período, nenhuma teve resposta escrita por uma pessoa, e " +
+      msgs.naoLidas + " nem foram abertas no Kommo.";
+    corrigir = "Abrir e responder toda conversa que entra, mesmo que seja para " +
+      "dizer que vai verificar e voltar. Silêncio é a única resposta que o " +
+      "paciente lê como “não querem meu caso”.";
+    treino = "Antes de qualquer treino de abordagem: definir quem responde, em " +
+      "que horário, e o que fazer quando a pessoa responsável está em consulta. " +
+      "Treinar condução com ninguém na conversa é desperdício.";
+    metaProx = "Zero conversa não aberta ao fim do dia, e primeira resposta em " +
+      "até 15 minutos no horário comercial.";
+    exemploTxt = "“Oi, [nome], aqui é do consultório do Dr. Paulo Rauen. Recebi " +
+      "sua mensagem. Para te direcionar certo: é a primeira vez que vai consultar " +
+      "com ele, ou já é paciente?”";
+    if (fun.total) bem.push("O volume de captação está funcionando: " + fun.total +
+      " leads no período, principalmente de Instagram.");
+  } else {
+    if (msgs.tprMediano != null && msgs.tprMediano <= 900)
+      bem.push("Velocidade dentro da meta: " + dur(msgs.tprMediano) + " na mediana.");
+    if (pct(msgs.respondidas, convs.length) >= 90)
+      bem.push("Taxa de resposta alta: " + pct(msgs.respondidas, convs.length) + "% das conversas atendidas.");
+    if (fun.gargalo){
+      gargaloTxt = "A maior perda está entre " + fun.gargalo.de + " e " +
+        fun.gargalo.para + ": só " + n1(fun.gargalo.conv) + "% avançam, " +
+        fun.gargalo.perdeu + " lead(s) param aí.";
+      corrigir = "Trabalhar esse degrau específico rende mais que melhorar " +
+        "qualquer outro número do painel.";
+      treino = "Revisar as conversas que pararam nesse ponto e identificar a " +
+        "mensagem em que o paciente deixou de responder.";
+      metaProx = "Subir a conversão de " + fun.gargalo.de + " → " + fun.gargalo.para +
+        " de " + n1(fun.gargalo.conv) + "% para " + n1(fun.gargalo.conv * 1.5) + "%.";
+    }
+  }
+  if (!bem.length) bem.push("Ainda não há base para apontar um ponto forte com honestidade.");
+
+  el("coach").innerHTML =
+    '<div class="cab"><div class="av">◆</div><div><b>Coach do SDR</b>' +
+      '<span>Leitura do período selecionado</span></div></div>' +
+    '<div class="coach-grade">' +
+      '<div class="coach-bloco"><div class="r">O que está funcionando</div><p>' +
+        bem.map(esc).join(" ") + '</p></div>' +
+      '<div class="coach-bloco"><div class="r">Principal gargalo</div><p>' +
+        esc(gargaloTxt || "Sem volume suficiente para apontar.") + '</p></div>' +
+      '<div class="coach-bloco"><div class="r">Comportamento a corrigir</div><p>' +
+        esc(corrigir || "—") + '</p></div>' +
+      '<div class="coach-bloco"><div class="r">Treinamento recomendado</div><p>' +
+        esc(treino || "—") + '</p></div>' +
+    '</div>' +
+    (metaProx ? '<div class="destaque"><div class="r">Meta para a próxima semana</div>' +
+      '<p>' + esc(metaProx) + '</p></div>' : "") +
+    (exemploTxt ? '<div class="destaque"><div class="r">Exemplo prático de abordagem</div>' +
+      '<p>' + esc(exemploTxt) + '</p></div>' : "");
+}
+
+/* ======================================================== os controles */
+function montarControles(){
+  var ops = [["Hoje",1],["7 dias",7],["30 dias",30],["90 dias",90],["Tudo",3650]];
+  el("gPeriodo").innerHTML = ops.map(function(o){
+    return '<button data-d="' + o[1] + '" aria-pressed="' +
+      (o[1] === estado.dias) + '">' + o[0] + '</button>'; }).join("");
+
+  var origens = {};
+  (D.leads||[]).forEach(function(l){ origens[l.o] = (origens[l.o]||0) + 1; });
+  el("fOrigem").innerHTML = '<option value="todas">Todas as origens</option>' +
+    Object.keys(origens).sort(function(a,b){ return origens[b]-origens[a]; })
+      .map(function(o){ return '<option value="' + esc(o) + '">' + esc(o) +
+        ' (' + origens[o] + ')</option>'; }).join("");
+
+  var us = D.usuarios || {};
+  el("fSdr").innerHTML = '<option value="todos">Todos os atendentes</option>' +
+    Object.keys(us).map(function(u){
+      return '<option value="' + esc(u) + '">' + esc(us[u]) + '</option>'; }).join("");
+}
+
+el("gPeriodo").addEventListener("click", function(ev){
+  var b = ev.target.closest("button[data-d]"); if (!b) return;
+  estado.dias = +b.dataset.d;
+  [].forEach.call(el("gPeriodo").children, function(x){
+    x.setAttribute("aria-pressed", x === b); });
+  pintar();
+});
+el("fOrigem").addEventListener("change", function(e){
+  estado.origem = e.target.value; pintar(); });
+el("fSdr").addEventListener("change", function(e){
+  estado.sdr = e.target.value; pintar(); });
+el("bExemplo").addEventListener("click", function(){
+  estado.exemplo = !estado.exemplo;
+  this.setAttribute("aria-pressed", estado.exemplo); pintar(); });
+el("bTema").addEventListener("click", function(){
+  var escuro = document.documentElement.getAttribute("data-theme") === "dark";
+  document.documentElement.setAttribute("data-theme", escuro ? "light" : "dark");
+  this.setAttribute("aria-pressed", !escuro);
+  try { localStorage.setItem("tema", escuro ? "light" : "dark"); } catch(x){}
+});
+try {
+  var t = localStorage.getItem("tema");
+  if (t){ document.documentElement.setAttribute("data-theme", t);
+          el("bTema").setAttribute("aria-pressed", t === "dark"); }
+} catch(x){}
+
+montarControles();
+pintar();
+
+/* Relê os dados sem recarregar a página, preservando filtro e conversas abertas. */
+setInterval(function(){
+  fetch("dados_publico.js?t=" + Date.now(), {cache:"no-store"})
+    .then(function(r){ return r.ok ? r.text() : null; })
+    .then(function(txt){
+      if (!txt) return;
+      var abertas = [].slice.call(document.querySelectorAll("details.conv[open]"))
+        .map(function(d){ return d.querySelector(".forte").textContent; });
+      (new Function(txt + "; return window.DADOS;"))();
+      D = window.DADOS;
+      montarControles();
+      el("fOrigem").value = estado.origem; el("fSdr").value = estado.sdr;
+      pintar();
+      [].forEach.call(document.querySelectorAll("details.conv"), function(d){
+        if (abertas.indexOf(d.querySelector(".forte").textContent) >= 0) d.open = true;
+      });
+    })
+    .catch(function(){ /* arquivo sendo reescrito: espera o próximo ciclo */ });
+}, 180000);
+})();
+</script>
+</body>
+</html>
