@@ -161,32 +161,15 @@ select option{background:#13293c;color:#fff}
   font-weight:500;margin-top:11px}
 
 /* ================================================================ funil */
-.funil-grade{display:grid;gap:20px;grid-template-columns:1fr 290px}
-@media (max-width:820px){ .funil-grade{grid-template-columns:1fr} }
-.degraus{display:grid;gap:7px}
-.degrau{display:grid;grid-template-columns:150px 1fr 120px;gap:14px;
-  align-items:center;font-size:13.5px}
-.degrau .nome{font-weight:500}
-.degrau .faixa{height:30px;background:var(--borda-sutil);border-radius:6px;
+@media (max-width:820px){   align-items:center;font-size:13.5px}
   overflow:hidden;position:relative}
-.degrau .faixa span{display:block;height:100%;border-radius:6px;
   background:linear-gradient(90deg,var(--ink-2),var(--azul));
   transition:width .6s ease}
-.degrau.gargalo .faixa span{background:linear-gradient(90deg,#8a2f24,var(--vermelho))}
-.degrau .fim{text-align:right;font-size:12.5px;color:var(--texto2);
   font-variant-numeric:tabular-nums}
-.degrau .fim b{color:var(--texto);font-size:16px;font-family:var(--serif)}
-.degrau .conv{display:inline-block;font-size:11px;font-weight:700;padding:1px 6px;
   border-radius:4px;background:var(--borda-sutil);color:var(--texto2)}
-.degrau.gargalo .conv{background:var(--vermelho-f);color:var(--vermelho)}
-@media (max-width:620px){ .degrau{grid-template-columns:96px 1fr 86px;font-size:12.5px} }
-.caixa-gargalo{background:var(--vermelho-f);border:1px solid var(--vermelho);
-  border-radius:var(--raio);padding:17px}
-.caixa-gargalo .t{font-size:10px;letter-spacing:.13em;text-transform:uppercase;
+@media (max-width:620px){   border-radius:var(--raio);padding:17px}
   font-weight:700;color:var(--vermelho);margin-bottom:7px}
-.caixa-gargalo .g{font-family:var(--serif);font-size:19px;line-height:1.25;
   margin-bottom:7px;color:var(--texto)}
-.caixa-gargalo p{margin:0;font-size:13px;color:var(--texto2)}
 
 /* ========================================================= gráficos puros */
 .barras{display:flex;align-items:flex-end;gap:5px;height:140px;padding-top:8px}
@@ -338,7 +321,7 @@ footer{color:var(--texto2);font-size:12px;padding:30px 0 50px;line-height:1.75;
       <div><b>Performance do SDR</b><span id="legPeriodo">—</span></div>
     </div>
     <div class="grupo" id="gPeriodo" role="group" aria-label="Período"></div>
-    <select id="fOrigem" aria-label="Origem do lead"></select>
+    <select id="fOrigem" aria-label="Canal da conversa"></select>
     <select id="fSdr" aria-label="Atendente"></select>
     <button class="icone" id="bExemplo" aria-pressed="false"
             title="Mostrar dados de exemplo nas seções sem dado real">EX</button>
@@ -346,7 +329,7 @@ footer{color:var(--texto2);font-size:12px;padding:30px 0 50px;line-height:1.75;
   </div>
   <nav class="ancoras wrap" style="padding-top:0;padding-bottom:0">
     <a href="#sScore">Score</a><a href="#sKpis">Indicadores</a>
-    <a href="#sFunil">Funil</a><a href="#sVelocidade">Velocidade</a>
+    <a href="#sVelocidade">Velocidade</a>
     <a href="#sQualidade">Qualidade</a><a href="#sErros">Erros</a>
     <a href="#sObjecoes">Objeções</a><a href="#sFollow">Follow-up</a>
     <a href="#sTempo">Evolução</a><a href="#sMapa">Heatmap</a>
@@ -382,15 +365,6 @@ footer{color:var(--texto2);font-size:12px;padding:30px 0 50px;line-height:1.75;
     <div class="kpis" id="kpis"></div>
   </section>
 
-  <section id="sFunil">
-    <h2>Funil comercial</h2>
-    <p class="sub">Etapas reais do Kommo agrupadas em sete degraus. Quem chegou a um degrau conta em todos os de cima.</p>
-    <div class="funil-grade">
-      <div class="cartao" style="padding:20px"><div class="degraus" id="degraus"></div></div>
-      <div id="gargalo"></div>
-    </div>
-  </section>
-
   <section id="sVelocidade">
     <h2>Velocidade de resposta</h2>
     <p class="sub">Relógio de expediente: quem escreve de madrugada ou domingo não conta contra o atendente.</p>
@@ -423,7 +397,7 @@ footer{color:var(--texto2);font-size:12px;padding:30px 0 50px;line-height:1.75;
 
   <section id="sTempo">
     <h2>Evolução no período</h2>
-    <p class="sub">Volume de leads e agendamentos por dia.</p>
+    <p class="sub">Conversas abertas por dia, e quantas tiveram atendimento humano.</p>
     <div class="cartao" style="padding:20px" id="evolucao"></div>
   </section>
 
@@ -499,58 +473,14 @@ function recorte(dias){
   var ate = Date.now()/1000, de = ate - dias*86400;
   return { de: de, ate: ate, deAnt: de - dias*86400, ateAnt: de };
 }
-function filtrarLeads(de, ate){
-  return (D.leads||[]).filter(function(l){
-    if (l.t < de || l.t > ate) return false;
-    if (estado.origem !== "todas" && l.o !== estado.origem) return false;
-    if (estado.sdr !== "todos" && l.u !== estado.sdr) return false;
-    return true;
-  });
-}
 function filtrarConversas(de, ate){
   return (D.conversas||[]).filter(function(c){
     var t = Date.parse(c.inicio)/1000;
-    return t >= de && t <= ate;
+    if (t < de || t > ate) return false;
+    if (estado.origem !== "todas" && (c.canal || "?") !== estado.origem) return false;
+    if (estado.sdr !== "todos" && c.sdr_uid !== estado.sdr) return false;
+    return true;
   });
-}
-
-/* funil a partir dos leads filtrados
-   ESCADA e ROTULOS saem de D na HORA DO USO, não na carga do script. Na
-   versão protegida por senha o D só chega depois de descriptografar: lidos uma
-   vez no início, ficavam vazios para sempre e o funil quebrava procurando um
-   degrau que não existia. */
-function montarFunil(leads){
-  var ESCADA = D.escada || [];
-  var ROTULOS = D.rotulos || {};
-  var conta = {}, perdidos = 0;
-  leads.forEach(function(l){
-    if (l.g === "perdido") { perdidos++; return; }
-    if (l.g === "entrada" || l.g === "?") return;
-    conta[l.g] = (conta[l.g]||0) + 1;
-  });
-  var total = leads.length, soma = 0, acum = {};
-  for (var i = ESCADA.length-1; i >= 0; i--){
-    soma += conta[ESCADA[i]] || 0; acum[ESCADA[i]] = soma;
-  }
-  var f = [{chave:"recebido", rotulo:"Leads recebidos", n:total, conv:null}], ant = total;
-  ESCADA.forEach(function(g){
-    var n = acum[g] || 0;
-    f.push({chave:g, rotulo:ROTULOS[g]||g, n:n, conv: ant ? pct(n,ant) : 0,
-            perdeu: ant - n, pctTotal: pct(n,total)});
-    ant = n;
-  });
-  // Gargalo só sai de degrau com base de verdade: a pior conversão do funil
-  // costuma estar num degrau de 2 leads, e apontar isso manda o gestor
-  // trabalhar onde não há o que ganhar.
-  var garg = null;
-  for (var j = 1; j < f.length; j++){
-    if (f[j-1].n >= 20 && (garg === null || f[j].conv < garg.conv)){
-      garg = {de:f[j-1].rotulo, para:f[j].rotulo, conv:f[j].conv,
-              perdeu:f[j].perdeu, i:j};
-    }
-  }
-  return {funil:f, perdidos:perdidos, total:total,
-          taxaPerda: pct(perdidos,total), gargalo:garg};
 }
 
 /* --------------------------------------------- a nota 0-10, como pedida
@@ -558,17 +488,18 @@ function montarFunil(leads){
    redistribuído entre os que têm dado. Zerar o que não foi medido afunda a
    nota por ausência de dado, não por desempenho — e aí a nota não significa
    nada. O cartão mostra quais ficaram de fora. */
+// Só atendimento. Qualificação de lead, conversão para agendamento e
+// organização no CRM saíram: vinham do funil do Kommo, falavam do resultado
+// comercial e não de como a pessoa atende — e era justamente o que embaralhava
+// a leitura de quem queria olhar o atendimento.
 var PESOS = [
-  ["velocidade","Velocidade de resposta",15],
-  ["resposta","Taxa de resposta",10],
-  ["qualidade","Qualidade da conversa",15],
-  ["qualificacao","Qualificação do lead",15],
-  ["agendamento","Conversão para agendamento",20],
-  ["objecoes","Tratamento de objeções",10],
-  ["followup","Follow-up",10],
-  ["crm","Organização no CRM",5]
+  ["velocidade","Velocidade de resposta",25],
+  ["resposta","Taxa de resposta",20],
+  ["qualidade","Qualidade da conversa",30],
+  ["objecoes","Tratamento de objeções",15],
+  ["followup","Follow-up",10]
 ];
-function calcularScore(fun, convs, msgs){
+function calcularScore(convs, msgs){
   var v = {};
   // velocidade: 10 se mediana <= 5 min, cai até 0 em 4h
   if (msgs.tprMediano != null){
@@ -579,32 +510,15 @@ function calcularScore(fun, convs, msgs){
   // taxa de resposta: % de conversas com resposta humana
   if (convs.length) v.resposta = 10 * (convs.filter(function(c){
     return !c.sem_resposta_humana; }).length / convs.length);
-  // qualidade: média das dimensões da IA (0-100 -> 0-10)
-  var dim = D.dimensoes || {}, ks = Object.keys(dim);
-  if (ks.length) v.qualidade = ks.reduce(function(a,k){ return a+dim[k]; },0)/ks.length/10;
-  // Qualificação e agendamento, do funil real — com duas travas que o primeiro
-  // desenho não tinha e que inflaram a nota para 8/10 num período de zero
-  // respostas:
-  //   1. BASE MÍNIMA. "1 de 1 interessado agendou" virava 100% e nota 10.
-  //      Taxa sobre punhado de lead não é taxa, é coincidência.
-  //   2. QUALIFICAÇÃO SOBRE O TOTAL, não sobre quem entrou no funil. Medir
-  //      só entre os aproveitados esconde justamente o lead descartado, que
-  //      aqui são 70% da base.
-  var BASE_MIN = 20;
-  var passo = {};
-  fun.funil.forEach(function(x){ passo[x.chave] = x; });
-  if (fun.total >= BASE_MIN)
-    v.qualificacao = Math.min(10, (100*passo.qualificado.n/fun.total) / 40 * 10);
-  if (passo.qualificado.n >= BASE_MIN)
-    v.agendamento = Math.min(10, (100*passo.agendado.n/passo.qualificado.n) / 25 * 10);
+  // qualidade e objeções: da leitura do agente, que já olha só a pessoa
+  var IAr = D.ia || {};
+  if (IAr.nota_geral != null) v.qualidade = IAr.nota_geral;
+  var dimObj = (IAr.dimensoes || []).filter(function(d){ return d.chave === "objecoes"; })[0];
+  if (dimObj) v.objecoes = dimObj.nota;
   // follow-up: conversas em que o atendente voltou sozinho
   var comHumano = convs.filter(function(c){ return c.n_humano > 0; });
   if (comHumano.length) v.followup = 10 * (comHumano.filter(function(c){
     return c.followups > 0; }).length / comHumano.length);
-  // objeções: precisa da leitura da IA
-  // crm: % de leads que saíram da etapa de entrada
-  if (fun.total >= 10) v.crm = 10 * (1 - (fun.funil[0].n - fun.funil[1].n
-      - fun.perdidos) / Math.max(1, fun.total));
 
   var somaPeso = 0, somaVal = 0, faltam = [];
   PESOS.forEach(function(p){
@@ -676,18 +590,15 @@ function semDado(titulo, porque){
 /* ====================================================== desenho da tela */
 function pintar(){
   var r = recorte(estado.dias);
-  var leads = filtrarLeads(r.de, r.ate), leadsAnt = filtrarLeads(r.deAnt, r.ateAnt);
   var convs = filtrarConversas(r.de, r.ate), convsAnt = filtrarConversas(r.deAnt, r.ateAnt);
-  var fun = montarFunil(leads), funAnt = montarFunil(leadsAnt);
   var msgs = metricasMsg(convs), msgsAnt = metricasMsg(convsAnt);
-  var sc = calcularScore(fun, convs, msgs);
-  var scAnt = calcularScore(funAnt, convsAnt, msgsAnt);
+  var sc = calcularScore(convs, msgs);
+  var scAnt = calcularScore(convsAnt, msgsAnt);
   var g = D.geral || {};
-  var passo = {}; fun.funil.forEach(function(x){ passo[x.chave] = x; });
 
   el("pe").textContent = g.atualizado || "—";
-  el("legPeriodo").textContent = leads.length + " leads · " + convs.length +
-    " conversas no período";
+  el("legPeriodo").textContent = convs.length + " conversas · " +
+    msgs.respondidas + " atendidas por pessoa";
 
   /* ---------------------------------------------------------- score */
   el("score").textContent = sc.nota == null ? "—" : n1(sc.nota);
@@ -728,12 +639,11 @@ function pintar(){
   if (msgs.naoLidas) alertas.push({n:"alto", t: msgs.naoLidas +
     " conversa(s) sem ninguém ter aberto",
     d:"Não é demora, é ausência: ninguém abriu a conversa no Kommo."});
-  if (fun.taxaPerda > 50) alertas.push({n:"alto",
-    t:"Taxa de perda em " + n1(fun.taxaPerda) + "%",
-    d: fun.perdidos + " de " + fun.total + " leads marcados como perdidos no período."});
-  if (funAnt.total >= 20 && fun.taxaPerda - funAnt.taxaPerda > 8)
-    alertas.push({n:"alto", t:"Perda subiu " + n1(fun.taxaPerda-funAnt.taxaPerda) +
-      " pontos", d:"De " + n1(funAnt.taxaPerda) + "% para " + n1(fun.taxaPerda) + "%."});
+  var paradas = convs.filter(function(c){ return c.abandonado; }).length;
+  if (paradas) alertas.push({n:"alto",
+    t: paradas + " conversa(s) paradas no paciente",
+    d:"O paciente falou por último e ninguém voltou. São as mais baratas de "
+      + "recuperar: a pessoa já demonstrou interesse."});
   if (msgsAnt.tprMediano && msgs.tprMediano &&
       (msgs.tprMediano - msgsAnt.tprMediano)/msgsAnt.tprMediano > 0.3)
     alertas.push({n:"alto", t:"Tempo de primeira resposta subiu " +
@@ -767,59 +677,25 @@ function pintar(){
     return '<div class="kpi sem"><div class="r">' + rot + '</div>' +
       '<div class="v">sem dado</div><div class="c">' + porque + '</div></div>';
   }
-  var rec = D.crm && D.crm.receita;
   el("kpis").innerHTML =
-    kpi("Leads recebidos", fun.total, {at:fun.total, ant:funAnt.total}) +
     kpi("Conversas", convs.length, {at:convs.length, ant:convsAnt.length}) +
-    kpi("Leads respondidos", msgs.respondidas,
+    kpi("Atendidas por pessoa", msgs.respondidas,
         {at:msgs.respondidas, ant:msgsAnt.respondidas}, !msgs.respondidas) +
     kpi("Taxa de resposta", pct(msgs.respondidas, convs.length) + "%",
         {at:pct(msgs.respondidas,convs.length), ant:pct(msgsAnt.respondidas,convsAnt.length)},
         pct(msgs.respondidas,convs.length) < 95) +
     kpi("1ª resposta", dur(msgs.tprMediano),
         {at:msgs.tprMediano, ant:msgsAnt.tprMediano, menorMelhor:true}) +
-    kpi("Qualificados", passo.qualificado.n,
-        {at:passo.qualificado.n, ant:funAnt.funil[2].n}) +
-    kpi("Agendamentos", passo.agendado.n,
-        {at:passo.agendado.n, ant:funAnt.funil[4].n}, passo.agendado.n === 0) +
-    // Agendamento sobre QUALIFICADOS, não sobre o degrau imediatamente acima:
-    // medir contra "interessados" dava 100% com um único lead.
-    kpi("Taxa de agendamento",
-        passo.qualificado.n >= 20 ? n1(pct(passo.agendado.n, passo.qualificado.n)) + "%" : "—",
-        {at:pct(passo.agendado.n, passo.qualificado.n),
-         ant:pct(funAnt.funil[4].n, funAnt.funil[2].n)},
-        passo.qualificado.n >= 20 && pct(passo.agendado.n, passo.qualificado.n) < 25) +
-    kpi("Compareceram", passo.compareceu.n, {at:passo.compareceu.n, ant:funAnt.funil[5].n}) +
-    kpi("Cirurgias agendadas", passo.vendeu.n, {at:passo.vendeu.n, ant:funAnt.funil[6].n}) +
-    kpi("Leads perdidos", n1(fun.taxaPerda) + "%",
-        {at:fun.taxaPerda, ant:funAnt.taxaPerda, menorMelhor:true}, fun.taxaPerda > 50) +
-    (rec && rec.tem_dado
-      ? kpi("Receita", "R$ " + rec.total.toLocaleString("pt-BR"), null)
-      : kpiSem("Receita", "só " + ((rec&&rec.leads_com_preco)||0) +
-               " lead com valor preenchido no CRM"));
-
-  /* ---------------------------------------------------------- funil */
-  var maxN = fun.funil[0].n || 1;
-  el("degraus").innerHTML = fun.funil.map(function(x,i){
-    var ehG = fun.gargalo && fun.gargalo.i === i;
-    return '<div class="degrau' + (ehG ? " gargalo" : "") + '">' +
-      '<div class="nome">' + esc(x.rotulo) + '</div>' +
-      '<div class="faixa"><span style="width:' +
-        Math.max(1, 100*x.n/maxN) + '%"></span></div>' +
-      '<div class="fim"><b>' + x.n + '</b>' +
-        (x.conv != null ? ' <span class="conv">' + n1(x.conv) + '%</span>' : '') +
-      '</div></div>';
-  }).join("");
-  el("gargalo").innerHTML = fun.gargalo
-    ? '<div class="caixa-gargalo"><div class="t">Maior gargalo</div>' +
-      '<div class="g">' + esc(fun.gargalo.de) + ' → ' + esc(fun.gargalo.para) +
-      '</div><p>Só <b>' + n1(fun.gargalo.conv) + '%</b> avançam. ' +
-      '<b>' + fun.gargalo.perdeu + '</b> lead(s) param aqui — é o degrau mais caro ' +
-      'do funil e onde uma hora de trabalho rende mais.</p>' +
-      '<p style="margin-top:10px">Perda declarada no CRM: <b>' + fun.perdidos +
-      '</b> lead(s), ' + n1(fun.taxaPerda) + '% do período.</p></div>'
-    : '<div class="cartao" style="padding:17px"><p class="sub" style="margin:0">' +
-      'Volume insuficiente para apontar gargalo com segurança.</p></div>';
+    kpi("Sem resposta", msgs.semResposta,
+        {at:msgs.semResposta, ant:msgsAnt.semResposta, menorMelhor:true},
+        msgs.semResposta > 0) +
+    kpi("Nunca abertas", msgs.naoLidas,
+        {at:msgs.naoLidas, ant:msgsAnt.naoLidas, menorMelhor:true}, msgs.naoLidas > 0) +
+    kpi("Paradas no paciente",
+        convs.filter(function(c){ return c.abandonado; }).length, null,
+        convs.filter(function(c){ return c.abandonado; }).length > 0) +
+    kpi("Áudios do paciente",
+        convs.reduce(function(a,c){ return a + (c.n_audio||0); }, 0), null);
 
   /* ----------------------------------------------------- velocidade */
   var FX = [["até 5 min",0,300],["5 a 15 min",300,900],["15 a 30 min",900,1800],
@@ -971,25 +847,27 @@ function pintar(){
 
   /* ------------------------------------------------------- evolução */
   var porDia = {};
-  leads.forEach(function(l){
-    var k = new Date(l.t*1000).toISOString().slice(0,10);
-    porDia[k] = porDia[k] || {r:0,a:0};
-    porDia[k].r++;
-    if (l.g === "agendado" || l.g === "compareceu" || l.g === "vendeu") porDia[k].a++;
+  convs.forEach(function(c){
+    var k = (c.inicio || "").slice(0,10);
+    if (!k) return;
+    porDia[k] = porDia[k] || {t:0, r:0};
+    porDia[k].t++;
+    if (!c.sem_resposta_humana) porDia[k].r++;
   });
   var dias = Object.keys(porDia).sort();
-  var maxDia = Math.max.apply(null, dias.map(function(d){ return porDia[d].r; }).concat([1]));
+  var maxDia = Math.max.apply(null, dias.map(function(d){ return porDia[d].t; }).concat([1]));
   el("evolucao").innerHTML = dias.length
     ? '<div class="barras" style="height:160px">' + dias.map(function(d){
         var v = porDia[d];
-        return '<div class="b" title="' + d + ': ' + v.r + ' leads, ' + v.a +
-          ' agendados"><div class="v" style="height:' + (120*v.r/maxDia) +
+        return '<div class="b" title="' + d + ': ' + v.t + ' conversas, ' + v.r +
+          ' atendidas"><div class="v" style="height:' + (120*v.t/maxDia) +
           'px"></div><div class="x" style="font-weight:600;color:var(--texto2)">' +
-          v.r + '</div><div class="x">' + d.slice(8,10) + "/" + d.slice(5,7) +
+          v.t + '</div><div class="x">' + d.slice(8,10) + "/" + d.slice(5,7) +
           '</div></div>'; }).join("") + '</div>' +
-      '<p class="sub" style="margin:14px 0 0">Altura = leads recebidos no dia. ' +
-      'Agendamentos no período: <b>' + passo.agendado.n + '</b>.</p>'
-    : '<div class="vazio">Sem leads no período escolhido.</div>';
+      '<p class="sub" style="margin:14px 0 0">Altura = conversas abertas no dia. ' +
+      'O número em cima é o total; passe o mouse para ver quantas foram atendidas ' +
+      'por uma pessoa.</p>'
+    : '<div class="vazio">Sem conversas no período escolhido.</div>';
 
   /* ---------------------------------------------------------- mapa */
   var mp = D.mapa || {}, maxm = 0;
@@ -1010,11 +888,9 @@ function pintar(){
   /* ---------------------------------------------------------- metas */
   var metasL = [
     ["Taxa de resposta", 95, pct(msgs.respondidas, convs.length), "%", false],
-    ["1ª resposta", 5, msgs.tprMediano != null ? Math.round(msgs.tprMediano/60*10)/10 : null, "min", true],
-    ["Qualificação", 40, fun.total >= 20 ? pct(passo.qualificado.n, fun.total) : null, "%", false],
-    ["Agendamento", 25, passo.qualificado.n >= 20 ? pct(passo.agendado.n, passo.qualificado.n) : null, "%", false],
-    ["Comparecimento", 75, passo.agendado.n >= 20 ? passo.compareceu.conv : null, "%", false],
-    ["Conversão final", 20, fun.total >= 20 ? pct(passo.vendeu.n, fun.total) : null, "%", false]
+    ["1ª resposta", 15, msgs.tprMediano != null ? Math.round(msgs.tprMediano/60*10)/10 : null, "min", true],
+    ["Qualidade da conversa", 7, (D.ia||{}).nota_geral, "", false],
+    ["Conversas sem resposta", 0, msgs.semResposta, "", true]
   ];
   el("metas").innerHTML = metasL.map(function(m){
     var rot = m[0], alvo = m[1], real = m[2], un = m[3], menor = m[4];
@@ -1024,14 +900,15 @@ function pintar(){
         '<span class="real">sem base</span></div>' +
         '<div class="t"><span style="width:0"></span></div></div>';
     }
-    var at = menor ? (real ? Math.round(100*alvo/real) : 0) : Math.round(100*real/alvo);
+    var at = menor ? (real ? Math.round(100*alvo/real) : 100) : Math.round(100*real/alvo);
+    if (menor && alvo === 0) at = real === 0 ? 100 : 0;
     var st = at >= 100 ? "atingida" : at >= 80 ? "perto" : "longe";
     return '<div class="meta ' + st + '"><div class="r"><span>' + rot + '</span>' +
       '<span class="chip ' + (st === "atingida" ? "v" : st === "perto" ? "a" : "r") +
       '">' + Math.min(at,999) + '%</span></div><div class="valores">' +
       '<span class="real">' + n1(real) + un + '</span>' +
-      '<span class="alvo">meta ' + (menor ? "< " : "") + alvo + un + '</span></div>' +
-      '<div class="t"><span style="width:' + Math.min(100,at) + '%"></span></div></div>';
+      '<span class="alvo">meta ' + (menor ? "≤ " : "") + alvo + un + '</span></div>' +
+      '<div class="t"><span style="width:' + Math.min(100,Math.max(0,at)) + '%"></span></div></div>';
   }).join("");
 
   /* ------------------------------------------------------ conversas */
@@ -1163,24 +1040,12 @@ function pintar(){
     exemploTxt = "“Oi, [nome], aqui é do consultório do Dr. Paulo Rauen. Recebi " +
       "sua mensagem. Para te direcionar certo: é a primeira vez que vai consultar " +
       "com ele, ou já é paciente?”";
-    if (fun.total) bem.push("O volume de captação está funcionando: " + fun.total +
-      " leads no período, principalmente de Instagram.");
   } else {
     if (msgs.tprMediano != null && msgs.tprMediano <= 900)
       bem.push("Velocidade dentro da meta: " + dur(msgs.tprMediano) + " na mediana.");
     if (pct(msgs.respondidas, convs.length) >= 90)
       bem.push("Taxa de resposta alta: " + pct(msgs.respondidas, convs.length) + "% das conversas atendidas.");
-    if (fun.gargalo){
-      gargaloTxt = "A maior perda está entre " + fun.gargalo.de + " e " +
-        fun.gargalo.para + ": só " + n1(fun.gargalo.conv) + "% avançam, " +
-        fun.gargalo.perdeu + " lead(s) param aí.";
-      corrigir = "Trabalhar esse degrau específico rende mais que melhorar " +
-        "qualquer outro número do painel.";
-      treino = "Revisar as conversas que pararam nesse ponto e identificar a " +
-        "mensagem em que o paciente deixou de responder.";
-      metaProx = "Subir a conversão de " + fun.gargalo.de + " → " + fun.gargalo.para +
-        " de " + n1(fun.gargalo.conv) + "% para " + n1(fun.gargalo.conv * 1.5) + "%.";
-    }
+    gargaloTxt = "Sem leitura do agente ainda para apontar o gargalo.";
   }
   if (!bem.length) bem.push("Ainda não há base para apontar um ponto forte com honestidade.");
 
@@ -1190,7 +1055,7 @@ function pintar(){
     '<div class="coach-grade">' +
       '<div class="coach-bloco"><div class="r">O que está funcionando</div><p>' +
         bem.map(esc).join(" ") + '</p></div>' +
-      '<div class="coach-bloco"><div class="r">Principal gargalo</div><p>' +
+      '<div class="coach-bloco"><div class="r">Onde está perdendo</div><p>' +
         esc(gargaloTxt || "Sem volume suficiente para apontar.") + '</p></div>' +
       '<div class="coach-bloco"><div class="r">Comportamento a corrigir</div><p>' +
         esc(corrigir || "—") + '</p></div>' +
@@ -1211,8 +1076,11 @@ function montarControles(){
       (o[1] === estado.dias) + '">' + o[0] + '</button>'; }).join("");
 
   var origens = {};
-  (D.leads||[]).forEach(function(l){ origens[l.o] = (origens[l.o]||0) + 1; });
-  el("fOrigem").innerHTML = '<option value="todas">Todas as origens</option>' +
+  // Canal da CONVERSA, não origem do lead: o filtro agora serve para olhar
+  // o atendimento de um canal por vez, que é a pergunta que sobra.
+  (D.conversas||[]).forEach(function(c){
+    var k = c.canal || "?"; origens[k] = (origens[k]||0) + 1; });
+  el("fOrigem").innerHTML = '<option value="todas">Todos os canais</option>' +
     Object.keys(origens).sort(function(a,b){ return origens[b]-origens[a]; })
       .map(function(o){ return '<option value="' + esc(o) + '">' + esc(o) +
         ' (' + origens[o] + ')</option>'; }).join("");
