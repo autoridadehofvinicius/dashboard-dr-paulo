@@ -25281,7 +25281,7 @@ window.DADOS = {
     "conducao": 30
    },
    "porques": [
-    "maior silêncio no meio da conversa: 3 dias",
+    "maior silêncio no meio da conversa: 3 Paciente XB",
     "ninguém puxou para agendamento",
     "paciente perguntou valor e a conversa morreu ali"
    ],
@@ -42309,8 +42309,8 @@ window.DADOS = {
     "conducao": 70
    },
    "porques": [
-    "primeira resposta em 5 dias de expediente (meta: 15 min)",
-    "maior silêncio no meio da conversa: 5 dias",
+    "primeira resposta em 5 Paciente XB de expediente (meta: 15 min)",
+    "maior silêncio no meio da conversa: 5 Paciente XB",
     "ninguém puxou para agendamento"
    ],
    "sdr": "Equipe (pelo app do celular)"
@@ -44018,8 +44018,8 @@ window.DADOS = {
     "conducao": 50
    },
    "porques": [
-    "primeira resposta em 2 dias de expediente (meta: 15 min)",
-    "maior silêncio no meio da conversa: 2 dias",
+    "primeira resposta em 2 Paciente XB de expediente (meta: 15 min)",
+    "maior silêncio no meio da conversa: 2 Paciente XB",
     "ninguém puxou para agendamento",
     "paciente sinalizou urgência e esperou mais de 30 min"
    ],
@@ -44136,8 +44136,8 @@ window.DADOS = {
     "conducao": 70
    },
    "porques": [
-    "primeira resposta em 3 dias de expediente (meta: 15 min)",
-    "maior silêncio no meio da conversa: 3 dias",
+    "primeira resposta em 3 Paciente XB de expediente (meta: 15 min)",
+    "maior silêncio no meio da conversa: 3 Paciente XB",
     "ninguém puxou para agendamento"
    ],
    "sdr": "Equipe (pelo app do celular)"
@@ -46473,9 +46473,9 @@ window.DADOS = {
     "conducao": 20
    },
    "porques": [
-    "primeira resposta em 4 dias de expediente (meta: 15 min)",
+    "primeira resposta em 4 Paciente XB de expediente (meta: 15 min)",
     "paciente falou por último há 45h e ninguém voltou",
-    "maior silêncio no meio da conversa: 4 dias",
+    "maior silêncio no meio da conversa: 4 Paciente XB",
     "ninguém puxou para agendamento",
     "paciente perguntou valor e a conversa morreu ali",
     "paciente sinalizou urgência e esperou mais de 30 min"
@@ -46537,8 +46537,8 @@ window.DADOS = {
     "conducao": 55
    },
    "porques": [
-    "primeira resposta em 7 dias de expediente (meta: 15 min)",
-    "maior silêncio no meio da conversa: 7 dias",
+    "primeira resposta em 7 Paciente XB de expediente (meta: 15 min)",
+    "maior silêncio no meio da conversa: 7 Paciente XB",
     "ninguém puxou para agendamento",
     "uma única mensagem do atendente para várias do paciente"
    ],
@@ -49449,7 +49449,7 @@ window.DADOS = {
    },
    "porques": [
     "primeira resposta em 2,1h de expediente (meta: 15 min)",
-    "maior silêncio no meio da conversa: 4 dias"
+    "maior silêncio no meio da conversa: 4 Paciente XB"
    ],
    "sdr": "Atendimento"
   },
@@ -58005,7 +58005,7 @@ window.DADOS = {
     "conducao": 70
    },
    "porques": [
-    "maior silêncio no meio da conversa: 5 dias",
+    "maior silêncio no meio da conversa: 5 Paciente XB",
     "ninguém puxou para agendamento"
    ],
    "sdr": "Equipe (pelo app do celular)"
@@ -58824,8 +58824,8 @@ window.DADOS = {
     "conducao": 100
    },
    "porques": [
-    "primeira resposta em 4 dias de expediente (meta: 15 min)",
-    "maior silêncio no meio da conversa: 4 dias"
+    "primeira resposta em 4 Paciente XB de expediente (meta: 15 min)",
+    "maior silêncio no meio da conversa: 4 Paciente XB"
    ],
    "sdr": "Equipe (pelo app do celular)"
   },
@@ -61157,8 +61157,8 @@ window.DADOS = {
     "conducao": 70
    },
    "porques": [
-    "primeira resposta em 4 dias de expediente (meta: 15 min)",
-    "maior silêncio no meio da conversa: 4 dias",
+    "primeira resposta em 4 Paciente XB de expediente (meta: 15 min)",
+    "maior silêncio no meio da conversa: 4 Paciente XB",
     "ninguém puxou para agendamento"
    ],
    "sdr": "Equipe (pelo app do celular)"
@@ -68796,8 +68796,8 @@ window.DADOS = {
     "conducao": 45
    },
    "porques": [
-    "primeira resposta em 2 dias de expediente (meta: 15 min)",
-    "maior silêncio no meio da conversa: 2 dias",
+    "primeira resposta em 2 Paciente XB de expediente (meta: 15 min)",
+    "maior silêncio no meio da conversa: 2 Paciente XB",
     "ninguém puxou para agendamento",
     "uma única mensagem do atendente para várias do paciente"
    ],
@@ -70759,8 +70759,8 @@ window.DADOS = {
     "conducao": 100
    },
    "porques": [
-    "primeira resposta em 3 dias de expediente (meta: 15 min)",
-    "maior silêncio no meio da conversa: 3 dias"
+    "primeira resposta em 3 Paciente XB de expediente (meta: 15 min)",
+    "maior silêncio no meio da conversa: 3 Paciente XB"
    ],
    "sdr": "Atendimento"
   },
@@ -72379,7 +72379,7 @@ window.DADOS = {
    },
    "porques": [
     "primeira resposta em 1,8h de expediente (meta: 15 min)",
-    "maior silêncio no meio da conversa: 2 dias",
+    "maior silêncio no meio da conversa: 2 Paciente XB",
     "ninguém puxou para agendamento",
     "paciente perguntou valor e a conversa morreu ali"
    ],
@@ -73876,7 +73876,7 @@ window.DADOS = {
    },
    "porques": [
     "primeira resposta em 43,1h de expediente (meta: 15 min)",
-    "maior silêncio no meio da conversa: 2 dias",
+    "maior silêncio no meio da conversa: 2 Paciente XB",
     "ninguém puxou para agendamento",
     "paciente sinalizou urgência e esperou mais de 30 min"
    ],
@@ -81250,7 +81250,7 @@ window.DADOS = {
    },
    "porques": [
     "primeira resposta em 9,7h de expediente (meta: 15 min)",
-    "maior silêncio no meio da conversa: 2 dias"
+    "maior silêncio no meio da conversa: 2 Paciente XB"
    ],
    "sdr": "Atendimento"
   },
@@ -85092,7 +85092,7 @@ window.DADOS = {
    },
    "porques": [
     "primeira resposta em 49min de expediente (meta: 15 min)",
-    "maior silêncio no meio da conversa: 2 dias",
+    "maior silêncio no meio da conversa: 2 Paciente XB",
     "ninguém puxou para agendamento"
    ],
    "sdr": "Atendimento"
@@ -85399,7 +85399,7 @@ window.DADOS = {
    },
    "porques": [
     "primeira resposta em 14,3h de expediente (meta: 15 min)",
-    "maior silêncio no meio da conversa: 2 dias"
+    "maior silêncio no meio da conversa: 2 Paciente XB"
    ],
    "sdr": "Atendimento"
   },
@@ -93983,7 +93983,7 @@ window.DADOS = {
    },
    "porques": [
     "primeira resposta em 43,0h de expediente (meta: 15 min)",
-    "maior silêncio no meio da conversa: 3 dias",
+    "maior silêncio no meio da conversa: 3 Paciente XB",
     "ninguém puxou para agendamento",
     "paciente perguntou valor e a conversa morreu ali"
    ],
@@ -100993,8 +100993,8 @@ window.DADOS = {
     "conducao": 50
    },
    "porques": [
-    "primeira resposta em 2 dias de expediente (meta: 15 min)",
-    "maior silêncio no meio da conversa: 2 dias",
+    "primeira resposta em 2 Paciente XB de expediente (meta: 15 min)",
+    "maior silêncio no meio da conversa: 2 Paciente XB",
     "ninguém puxou para agendamento",
     "paciente sinalizou urgência e esperou mais de 30 min"
    ],
@@ -108585,8 +108585,8 @@ window.DADOS = {
     "conducao": 60
    },
    "porques": [
-    "primeira resposta em 2 dias de expediente (meta: 15 min)",
-    "maior silêncio no meio da conversa: 2 dias",
+    "primeira resposta em 2 Paciente XB de expediente (meta: 15 min)",
+    "maior silêncio no meio da conversa: 2 Paciente XB",
     "ninguém puxou para agendamento"
    ],
    "sdr": "Equipe (pelo app do celular)"
@@ -118324,8 +118324,8 @@ window.DADOS = {
     "conducao": 70
    },
    "porques": [
-    "primeira resposta em 2 dias de expediente (meta: 15 min)",
-    "maior silêncio no meio da conversa: 2 dias",
+    "primeira resposta em 2 Paciente XB de expediente (meta: 15 min)",
+    "maior silêncio no meio da conversa: 2 Paciente XB",
     "ninguém puxou para agendamento"
    ],
    "sdr": "Equipe (pelo app do celular)"
@@ -131003,8 +131003,8 @@ window.DADOS = {
     "conducao": 70
    },
    "porques": [
-    "primeira resposta em 2 dias de expediente (meta: 15 min)",
-    "maior silêncio no meio da conversa: 2 dias",
+    "primeira resposta em 2 Paciente XB de expediente (meta: 15 min)",
+    "maior silêncio no meio da conversa: 2 Paciente XB",
     "ninguém puxou para agendamento"
    ],
    "sdr": "Atendimento"
@@ -131359,8 +131359,8 @@ window.DADOS = {
     "conducao": 70
    },
    "porques": [
-    "primeira resposta em 2 dias de expediente (meta: 15 min)",
-    "maior silêncio no meio da conversa: 2 dias",
+    "primeira resposta em 2 Paciente XB de expediente (meta: 15 min)",
+    "maior silêncio no meio da conversa: 2 Paciente XB",
     "ninguém puxou para agendamento"
    ],
    "sdr": "Equipe (pelo app do celular)"
@@ -131418,8 +131418,8 @@ window.DADOS = {
     "conducao": 70
    },
    "porques": [
-    "primeira resposta em 2 dias de expediente (meta: 15 min)",
-    "maior silêncio no meio da conversa: 2 dias",
+    "primeira resposta em 2 Paciente XB de expediente (meta: 15 min)",
+    "maior silêncio no meio da conversa: 2 Paciente XB",
     "ninguém puxou para agendamento"
    ],
    "sdr": "Equipe (pelo app do celular)"
@@ -147415,22 +147415,22 @@ window.DADOS = {
   {
    "peso": "critico",
    "t": "102 atendimento(s) com risco de conformidade",
-   "d": "Frase do atendente prometendo resultado, dando conduta ou garantindo prazo. Em consultório médico isso responde pelo CRM do Dr. Paulo, não pelo atendente. Veja a frase exata na conversa: Paciente BC, Paciente BWC, Paciente BSR, Paciente AEN."
+   "d": "Frase do atendente prometendo resultado, dando conduta ou garantindo prazo. Em consultório médico isso responde pelo CRM do Dr. Paciente BC, não pelo atendente. Veja a frase exata na conversa: Paciente BC, Paciente BWC, Paciente BSR Paciente AIM, Paciente AEN."
   },
   {
    "peso": "critico",
    "t": "8 conversa(s) sem resposta nenhuma",
-   "d": "Nem pessoa nem robô responderam, e ninguém encerrou a conversa no Kommo. A mais antiga espera 293h."
+   "d": "Nem Paciente ACM nem robô responderam, e ninguém encerrou a conversa no Kommo. A mais antiga espera 293h."
   },
   {
    "peso": "critico",
    "t": "79 paciente(s) com sinal de urgência esperaram mais de 30 min",
-   "d": "Mensagem com dor, piora de visão ou 'não enxergo' não pode entrar na mesma fila das demais. Vale uma regra no Kommo que destaque essas palavras assim que chegam."
+   "d": "Mensagem com dor, piora de visão ou 'não enxergo' não pode entrar na mesma fila das demais. Paciente GE uma regra no Kommo que Paciente AGZ essas palavras assim que chegam."
   },
   {
    "peso": "alto",
    "t": "750 de 2064 conversas atendidas só pelo robô",
-   "d": "36% dos pacientes receberam resposta automática e nenhuma pessoa entrou depois. O robô segura o primeiro contato; quem agenda é gente."
+   "d": "36% dos pacientes receberam resposta automática e nenhuma Paciente ACM entrou depois. O robô segura o primeiro contato; quem agenda é gente."
   },
   {
    "peso": "alto",
@@ -147440,7 +147440,7 @@ window.DADOS = {
   {
    "peso": "alto",
    "t": "85 conversa(s) paradas no paciente",
-   "d": "O paciente falou por último e ninguém voltou. A pior é Paciente AFF (293h). Essas são as mais baratas de recuperar: a pessoa já demonstrou interesse e está esperando."
+   "d": "O paciente falou por último e ninguém voltou. A pior é Paciente AFF (293h). Essas são as mais baratas de recuperar: a Paciente ACM já demonstrou interesse e Paciente BHX esperando."
   },
   {
    "peso": "alto",
@@ -147450,12 +147450,12 @@ window.DADOS = {
   {
    "peso": "medio",
    "t": "1149 atendimento(s) sem nenhuma oferta de horário",
-   "d": "Conversa que informa mas não convida não fecha agenda. Toda resposta deveria terminar oferecendo dois horários concretos, não um 'qualquer dúvida estou à disposição'."
+   "d": "Conversa que informa mas não Paciente DA não fecha agenda. Toda resposta deveria terminar oferecendo dois horários concretos, não um 'qualquer dúvida estou à disposição'."
   },
   {
    "peso": "medio",
    "t": "O buraco do dia é às 4h",
-   "d": "Mediana de 6,5h para a primeira resposta nesse horário, sobre 11 atendimento(s). Se a demanda ali é constante, é escala, não esforço: ninguém melhora sozinho um horário em que não tem gente."
+   "d": "Mediana de 6,5h para a primeira resposta nesse horário, sobre 11 atendimento(s). Se a demanda ali é Paciente APU, é escala, não esforço: ninguém melhora sozinho um horário em que não tem gente."
   },
   {
    "peso": "info",
