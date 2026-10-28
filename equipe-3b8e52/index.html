@@ -649,9 +649,12 @@ function metricasMsg(convs){
   return {
     tprMediano: tprs.length ? tprs[Math.floor(tprs.length/2)] : null,
     tprMedio: tprs.length ? tprs.reduce(function(a,b){return a+b;},0)/tprs.length : null,
-    respondidas: convs.filter(function(c){ return !c.sem_resposta_humana; }).length,
-    semResposta: convs.filter(function(c){ return c.sem_resposta_humana; }).length,
-    naoLidas: convs.filter(function(c){ return c.lida === false; }).length,
+    // respondida = pessoa OU robô respondeu depois do paciente
+    respondidas: convs.filter(function(c){ return c.respondida; }).length,
+    porPessoa: convs.filter(function(c){ return !c.sem_resposta_humana; }).length,
+    soRobo: convs.filter(function(c){ return c.so_bot; }).length,
+    semResposta: convs.filter(function(c){ return c.sem_resposta; }).length,
+    naoLidas: convs.filter(function(c){ return c.lida === false && c.sem_resposta; }).length,
     tprs: tprs
   };
 }
@@ -784,12 +787,14 @@ function pintar(){
   }
   el("kpis").innerHTML =
     kpi("Conversas", convs.length, {at:convs.length, ant:convsAnt.length}) +
-    kpi("Atendidas por pessoa", msgs.respondidas,
-        {at:msgs.respondidas, ant:msgsAnt.respondidas}, !msgs.respondidas) +
     kpi("Taxa de resposta", pct(msgs.respondidas, convs.length) + "%",
         {at:pct(msgs.respondidas,convs.length), ant:pct(msgsAnt.respondidas,convsAnt.length)},
         pct(msgs.respondidas,convs.length) < 95) +
-    kpi("1ª resposta", dur(msgs.tprMediano),
+    kpi("Atendidas por pessoa", msgs.porPessoa,
+        {at:msgs.porPessoa, ant:msgsAnt.porPessoa}, !msgs.porPessoa) +
+    kpi("Só o robô respondeu", msgs.soRobo,
+        {at:msgs.soRobo, ant:msgsAnt.soRobo, menorMelhor:true}) +
+    kpi("1ª resposta humana", dur(msgs.tprMediano),
         {at:msgs.tprMediano, ant:msgsAnt.tprMediano, menorMelhor:true}) +
     kpi("Sem resposta", msgs.semResposta,
         {at:msgs.semResposta, ant:msgsAnt.semResposta, menorMelhor:true},
@@ -805,17 +810,17 @@ function pintar(){
   /* ----------------------------------------------------- velocidade */
   var FX = [["até 5 min",0,300],["5 a 15 min",300,900],["15 a 30 min",900,1800],
             ["30 a 60 min",1800,3600],["mais de 1 hora",3600,1e9]];
-  var CORES = ["#2f7a55","#5a9b6f","#c9a227","#cf7a2c","#a5372a","#7b8894"];
+  var CORES = ["#2f7a55","#5a9b6f","#c9a227","#cf7a2c","#a5372a","#7b8894","#3b3f45"];
   var cont = FX.map(function(f){
     return msgs.tprs.filter(function(t){ return t >= f[1] && t < f[2]; }).length; });
-  cont.push(msgs.semResposta);
+  cont.push(msgs.soRobo, msgs.semResposta);
   var somaFx = cont.reduce(function(a,b){ return a+b; },0);
   el("velocidade").innerHTML = somaFx
     ? '<div class="faixas-sla">' + cont.map(function(q,i){
         return q ? '<div style="width:' + (100*q/somaFx) + '%;background:' +
           CORES[i] + '">' + (100*q/somaFx > 8 ? q : "") + '</div>' : ""; }).join("") +
       '</div><div class="legenda">' +
-      FX.concat([["sem resposta"]]).map(function(f,i){
+      FX.concat([["só o robô (sem pessoa)"],["sem resposta nenhuma"]]).map(function(f,i){
         return '<span><i style="background:' + CORES[i] + '"></i>' + f[0] + ': <b>' +
           cont[i] + '</b> · ' + n1(100*cont[i]/somaFx) + '%</span>'; }).join("") +
       '</div>'
@@ -923,7 +928,7 @@ function pintar(){
   /* ------------------------------------------------------ follow-up */
   var comH = convs.filter(function(c){ return c.n_humano > 0; });
   var fups = comH.reduce(function(a,c){ return a + (c.followups||0); }, 0);
-  var esperando = convs.filter(function(c){ return c.sem_resposta_humana; }).length;
+  var esperando = convs.filter(function(c){ return c.sem_resposta; }).length;
   var parados = convs.filter(function(c){ return c.abandonado; }).length;
   el("follow").innerHTML = (estado.exemplo && !comH.length ?
       tarja("Conversão por número de follow-up depende de agendamento registrado.") : "") +
@@ -957,7 +962,7 @@ function pintar(){
     if (!k) return;
     porDia[k] = porDia[k] || {t:0, r:0};
     porDia[k].t++;
-    if (!c.sem_resposta_humana) porDia[k].r++;
+    if (c.respondida) porDia[k].r++;
   });
   var dias = Object.keys(porDia).sort();
   var maxDia = Math.max.apply(null, dias.map(function(d){ return porDia[d].t; }).concat([1]));
@@ -970,8 +975,8 @@ function pintar(){
           v.t + '</div><div class="x">' + d.slice(8,10) + "/" + d.slice(5,7) +
           '</div></div>'; }).join("") + '</div>' +
       '<p class="sub" style="margin:14px 0 0">Altura = conversas abertas no dia. ' +
-      'O número em cima é o total; passe o mouse para ver quantas foram atendidas ' +
-      'por uma pessoa.</p>'
+      'O número em cima é o total; passe o mouse para ver quantas foram respondidas ' +
+      '(por pessoa ou robô).</p>'
     : '<div class="vazio">Sem conversas no período escolhido.</div>';
 
   /* ---------------------------------------------------------- mapa */
@@ -1029,8 +1034,9 @@ function pintar(){
 
     var tags = [];
     if (c.lida === false) tags.push(["r","nunca aberta"]);
-    if (c.sem_resposta_humana) tags.push(["r","sem resposta"]);
-    if (c.so_bot) tags.push(["r","só o robô"]);
+    if (c.sem_resposta) tags.push(["r","sem resposta"]);
+    if (c.so_bot) tags.push(["a","só o robô respondeu"]);
+    if (c.encerrada) tags.push(["","encerrada no Kommo"]);
     if (c.urgencia) tags.push(["r","urgência"]);
     if (c.perguntou_preco && !c.ofereceu_agenda) tags.push(["r","valor sem agenda"]);
     if (c.ofereceu_agenda) tags.push(["v","puxou agenda"]);
