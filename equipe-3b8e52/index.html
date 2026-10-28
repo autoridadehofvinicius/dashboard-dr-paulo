@@ -675,6 +675,9 @@ function dur(s){
   if (s < 172800) return (s/3600).toFixed(1).replace(".",",")+"h";
   return Math.round(s/86400)+"d";
 }
+/* "2026-10-28T15:04:49" -> "28/10 15:04" */
+function quandoBr(iso){ iso = String(iso || "");
+  return iso.length < 16 ? "—" : iso.slice(8,10) + "/" + iso.slice(5,7) + " " + iso.slice(11,16); }
 function n1(v){ return (Math.round(v*10)/10).toString().replace(".",","); }
 function pct(a,b){ return b ? Math.round(1000*a/b)/10 : 0; }
 function classeNota(n){ return n>=8 ? "v" : n>=6 ? "a" : "r"; }
@@ -738,12 +741,22 @@ function linkLead(id){
    trocar de período não exige rodar o coletor de novo. */
 function recorte(dias){
   var ate = Date.now()/1000, de = ate - dias*86400;
+  // "Hoje" é desde a meia-noite, não as últimas 24h (que puxavam a tarde de
+  // ontem). O anterior é ontem inteiro.
+  if (dias === 1){
+    var meia = new Date(); meia.setHours(0,0,0,0);
+    de = meia.getTime()/1000;
+    return { de: de, ate: ate, deAnt: de - 86400, ateAnt: de };
+  }
   return { de: de, ate: ate, deAnt: de - dias*86400, ateAnt: de };
 }
 function filtrarConversas(de, ate){
+  // Entra quem teve MOVIMENTO no período, não só quem começou nele: paciente
+  // que abriu a conversa dia 26 e voltou a escrever hoje sumia do "Hoje".
   return (D.conversas||[]).filter(function(c){
-    var t = Date.parse(c.inicio)/1000;
-    if (t < de || t > ate) return false;
+    var ini = Date.parse(c.inicio)/1000;
+    var fim = c.fim ? Date.parse(c.fim)/1000 : ini;
+    if (ini > ate || fim < de) return false;
     if (estado.origem !== "todas" && (c.canal || "?") !== estado.origem) return false;
     if (estado.sdr !== "todos" && c.sdr_uid !== estado.sdr) return false;
     return true;
@@ -1207,7 +1220,10 @@ function pintar(){
   }).join("");
 
   /* ------------------------------------------------------ conversas */
-  el("conversas").innerHTML = convs.length ? convs.slice(0, estado.mostrar).map(function(c){
+  // mais recente primeiro: quem escreveu agora aparece no topo da lista
+  var recentes = convs.slice().sort(function(a, b){
+    return (b.fim || b.inicio || "") < (a.fim || a.inicio || "") ? -1 : 1; });
+  el("conversas").innerHTML = convs.length ? recentes.slice(0, estado.mostrar).map(function(c){
     var bolhas = (c.mensagens||[]).map(function(m){
       var cls = m.p === "paciente" ? "b-paciente" : m.p === "bot" ? "b-bot" : "b-humano";
       var quem = m.p === "paciente" ? (m.n || "Paciente")
@@ -1257,7 +1273,7 @@ function pintar(){
     return '<details class="conv"><summary>' +
       '<div><div class="forte">' + esc(c.paciente) + '</div><div class="fraco">' +
         linkLead(c.lead) +
-        esc(c.canal) + ' · ' + esc((c.inicio||"").replace("T"," ").slice(5,16)) +
+        esc(c.canal) + ' · última mensagem ' + quandoBr(c.fim || c.inicio) +
         ' · ' + c.n_paciente + ' do paciente / ' + c.n_humano + ' do atendente</div></div>' +
       '<div class="fraco tab">' + dur(c.tpr) + '</div>' +
       '<span class="nota ' + classeNota(c.nota/10) + '">' + n1(c.nota/10) + '</span>' +
