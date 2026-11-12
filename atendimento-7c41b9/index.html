@@ -70,6 +70,16 @@ h2{font-family:var(--serif);font-weight:500;font-size:25px;line-height:1.1;margi
   letter-spacing:-.015em;color:var(--texto);font-variation-settings:"opsz" 60}
 .sub{color:var(--texto2);font-size:13px;margin:6px 0 0;max-width:72ch}
 section{margin-top:56px;scroll-margin-top:118px}
+.robo-grade{display:grid;grid-template-columns:150px 1fr;gap:28px;align-items:center}
+.robo-nota .n{font-size:54px;font-weight:700;line-height:1}
+.robo-nota .d{font-size:18px;color:var(--texto3);margin-left:4px}
+@media (max-width:700px){.robo-grade{grid-template-columns:1fr}}
+body.so-pend .hero, body.so-pend main > *:not(#sPendentes){display:none!important}
+.so-na-aba{display:none;margin:8px 0 0}
+.so-na-aba a{color:var(--latao2,#e6cf9c)}
+body.so-pend .so-na-aba{display:block}
+.aba-pend{color:var(--verm)!important;font-weight:600}
+.aba-pend b{display:inline-block;min-width:20px;padding:0 6px;margin-left:4px;border-radius:9px;background:var(--verm-f);text-align:center}
 .cartao{background:var(--sup);border:1px solid var(--linha);border-radius:16px;
   box-shadow:var(--sombra)}
 .pad{padding:22px 24px}
@@ -407,7 +417,7 @@ footer b{color:var(--texto2)}
     <button class="icone" id="bTema" aria-pressed="true" title="Tema claro ou escuro">◐</button>
   </div>
   <nav class="ancoras wrap" id="ancoras" aria-label="Seções">
-    <a href="#sScore">Nota</a><a href="#sKpis">Indicadores</a>
+    <a href="#naorespondidas" class="aba-pend">Não respondidas <b id="nPendNav"></b></a><a href="#sScore">Nota do SDR</a><a href="#sRobo">Robô</a><a href="#sKpis">Indicadores</a>
     <a href="#sVelocidade">Velocidade</a>
     <a href="#sQualidade">Qualidade</a><a href="#sErros">Melhorias</a>
     <a href="#sObjecoes">Objeções</a><a href="#sFollow">Follow-up</a>
@@ -454,12 +464,29 @@ footer b{color:var(--texto2)}
 <main class="wrap">
   <section id="sAlertas"></section>
 
+  <section id="sRobo">
+    <div class="cab-sec"><div>
+      <h2>Robô</h2>
+      <p class="sub">Nota separada. O robô atende o dia inteiro e sozinho fora do horário do SDR (seg a sex, 8h às 18h).</p>
+    </div></div>
+    <div id="robo"></div>
+  </section>
+
   <section id="sKpis">
     <div class="cab-sec"><div>
       <h2>Indicadores</h2>
       <p class="sub">Valor do período escolhido, comparado com o período anterior de mesmo tamanho.</p>
     </div></div>
     <div class="kpis" id="kpis"></div>
+  </section>
+
+  <section id="sPendentes">
+    <div class="cab-sec"><div>
+      <h2>Não respondidas</h2>
+      <p class="sub">O paciente mandou a última mensagem e ninguém voltou há mais de 15 minutos úteis. Antes de contar contra o SDR, a IA lê cada conversa: quem só agradeceu, desistiu, pediu para parar ou mandou por engano sai da conta, e fica listado embaixo para você conferir. Conversas encerradas no Kommo não entram.</p>
+      <p class="so-na-aba"><a href="#">← voltar ao painel completo</a></p>
+    </div></div>
+    <div id="pendentes"></div>
   </section>
 
   <section id="sVelocidade">
@@ -667,33 +694,78 @@ function filtrarConversas(de, ate){
 // organização no CRM saíram: vinham do funil do Kommo, falavam do resultado
 // comercial e não de como a pessoa atende — e era justamente o que embaralhava
 // a leitura de quem queria olhar o atendimento.
+/* A nota do SDR cobra só o que é dele: o pedido que o robô não resolveu (ficou
+   calado mais de 3 min ou disse que ia transferir), no relógio de seg a sex,
+   8h às 18h. O que chega à noite começa a contar às 8h. Conversa que o robô
+   resolveu sozinho não entra, nem para cima nem para baixo. */
+var PEND_MIN = 900;
 var PESOS = [
-  ["velocidade","Velocidade de resposta",25],
-  ["resposta","Taxa de resposta",20],
-  ["qualidade","Qualidade da conversa",30],
-  ["objecoes","Tratamento de objeções",15],
-  ["followup","Follow-up",10]
+  ["velocidade","Velocidade do SDR",30],
+  ["resposta","Pedidos atendidos por pessoa",25],
+  ["pendencias","Sem pendência parada",15],
+  ["qualidade","Qualidade da conversa",20],
+  ["objecoes","Tratamento de objeções",10]
 ];
+function metricasDem(convs, de, ate){
+  var r = {robo:0, roboFora:0, foraTot:0, pessoa:0, cob:0, sdr:0, outro:0, sem:0,
+           enc:0, prazo:0, transf:0, transfAt:0, esperas:[], leadsComP:0,
+           naoPrecisa:0, semLeitura:0};
+  convs.forEach(function(c){
+    var teveP = false;
+    (c.dem || []).forEach(function(d){
+      var t = Date.parse(d.t)/1000; if (t < de || t > ate) return;
+      if (!d.h) r.foraTot++;
+      if (d.x){ r.transf++; if (d.q) r.transfAt++; }
+      if (d.k === "r"){ r.robo++; if (!d.h) r.roboFora++; return; }
+      r.pessoa++;
+      if (d.enc && !d.q){ r.enc++; return; }
+      // a IA leu e o paciente não esperava resposta (agradeceu, desistiu, pediu para parar)
+      if (!d.q && d.tri && d.tri.c !== "precisa"){ r.naoPrecisa++; return; }
+      if (!d.q && !d.tri && !d.a) r.semLeitura++;
+      if (d.a && !d.q && (d.e || 0) < PEND_MIN){ r.prazo++; return; }
+      teveP = true; r.cob++;
+      if (d.q === "s"){ r.sdr++; if (d.e != null) r.esperas.push(d.e); }
+      else if (d.q === "o") r.outro++;
+      else r.sem++;
+    });
+    if (teveP) r.leadsComP++;
+  });
+  r.esperas.sort(function(a,b){ return a-b; });
+  r.mediana = r.esperas.length ? r.esperas[Math.floor(r.esperas.length/2)] : null;
+  r.ate15 = r.esperas.filter(function(e){ return e <= 900; }).length;
+  r.pendentes = convs.filter(function(c){ return c.pendente; });
+  r.naoPrecisam = convs.filter(function(c){ return c.nao_precisa; });
+  return r;
+}
+function pontosEspera(e){
+  return e <= 300 ? 10 : e <= 900 ? 8.5 : e <= 1800 ? 7 : e <= 3600 ? 5 : e <= 14400 ? 3 : 1;
+}
+function notaRobo(dm){
+  var partes = [], soma = 0, peso = 0;
+  function add(rot, v, w, txt){ partes.push([rot, v, txt]); if (v != null){ soma += v*w; peso += w; } }
+  add("Fora do horário, resolveu na hora", dm.foraTot ? 10*dm.roboFora/dm.foraTot : null, 50,
+      dm.roboFora + " de " + dm.foraTot + " pedidos");
+  var tentou = dm.robo + dm.transf;
+  add("Não travou (sem “não entendi”)", tentou ? 10*(1 - dm.transf/tentou) : null, 25,
+      dm.transf + " transferência(s) em " + tentou + " pedidos");
+  add("Passagens que alguém pegou", dm.transf ? 10*dm.transfAt/dm.transf : null, 25,
+      dm.transfAt + " de " + dm.transf);
+  return { nota: peso ? soma/peso : null, partes: partes };
+}
 function calcularScore(convs, msgs){
-  var v = {};
-  // velocidade: 10 se mediana <= 5 min, cai até 0 em 4h
-  if (msgs.tprMediano != null){
-    var m = msgs.tprMediano/60;
-    v.velocidade = m <= 5 ? 10 : m <= 15 ? 8.5 : m <= 30 ? 7 : m <= 60 ? 5
-                 : m <= 240 ? 3 : 1;
-  }
-  // taxa de resposta: % de conversas com resposta humana
-  if (convs.length) v.resposta = 10 * (convs.filter(function(c){
-    return !c.sem_resposta_humana; }).length / convs.length);
+  var v = {}, dm = msgs.dem || {esperas:[]};
+  // velocidade: média, pedido a pedido, do tempo útil até o SDR responder
+  if (dm.esperas.length) v.velocidade = dm.esperas.reduce(function(a,e){
+    return a + pontosEspera(e); }, 0) / dm.esperas.length;
+  // pedidos que precisavam de pessoa e tiveram pessoa
+  if (dm.cob) v.resposta = 10 * (dm.sdr + dm.outro) / dm.cob;
+  // pendência parada: quantos leads com pedido para pessoa estão parados agora
+  if (dm.leadsComP) v.pendencias = Math.max(0, 10 * (1 - dm.pendentes.length / dm.leadsComP));
   // qualidade e objeções: da leitura do agente, que já olha só a pessoa
   var IAr = D.ia || {};
   if (IAr.nota_geral != null) v.qualidade = IAr.nota_geral;
   var dimObj = (IAr.dimensoes || []).filter(function(d){ return d.chave === "objecoes"; })[0];
   if (dimObj) v.objecoes = dimObj.nota;
-  // follow-up: conversas em que o atendente voltou sozinho
-  var comHumano = convs.filter(function(c){ return c.n_humano > 0; });
-  if (comHumano.length) v.followup = 10 * (comHumano.filter(function(c){
-    return c.followups > 0; }).length / comHumano.length);
 
   var somaPeso = 0, somaVal = 0, faltam = [];
   PESOS.forEach(function(p){
@@ -770,6 +842,16 @@ function pintar(){
   var r = recorte(estado.dias);
   var convs = filtrarConversas(r.de, r.ate), convsAnt = filtrarConversas(r.deAnt, r.ateAnt);
   var msgs = metricasMsg(convs), msgsAnt = metricasMsg(convsAnt);
+  msgs.dem = metricasDem(convs, r.de, r.ate);
+  msgsAnt.dem = metricasDem(convsAnt, r.deAnt, r.ateAnt);
+  var dm = msgs.dem, dmAnt = msgsAnt.dem;
+  // A coleta começou em 07/10. Comparar com um período anterior que caiu antes
+  // disso dava "+720%" contra quase nada: não compara.
+  var primeira = (D.conversas||[]).reduce(function(m, c){
+    var t = Date.parse(c.inicio)/1000; return t < m ? t : m; }, Infinity);
+  var antOk = r.deAnt >= primeira;
+  // "1ª resposta" passa a ser a do SDR, pedido a pedido, em tempo útil
+  msgs.tprMediano = dm.mediana; msgsAnt.tprMediano = dmAnt.mediana;
   var sc = calcularScore(convs, msgs);
   var scAnt = calcularScore(convsAnt, msgsAnt);
   var g = D.geral || {};
@@ -778,7 +860,7 @@ function pintar(){
   vivo();
   // "por pessoa" é porPessoa; `respondidas` inclui o robô e inflava o número.
   el("legPeriodo").textContent = convs.length + " conversas · " +
-    msgs.porPessoa + " atendidas por pessoa";
+    dm.cob + " pedidos precisaram de pessoa";
 
   /* ---------------------------------------------------------- score */
   el("score").textContent = sc.nota == null ? "—" : n1(sc.nota);
@@ -805,7 +887,7 @@ function pintar(){
     : sc.nota >= 6 ? "O atendimento funciona, mas deixa paciente pelo caminho"
     : "O atendimento está perdendo pacientes que já chegaram interessados";
   el("frase").textContent = fraseNota;
-  if (sc.nota != null && scAnt.nota != null){
+  if (sc.nota != null && scAnt.nota != null && antOk){
     var dd = sc.nota - scAnt.nota;
     el("deltaScore").innerHTML = 'Período anterior: ' + n1(scAnt.nota) + '/10 · ' +
       '<b class="' + (dd >= 0 ? "sobe" : "desce") + '">' +
@@ -833,18 +915,88 @@ function pintar(){
       'representa ' + sc.cobertura + '% do modelo, não os 100%. ' +
       'Zerar o que não foi medido afundaria a nota por ausência de dado.</div>';
   }
+  av = '<p class="sub" style="margin:0 0 10px">A nota cobra só o que é do SDR: ' +
+    dm.cob + ' pedidos que o robô não resolveu, no relógio de seg a sex, 8h às 18h. ' +
+    'Os ' + dm.robo + ' pedidos que o robô resolveu sozinho não entram.' +
+    (dm.enc ? ' ' + dm.enc + ' pedido(s) em conversas encerradas no Kommo sem resposta ficaram de fora.' : '') +
+    '</p>' + av;
   el("avisoHero").innerHTML = av;
+
+  /* ------------------------------------------------------------ robô */
+  var nr = notaRobo(dm), nrAnt = notaRobo(dmAnt);
+  el("robo").innerHTML = '<div class="cartao pad"><div class="robo-grade">' +
+    '<div class="robo-nota"><span class="n" style="color:' + (nr.nota == null ? "var(--texto3)" : corNota(nr.nota)) + '">' +
+      (nr.nota == null ? "—" : n1(nr.nota)) + '</span><span class="d">/10</span>' +
+      '<div class="sub">' + (nrAnt.nota != null && antOk ? 'anterior ' + n1(nrAnt.nota) : 'sem período anterior completo') + '</div></div>' +
+    '<div class="comps">' + nr.partes.map(function(pp){
+      var v = pp[1], cor = v == null ? "#425a70" : v >= 8 ? "#62b98b" : v >= 6 ? "#dcab45" : "#e5806d";
+      return '<div class="comp"><div class="l"><span>' + esc(pp[0]) + '</span>' +
+        (v == null ? '<span class="sd">sem dado</span>' : '<b>' + n1(v) + '</b>') + '</div>' +
+        '<div class="t"><span style="width:' + (v == null ? 0 : v*10) + '%;background:' + cor + '"></span><em></em></div>' +
+        '<div class="p">' + esc(pp[2]) + '</div></div>'; }).join("") + '</div></div>' +
+    '<p class="nota-rodape">' + dm.robo + ' pedidos resolvidos pelo robô em até 3 minutos (' +
+    (dm.robo - dm.roboFora) + ' dentro do horário do SDR, ' + dm.roboFora + ' fora). ' +
+    'Transferência é quando o robô diz “não consegui entender, vou transferir”.</p></div>';
+
+  /* ------------------------------------------- não respondidas (aba) */
+  var ROT_TRI = {precisa:"precisa de resposta", encerrou:"só agradeceu ou encerrou",
+    sem_interesse:"desistiu ou sem interesse", pediu_parar:"pediu para não receber mais",
+    engano:"engano ou fora de contexto"};
+  function ultimaPac(c){
+    var ms = c.mensagens || [];
+    for (var k = ms.length-1; k >= 0; k--) if (ms[k].p === "paciente") return ms[k];
+    return {};
+  }
+  function linhaPend(c, comCat){
+    var u = ultimaPac(c), t = c.pend_tri;
+    var ia = t ? '<span class="chip ' + (t.c === "precisa" ? "r" : "") + '">' + esc(ROT_TRI[t.c] || t.c) +
+                 '</span><div class="fraco" style="margin-top:4px">' + esc(t.m || "") + '</div>'
+               : '<span class="chip a">IA ainda não leu</span>';
+    return '<tr><td><div class="forte">' + esc(c.paciente) + '</div><div class="fraco">' +
+      linkLead(c.lead) + esc(c.canal) + '</div></td>' +
+      '<td class="tab"><b>' + dur(c.espera_util_atual) + '</b><div class="fraco">' +
+      (c.h_ultima_no_horario || c.pendente_no_horario ? 'chegou no horário do SDR' : 'chegou fora do horário') + '</div></td>' +
+      '<td><div class="fraco">' + esc(u.h || "") + '</div>' + esc(String(u.t || "").slice(0, 160)) + '</td>' +
+      '<td style="min-width:190px">' + ia + '</td></tr>';
+  }
+  var cabT = '<table class="t"><thead><tr><th>Paciente</th><th>Esperando (tempo útil)</th>' +
+    '<th>Última mensagem do paciente</th><th>Leitura da IA</th></tr></thead><tbody>';
+  var pend = dm.pendentes.slice().sort(function(a,b){
+    return (b.espera_util_atual||0) - (a.espera_util_atual||0); });
+  var nao = dm.naoPrecisam.slice().sort(function(a,b){ return (b.fim||"") < (a.fim||"") ? -1 : 1; });
+  var porCat = {}; nao.forEach(function(c){ var k = (c.pend_tri||{}).c; porCat[k] = (porCat[k]||0) + 1; });
+  var semLer = pend.filter(function(c){ return !c.pend_tri; }).length;
+  el("nPendNav").textContent = pend.length;
+  el("pendentes").innerHTML =
+    '<div class="kpis" style="margin-bottom:16px">' +
+      '<div class="kpi' + (pend.length ? " risco" : "") + '"><div class="r">Precisam de resposta</div><div class="v">' +
+        pend.length + '</div><div class="c">contam contra o SDR' + (semLer ? ' · ' + semLer + ' ainda sem leitura da IA' : '') + '</div></div>' +
+      '<div class="kpi"><div class="r">Não precisavam de resposta</div><div class="v">' + nao.length +
+        '</div><div class="c">a IA leu a conversa: fora da conta</div></div>' +
+      Object.keys(porCat).map(function(k){
+        return '<div class="kpi"><div class="r">' + esc(ROT_TRI[k] || k) + '</div><div class="v">' + porCat[k] +
+          '</div><div class="c">das que não precisavam</div></div>'; }).join("") +
+    '</div>' +
+    (pend.length
+      ? '<div class="cartao" style="overflow:hidden">' + cabT + pend.slice(0, 80).map(function(c){
+          return linhaPend(c); }).join("") + '</tbody></table>' +
+        (pend.length > 80 ? '<p class="nota-rodape">Mostrando as 80 mais antigas de ' + pend.length + '.</p>' : '') + '</div>'
+      : '<div class="cartao"><div class="vazio"><b>Nenhuma conversa esperando resposta</b>Todo paciente que pediu algo teve retorno.</div></div>') +
+    (nao.length
+      ? '<details class="cartao" style="margin-top:16px;overflow:hidden"><summary style="padding:16px 20px;cursor:pointer">' +
+        '<b>Conferir as ' + nao.length + ' que a IA tirou da conta</b> <span class="fraco">· o paciente falou por último, mas não esperava resposta</span></summary>' +
+        cabT + nao.slice(0, 150).map(function(c){ return linhaPend(c); }).join("") + '</tbody></table></details>'
+      : '');
 
   /* -------------------------------------------------------- alertas */
   var alertas = [];
-  if (msgs.naoLidas) alertas.push({n:"alto", t: msgs.naoLidas +
-    " conversa(s) sem ninguém ter aberto",
-    d:"Não é demora, é ausência: ninguém abriu a conversa no Kommo."});
-  var paradas = convs.filter(function(c){ return c.abandonado; }).length;
-  if (paradas) alertas.push({n:"alto",
-    t: paradas + " conversa(s) paradas no paciente",
-    d:"O paciente falou por último e ninguém voltou. São as mais baratas de "
-      + "recuperar: a pessoa já demonstrou interesse."});
+  if (dm.pendentes.length) alertas.push({n:"alto",
+    t: dm.pendentes.length + " paciente(s) esperando retorno agora",
+    d:"O paciente falou por último, pedindo algo, e ninguém voltou há mais de 15 min úteis. "
+      + "São os mais baratos de recuperar: a pessoa já demonstrou interesse. Lista na aba Não respondidas."});
+  if (dm.transf - dm.transfAt > 0) alertas.push({n:"alto",
+    t: (dm.transf - dm.transfAt) + " transferência(s) do robô que ninguém pegou",
+    d:"O robô avisou o paciente que um atendente ia continuar, e nenhuma pessoa entrou na conversa."});
   if (msgsAnt.tprMediano && msgs.tprMediano &&
       (msgs.tprMediano - msgsAnt.tprMediano)/msgsAnt.tprMediano > 0.3)
     alertas.push({n:"alto", t:"Tempo de primeira resposta subiu " +
@@ -864,7 +1016,8 @@ function pintar(){
   /* ----------------------------------------------------------- KPIs */
   function kpi(rot, val, comp, ruim){
     var c = "";
-    if (comp && comp.ant != null && comp.ant !== 0){
+    if (comp && !antOk) c = '<span style="color:var(--texto3)">período anterior sem dado completo</span>';
+    else if (comp && comp.ant != null && comp.ant !== 0){
       var dl = Math.round(1000*(comp.at-comp.ant)/Math.abs(comp.ant))/10;
       var bom = comp.menorMelhor ? dl < 0 : dl > 0;
       c = '<span class="seta ' + (dl === 0 ? "neutro" : bom ? "sobe" : "desce") + '">' +
@@ -878,47 +1031,41 @@ function pintar(){
     return '<div class="kpi sem"><div class="r">' + rot + '</div>' +
       '<div class="v">sem dado</div><div class="c">' + porque + '</div></div>';
   }
+  var totDem = dm.robo + dm.pessoa, totAnt = dmAnt.robo + dmAnt.pessoa;
   el("kpis").innerHTML =
-    kpi("Conversas", convs.length, {at:convs.length, ant:convsAnt.length}) +
-    kpi("Taxa de resposta", n1(pct(msgs.respondidas, convs.length)) + "%",
-        {at:pct(msgs.respondidas,convs.length), ant:pct(msgsAnt.respondidas,convsAnt.length)},
-        pct(msgs.respondidas,convs.length) < 95) +
-    kpi("Atendidas por pessoa", msgs.porPessoa,
-        {at:msgs.porPessoa, ant:msgsAnt.porPessoa}, !msgs.porPessoa) +
-    kpi("Só o robô respondeu", msgs.soRobo,
-        {at:msgs.soRobo, ant:msgsAnt.soRobo, menorMelhor:true}) +
-    kpi("1ª resposta humana", dur(msgs.tprMediano),
-        {at:msgs.tprMediano, ant:msgsAnt.tprMediano, menorMelhor:true}) +
-    kpi("Sem resposta", msgs.semResposta,
-        {at:msgs.semResposta, ant:msgsAnt.semResposta, menorMelhor:true},
-        msgs.semResposta > 0) +
-    kpi("Nunca abertas", msgs.naoLidas,
-        {at:msgs.naoLidas, ant:msgsAnt.naoLidas, menorMelhor:true}, msgs.naoLidas > 0) +
-    kpi("Paradas no paciente",
-        convs.filter(function(c){ return c.abandonado; }).length, null,
-        convs.filter(function(c){ return c.abandonado; }).length > 0) +
-    kpi("Áudios do paciente",
-        convs.reduce(function(a,c){ return a + (c.n_audio||0); }, 0), null);
+    kpi("Pedidos do paciente", totDem, {at:totDem, ant:totAnt}) +
+    kpi("Robô resolveu na hora", n1(pct(dm.robo, totDem)) + "%",
+        {at:pct(dm.robo,totDem), ant:pct(dmAnt.robo,totAnt)}) +
+    kpi("Precisaram de pessoa", dm.cob, {at:dm.cob, ant:dmAnt.cob}) +
+    kpi("Atendidos pelo SDR", n1(pct(dm.sdr, dm.cob)) + "%",
+        {at:pct(dm.sdr,dm.cob), ant:pct(dmAnt.sdr,dmAnt.cob)}, pct(dm.sdr, dm.cob) < 80) +
+    kpi("1ª resposta do SDR", dur(dm.mediana),
+        {at:dm.mediana, ant:dmAnt.mediana, menorMelhor:true}, (dm.mediana||0) > 900) +
+    kpi("SDR em até 15 min", n1(pct(dm.ate15, dm.esperas.length)) + "%",
+        {at:pct(dm.ate15,dm.esperas.length), ant:pct(dmAnt.ate15,dmAnt.esperas.length)},
+        pct(dm.ate15, dm.esperas.length) < 80) +
+    kpi("Ficaram sem pessoa", dm.sem, {at:dm.sem, ant:dmAnt.sem, menorMelhor:true}, dm.sem > 0) +
+    kpi("Pendentes agora", dm.pendentes.length, null, dm.pendentes.length > 0);
 
   /* ----------------------------------------------------- velocidade */
   var FX = [["até 5 min",0,300],["5 a 15 min",300,900],["15 a 30 min",900,1800],
             ["30 a 60 min",1800,3600],["mais de 1 hora",3600,1e9]];
   var CORES = ["#3f9a6c","#7cb98f","#d8b25a","#d9853e","#c2523f","#5f7487","#2c3a47"];
   var cont = FX.map(function(f){
-    return msgs.tprs.filter(function(t){ return t >= f[1] && t < f[2]; }).length; });
-  cont.push(msgs.soRobo, msgs.semResposta);
+    return dm.esperas.filter(function(t){ return t >= f[1] && t < f[2]; }).length; });
+  cont.push(dm.outro, dm.sem);
   var somaFx = cont.reduce(function(a,b){ return a+b; },0);
   el("velocidade").innerHTML = somaFx
     ? '<div class="faixas-sla">' + cont.map(function(q,i){
         return q ? '<div style="width:' + (100*q/somaFx) + '%;background:' +
           CORES[i] + '">' + (100*q/somaFx > 8 ? q : "") + '</div>' : ""; }).join("") +
       '</div><div class="legenda">' +
-      FX.concat([["só o robô (sem pessoa)"],["sem resposta nenhuma"]]).map(function(f,i){
+      FX.concat([["outra pessoa respondeu"],["ficou sem pessoa"]]).map(function(f,i){
         return '<span><i style="background:' + CORES[i] + '"></i>' + f[0] + '<b>' +
           cont[i] + '</b><em>' + n1(100*cont[i]/somaFx) + '%</em></span>'; }).join("") +
       '</div>'
-    : '<div class="vazio"><b>Nenhuma primeira resposta medida</b>' +
-      'Nenhuma conversa do período teve resposta de uma pessoa.</div>';
+    : '<div class="vazio"><b>Nenhuma resposta do SDR medida</b>' +
+      'Nenhum pedido do período precisou de pessoa ou teve resposta do SDR.</div>';
 
   /* ------------------------------------------------------ qualidade */
   var IA = D.ia || {};
@@ -1017,14 +1164,14 @@ function pintar(){
   /* ------------------------------------------------------ follow-up */
   var comH = convs.filter(function(c){ return c.n_humano > 0; });
   var fups = comH.reduce(function(a,c){ return a + (c.followups||0); }, 0);
-  var esperando = convs.filter(function(c){ return c.sem_resposta; }).length;
-  var parados = convs.filter(function(c){ return c.abandonado; }).length;
+  var esperando = dm.sem;
+  var parados = dm.pendentes.length;
   el("follow").innerHTML = (estado.exemplo && !comH.length ?
       tarja("Conversão por número de follow-up depende de agendamento registrado.") : "") +
     '<div class="kpis">' +
-      '<div class="kpi' + (esperando ? " risco" : "") + '"><div class="r">Sem nenhuma resposta</div>' +
-      '<div class="v">' + esperando + '</div><div class="c">precisam de primeiro contato</div></div>' +
-      '<div class="kpi' + (parados ? " risco" : "") + '"><div class="r">Parados no paciente</div>' +
+      '<div class="kpi' + (esperando ? " risco" : "") + '"><div class="r">Ficaram sem pessoa</div>' +
+      '<div class="v">' + esperando + '</div><div class="c">o robô passou e ninguém pegou</div></div>' +
+      '<div class="kpi' + (parados ? " risco" : "") + '"><div class="r">Pendentes agora</div>' +
       '<div class="v">' + parados + '</div><div class="c">o paciente falou por último</div></div>' +
       '<div class="kpi"><div class="r">Follow-ups feitos</div><div class="v">' + fups +
       '</div><div class="c">atendente voltou sem o paciente responder</div></div>' +
@@ -1090,10 +1237,11 @@ function pintar(){
 
   /* ---------------------------------------------------------- metas */
   var metasL = [
-    ["Taxa de resposta", 95, pct(msgs.respondidas, convs.length), "%", false],
-    ["1ª resposta", 15, msgs.tprMediano != null ? Math.round(msgs.tprMediano/60*10)/10 : null, "min", true],
+    ["Pedidos atendidos por pessoa", 95, dm.cob ? pct(dm.sdr + dm.outro, dm.cob) : null, "%", false],
+    ["1ª resposta do SDR (mediana)", 15, dm.mediana != null ? Math.round(dm.mediana/60*10)/10 : null, "min", true],
+    ["SDR em até 15 min", 80, dm.esperas.length ? pct(dm.ate15, dm.esperas.length) : null, "%", false],
     ["Qualidade da conversa", 7, (D.ia||{}).nota_geral, "", false],
-    ["Conversas sem resposta", 0, msgs.semResposta, "", true]
+    ["Pendentes agora", 0, dm.pendentes.length, "", true]
   ];
   el("metas").innerHTML = metasL.map(function(m){
     var rot = m[0], alvo = m[1], real = m[2], un = m[3], menor = m[4];
@@ -1122,7 +1270,8 @@ function pintar(){
     var bolhas = (c.mensagens||[]).map(function(m){
       var cls = m.p === "paciente" ? "b-paciente" : m.p === "bot" ? "b-bot" : "b-humano";
       var quem = m.p === "paciente" ? (m.n || "Paciente")
-               : m.p === "bot" ? "Robô" : (m.n || "Atendente");
+               : m.p === "bot" ? "Robô"
+               : (m.n || "Atendente") + (m.s ? " (SDR)" : " (outra pessoa)");
       return '<div class="bolha ' + cls + '"><div class="c">' + esc(quem) + ' · ' +
         esc(m.h) + (m.a ? '<span class="audio">áudio transcrito</span>' : '') +
         '</div>' + esc(m.t) + '</div>';
@@ -1130,6 +1279,7 @@ function pintar(){
 
     var tags = [];
     if (c.lida === false) tags.push(["r","nunca aberta"]);
+    if (c.pendente) tags.push(["r","pendente"]);
     if (c.sem_resposta) tags.push(["r","sem resposta"]);
     if (c.so_bot) tags.push(["a","só o robô respondeu"]);
     if (c.encerrada) tags.push(["","encerrada no Kommo"]);
@@ -1171,7 +1321,8 @@ function pintar(){
         esc(c.canal) + ' · última mensagem ' + quandoBr(c.fim || c.inicio) +
         ' · ' + c.n_paciente + ' do paciente / ' + c.n_humano + ' do atendente</div></div>' +
       '<div class="fraco tab">' + dur(c.tpr) + '</div>' +
-      '<span class="nota ' + classeNota(c.nota/10) + '">' + n1(c.nota/10) + '</span>' +
+      (c.nota == null ? '<span class="nota" title="O robô resolveu: fora da nota do SDR">robô</span>'
+        : '<span class="nota ' + classeNota(c.nota/10) + '">' + n1(c.nota/10) + '</span>') +
       '<span class="abrir" aria-hidden="true">▶</span>' +
       '<div class="tags">' + tags.map(function(t){
         return '<span class="chip ' + t[0] + '">' + esc(t[1]) + '</span>'; }).join("") +
@@ -1278,6 +1429,16 @@ function pintar(){
     (exemploTxt ? '<div class="destaque"><div class="r">Exemplo prático de abordagem</div>' +
       '<p>' + esc(exemploTxt) + '</p></div>' : "");
 }
+
+/* Aba "Não respondidas": mesmo endereço com #naorespondidas mostra só a lista. */
+function modoAba(){
+  var so = location.hash === "#naorespondidas";
+  document.body.classList.toggle("so-pend", so);
+  if (so) window.scrollTo(0, 0);
+}
+window.addEventListener("hashchange", modoAba);
+document.addEventListener("DOMContentLoaded", modoAba);
+modoAba();
 
 /* ======================================================== os controles */
 function montarControles(){
