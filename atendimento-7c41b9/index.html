@@ -76,6 +76,25 @@ section{margin-top:56px;scroll-margin-top:118px}
 @media (max-width:700px){.robo-grade{grid-template-columns:1fr}}
 body.so-pend .hero, body.so-pend main > *:not(#sPendentes){display:none!important}
 .so-na-aba{display:none;margin:8px 0 0}
+details.ex{border-top:1px solid var(--linha);padding:0}
+details.ex>summary{cursor:pointer;list-style:none;padding:12px 2px;display:flex;gap:10px;
+  align-items:baseline;justify-content:space-between;font-size:13.5px;color:var(--texto)}
+details.ex>summary::-webkit-details-marker{display:none}
+details.ex>summary .seta{color:var(--texto3);font-size:12px;white-space:nowrap}
+details.ex[open]>summary .seta{color:var(--latao)}
+details.ex>summary b{font-family:var(--serif);font-weight:500;font-size:17px}
+.ex-corpo{padding:0 2px 16px;display:grid;gap:10px;font-size:13px;color:var(--texto2)}
+.ex-corpo h4{margin:4px 0 0;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--texto3);font-weight:600}
+.ex-corpo .como{background:var(--latao-f);border-left:3px solid var(--latao);border-radius:8px;padding:10px 12px;color:var(--texto)}
+.ex-corpo .frase{font-style:italic}
+.obs{color:var(--texto3);font-size:11.5px}
+.trecho{background:var(--sup3);border-radius:10px;padding:10px 12px;display:grid;gap:5px;font-size:12.5px}
+.trecho .m{display:grid;grid-template-columns:96px 1fr;gap:8px}
+.trecho .m i{font-style:normal;color:var(--texto3);font-size:11.5px}
+.trecho .m.pac span{color:var(--texto)}
+.trecho .m.sdr i{color:var(--latao)}
+.ex-lista{display:grid;gap:6px}
+#puxa .cartao{color:var(--texto)}
 .so-na-aba a{color:var(--latao2,#e6cf9c)}
 body.so-pend .so-na-aba{display:block}
 .aba-pend{color:var(--verm)!important;font-weight:600}
@@ -417,7 +436,7 @@ footer b{color:var(--texto2)}
     <button class="icone" id="bTema" aria-pressed="true" title="Tema claro ou escuro">◐</button>
   </div>
   <nav class="ancoras wrap" id="ancoras" aria-label="Seções">
-    <a href="#naorespondidas" class="aba-pend">Não respondidas <b id="nPendNav"></b></a><a href="#sScore">Nota do SDR</a><a href="#sRobo">Robô</a><a href="#sKpis">Indicadores</a>
+    <a href="#naorespondidas" class="aba-pend">Não respondidas <b id="nPendNav"></b></a><a href="#sScore">Nota do SDR</a><a href="#sRobo">Robô</a><a href="#sInsta">IA do Instagram</a><a href="#sKpis">Indicadores</a>
     <a href="#sVelocidade">Velocidade</a>
     <a href="#sQualidade">Qualidade</a><a href="#sErros">Melhorias</a>
     <a href="#sObjecoes">Objeções</a><a href="#sFollow">Follow-up</a>
@@ -458,6 +477,7 @@ footer b{color:var(--texto2)}
       </div>
     </div>
     <div id="avisoHero" style="padding-top:24px"></div>
+    <div id="puxa" style="padding-top:8px"></div>
   </div>
 </header>
 
@@ -470,6 +490,14 @@ footer b{color:var(--texto2)}
       <p class="sub">Nota separada. O robô atende o dia inteiro e sozinho fora do horário do SDR (seg a sex, 8h às 18h).</p>
     </div></div>
     <div id="robo"></div>
+  </section>
+
+  <section id="sInsta">
+    <div class="cab-sec"><div>
+      <h2>IA do Instagram</h2>
+      <p class="sub">Nota separada. No Instagram quem responde é a IA, e o trabalho dela é acolher e levar o paciente para o WhatsApp. Quando uma pessoa da equipe fala no Instagram, aquele trecho conta na nota do SDR, não aqui.</p>
+    </div></div>
+    <div id="insta"></div>
   </section>
 
   <section id="sKpis">
@@ -709,12 +737,13 @@ var PESOS = [
 function metricasDem(convs, de, ate){
   var r = {robo:0, roboFora:0, foraTot:0, pessoa:0, cob:0, sdr:0, outro:0, sem:0,
            enc:0, prazo:0, transf:0, transfAt:0, esperas:[], leadsComP:0,
-           naoPrecisa:0, semLeitura:0};
+           naoPrecisa:0, semLeitura:0, ia:0, iaE:[]};
   convs.forEach(function(c){
     var teveP = false;
     (c.dem || []).forEach(function(d){
       var t = Date.parse(d.t)/1000; if (t < de || t > ate) return;
       if (!d.h) r.foraTot++;
+      if (d.ia){ r.ia++; if (d.ei != null) r.iaE.push(d.ei); return; }
       if (d.x){ r.transf++; if (d.q) r.transfAt++; }
       if (d.k === "r"){ r.robo++; if (!d.h) r.roboFora++; return; }
       r.pessoa++;
@@ -838,6 +867,142 @@ function semDado(titulo, porque){
 }
 
 /* ====================================================== desenho da tela */
+/* ----------------------------------------- exemplos e como melhorar
+   13/11/2026, pedido do usuário: em cada nota, o porquê com conversa real e o
+   que fazer. O exemplo sai dos dados do período (muda sozinho); o "como
+   melhorar" é fixo. Na página aberta não há texto de conversa, então só a dica
+   aparece. Horário nas frases-modelo fica entre colchetes: o SDR usa a agenda
+   real, nunca um horário inventado (a reescrita da IA às vezes inventa). */
+var PILAR_INFO = {
+  velocidade: ["Cada pedido ganha pontos pela espera em horário útil: até 5 min vale 10, até 15 min 8,5, até 30 min 7, até 1h 5, até 4h 3, mais que isso 1.",
+    "Meta: até 15 min úteis. Quando precisar consultar o Dr. Paulo, mandar NA HORA: “Recebi, vou confirmar com o doutor e te respondo até [hora]”. Isso para o relógio e segura o paciente."],
+  resposta: ["Dos pedidos que o robô não resolveu (ficou calado mais de 3 min ou disse que ia transferir), quantos tiveram resposta de uma pessoa.",
+    "Foto de exame, pergunta sobre resultado e “quero marcar” nunca ficam só com o robô. Abrir a aba Não respondidas às 11h e às 16h e zerar a lista."],
+  pendencias: ["Quantos pacientes com pedido para pessoa estão esperando agora, há mais de 15 min úteis. Com poucos pacientes no período (ex.: “Hoje”), cada um mexe muito na nota.",
+    "Antes do almoço e no fim do dia, conferir a lista: responder, ou encerrar no Kommo se não há o que responder."],
+  qualidade: ["Média das 12 notas que a IA dá lendo só as mensagens da pessoa (o robô e a IA do Instagram não entram).",
+    "O que mais derruba é o fim da conversa: terminar SEMPRE com duas opções de horário. “Tenho [dia/hora] ou [dia/hora], qual fica melhor?” Ver as 12 notas na seção Qualidade."],
+  objecoes: ["Nota da IA para como a pessoa enfrentou a hesitação do paciente (preço, distância, convênio, medo).",
+    "Resposta pronta para as duas que mais aparecem. Distância: “Atendemos em Umuarama, Campo Mourão e Palotina, e os exames são feitos no mesmo dia, numa ida só.” Preço: “Entendo. Já inclui [exames], você não paga nada à parte.” E em seguida oferecer horário."]
+};
+var DIM_DICA = {
+  personalizacao: ["Mensagem pronta que ignora o que o paciente acabou de dizer.", "Responder primeiro ao que a pessoa escreveu, usando o nome e o detalhe dela. Texto padrão só depois, se precisar."],
+  clareza: ["Áudio ou texto longo que demora para chegar ao assunto.", "Uma ideia por mensagem e a resposta na primeira linha. Áudio de no máximo 40 segundos."],
+  empatia: ["Relato de dor, medo ou diagnóstico respondido só com “boa tarde” ou com o horário de expediente.", "Reconhecer antes de informar: “Sinto muito que esteja com dor, isso precisa ser visto logo. Vou te passar o primeiro horário que tenho.”"],
+  investigacao: ["Pede “me conta o que está acontecendo”, mas não aprofunda quando o paciente conta.", "Duas perguntas fechadas que direcionam sem diagnosticar: “Há quanto tempo? Em um olho ou nos dois?”"],
+  qualificacao: ["Não descobre cidade, convênio ou particular, se já é paciente e a urgência.", "Checklist fixo de 4 perguntas: cidade · convênio ou particular · já é paciente · há quanto tempo sente."],
+  gerar_valor: ["Preço dado seco, sem dizer o que está incluso.", "Valor antes do preço: “A consulta com o Dr. Paulo, especialista em retina, já inclui [exames]. Sai por R$ [valor].”"],
+  conducao: ["Responde e espera; fecha com “estou à disposição” ou “se precisar me chama”.", "Toda mensagem termina com uma pergunta que avança, de preferência a escolha de horário."],
+  objecoes: ["Paciente diz “é longe”, “não tenho dinheiro”, “vou pensar” e a conversa segue como se nada tivesse sido dito.", "Responder a objeção antes de qualquer outra coisa (respostas prontas em “O que puxa cada nota”, no topo) e voltar ao horário."],
+  urgencia: ["Caso grave (buraco macular, descolamento, sangramento, perda de visão) respondido horas ou dias depois e sem prioridade.", "Palavra de alarme é resposta na hora, com encaixe: “Pelo que você contou, o ideal é o Dr. Paulo ver logo. Tenho [dia/hora].” Motivo verdadeiro, sem assustar e sem prometer resultado."],
+  cta: ["Termina com “passe seu contato” ou “fico à disposição”, sem horário.", "Sempre duas opções: “Tenho [dia/hora] ou [dia/hora]. Qual fica melhor?” É a mudança que mais sobe a nota geral."],
+  follow_up: ["Quando o paciente some, só o robô volta.", "Retomada humana em 24h citando o caso: “Oi [nome], ficou alguma dúvida sobre [o que ele contou]? Ainda tenho [horário].”"],
+  prob_conversao: ["É a soma das outras: conversa sem horário oferecido quase nunca vira consulta.", "Sobe sozinha quando CTA, objeções e urgência melhoram."]
+};
+var INSTA_DICA = {
+  acolhimento: "Começar reconhecendo o que a pessoa contou (“Sinto muito que esteja passando por isso”) antes de mandar o link.",
+  clareza: "Mensagens curtas, uma ideia cada, sem termo técnico.",
+  respondeu: "Responder o básico que pode ser dito (cidades, convênio, se o doutor trata aquele problema) e só então convidar para o WhatsApp.",
+  redirecionamento: "Dar o motivo: “Pelo WhatsApp a equipe já vê um horário para você” + botão. “Passe-me seu contato” sozinho converte pouco.",
+  naturalidade: "Não repetir o mesmo texto na mesma conversa; variar a abertura e usar o nome da pessoa.",
+  urgencia: "Sinal de alarme (perda súbita de visão, descolamento, buraco macular, sangramento) = orientar atendimento rápido e passar para pessoa na hora.",
+  conformidade: "Nunca diagnosticar nem minimizar (“deve ser algo simples”), nunca prometer resultado. Isso responde pelo CRM do Dr. Paulo. Ajustar o prompt da IA."
+};
+function nomeQuem(m){
+  if (m.p === "paciente") return "Paciente";
+  if (m.ia) return "IA Instagram";
+  if (m.p === "bot") return "Robô";
+  return m.s ? "SDR" : "Equipe";
+}
+function trecho(c, i, j, max){
+  var ms = (c.mensagens || []);
+  if (!ms.length) return "";
+  max = max || 6;
+  var a = Math.max(0, i == null ? ms.length - max : i);
+  var b = Math.min(ms.length - 1, j == null ? ms.length - 1 : j);
+  var sel = ms.slice(a, b + 1).filter(function(m){
+    return !/could not be displayed|Mentioned you in their story/i.test(m.t || ""); });
+  if (!sel.length) return "";
+  if (sel.length > max) sel = sel.slice(0, 2).concat([null], sel.slice(-(max - 2)));
+  return '<div class="trecho">' + sel.map(function(m){
+    if (!m) return '<div class="obs">…</div>';
+    var t = String(m.t || ""); if (t.length > 260) t = t.slice(0, 257) + "…";
+    var cls = m.p === "paciente" ? "pac" : (m.p === "bot" ? "bot" : "sdr");
+    return '<div class="m ' + cls + '"><i>' + esc(m.h) + ' · ' + nomeQuem(m) + '</i><span>' + esc(t) + '</span></div>';
+  }).join("") + '</div>';
+}
+function linkLeadEx(c){
+  var base = (D.geral||{}).kommo_lead;
+  return (base && c.lead) ? '<div><a href="' + base + c.lead + '" target="_blank" rel="noopener">abrir no Kommo ↗</a></div>' : '';
+}
+function blocoEx(titulo, valor, oque, exemplos, como){
+  return '<details class="ex"><summary><span>' + titulo + '</span><span>' +
+    (valor == null ? '' : '<b style="color:' + corNota(valor) + '">' + n1(valor) + '</b> ') +
+    '<span class="seta">exemplo e como melhorar ▾</span></span></summary><div class="ex-corpo">' +
+    (oque ? '<div>' + oque + '</div>' : '') +
+    '<h4>Exemplo real</h4>' + (exemplos || '<div class="obs">Sem exemplo com texto neste período' +
+      ((D.geral||{}).anonimo ? ' (a página aberta não mostra conversas; veja na página da equipe)' : '') + '.</div>') +
+    '<h4>Como melhorar</h4><div class="como">' + como + '</div></div></details>';
+}
+function exIA(c, ia){
+  ia = ia || c.ia || {};
+  return '<div class="ex-lista">' + (ia.resumo ? '<div>' + esc(ia.resumo) + '</div>' : '') +
+    trecho(c, null, null, 6) +
+    (ia.momento_critico ? '<div><b>Onde se perdeu:</b> <span class="frase">“' + esc(ia.momento_critico) + '”</span></div>' : '') +
+    (ia.reescrita ? '<div><b>O que deveria ter ido:</b> <span class="frase">“' + esc(ia.reescrita) + '”</span>' +
+      ' <span class="obs">(horários sugeridos pela IA são ilustrativos; usar a agenda real)</span></div>' : '') +
+    linkLeadEx(c) + '</div>';
+}
+function piorPorDim(lista, campo, dim){
+  // a mais recente entre as de nota baixa, de preferência com o momento crítico
+  var cand = lista.filter(function(c){ var x = c[campo]; return x && x.notas &&
+      x.notas[dim] != null && x.notas[dim] <= 3 && (c.mensagens||[]).some(function(m){
+        return m.p === "paciente" && (m.t || "").length > 25 && !/could not be displayed|Mentioned you/i.test(m.t); }); });
+  cand.sort(function(a,b){ return Date.parse(b.fim) - Date.parse(a.fim); });
+  var comFrase = cand.filter(function(c){ return c[campo].momento_critico && c[campo].reescrita; });
+  return (comFrase.length ? comFrase : cand)[0] || null;
+}
+function exemplosPilar(chave, convs, de, ate){
+  var out = [];
+  function noPeriodo(d){ var t = Date.parse(d.t)/1000; return t >= de && t <= ate; }
+  if (chave === "velocidade"){
+    var L = [];
+    convs.forEach(function(c){ (c.dem||[]).forEach(function(d){
+      if (noPeriodo(d) && d.k === "p" && d.q === "s" && d.e != null && d.e > 900) L.push([d.e, c, d]); }); });
+    L.sort(function(a,b){ return b[0]-a[0]; });
+    var tipicos = L.filter(function(x){ return x[0] <= 36000; });
+    if (tipicos.length >= 2) L = tipicos;
+    out = L.slice(0, 2).map(function(x){ return '<div><b>Esperou ' + dur(x[0]) + ' úteis</b>' +
+      trecho(x[1], x[2].i, x[2].j, 6) + linkLeadEx(x[1]) + '</div>'; });
+  } else if (chave === "resposta"){
+    var S = [];
+    convs.forEach(function(c){ (c.dem||[]).forEach(function(d){
+      if (!noPeriodo(d) || d.k !== "p" || d.q || d.enc) return;
+      if (d.tri && d.tri.c !== "precisa") return;
+      if (d.a && (d.e || 0) < 900) return;
+      S.push([c, d]); }); });
+    S.sort(function(a,b){ return Date.parse(b[1].t) - Date.parse(a[1].t); });
+    out = S.slice(0, 2).map(function(x){ return '<div>' +
+      (x[1].tri && x[1].tri.m ? '<b>Leitura da IA:</b> ' + esc(x[1].tri.m) : '<b>Ninguém respondeu</b>') +
+      trecho(x[0], x[1].i, x[1].j, 6) + linkLeadEx(x[0]) + '</div>'; });
+  } else if (chave === "pendencias"){
+    out = convs.filter(function(c){ return c.pendente; })
+      .sort(function(a,b){ return (b.espera_util_atual||0) - (a.espera_util_atual||0); })
+      .slice(0, 2).map(function(c){ return '<div><b>Esperando há ' + dur(c.espera_util_atual || 0) + ' úteis</b>' +
+        (c.pend_tri && c.pend_tri.m ? ' · ' + esc(c.pend_tri.m) : '') + trecho(c, null, null, 4) + linkLeadEx(c) + '</div>'; });
+  } else if (chave === "qualidade" || chave === "objecoes"){
+    var Q = convs.filter(function(c){ return c.ia && c.ia.notas && (c.mensagens||[]).length && c.ia.reescrita &&
+      (chave === "qualidade" ? (c.ia.participacao_humana === "conduziu" || c.ia.participacao_humana === "interveio")
+                             : ((c.ia.objecoes||[]).length && c.ia.notas.objecoes != null)); });
+    var med = function(c){ if (chave === "objecoes") return c.ia.notas.objecoes;
+      var v = Object.keys(c.ia.notas).map(function(k){ return c.ia.notas[k]; });
+      return v.reduce(function(a,b){ return a+b; }, 0) / v.length; };
+    Q.sort(function(a,b){ return (med(a) - med(b)) || (Date.parse(b.fim) - Date.parse(a.fim)); });
+    out = Q.slice(0, 1).map(function(c){ return exIA(c); });
+  }
+  return out.join("");
+}
+
 function pintar(){
   var r = recorte(estado.dias);
   var convs = filtrarConversas(r.de, r.ate), convsAnt = filtrarConversas(r.deAnt, r.ateAnt);
@@ -920,7 +1085,19 @@ function pintar(){
     'Os ' + dm.robo + ' pedidos que o robô resolveu sozinho não entram.' +
     (dm.enc ? ' ' + dm.enc + ' pedido(s) em conversas encerradas no Kommo sem resposta ficaram de fora.' : '') +
     '</p>' + av;
+  if (dm.leadsComP && dm.leadsComP < 15)
+    av += '<div class="fita-exemplo" style="margin:10px 0 0"><b>Base pequena:</b> só ' + dm.leadsComP +
+      ' paciente(s) precisaram de pessoa neste período, então um caso só mexe muito na nota. ' +
+      'Para avaliar o SDR, use 7 ou 30 dias.</div>';
   el("avisoHero").innerHTML = av;
+  el("puxa").innerHTML = '<div class="cartao pad">' +
+    '<h3 style="margin:0 0 4px;font-size:15px">O que puxa cada nota</h3>' +
+    '<p class="sub" style="margin:0 0 6px">Abra cada item: como é medido, conversas reais do período e o que fazer.</p>' +
+    PESOS.map(function(p){
+      var info = PILAR_INFO[p[0]] || ["", ""];
+      return blocoEx(p[1] + ' <span class="obs">· peso ' + p[2] + '%</span>', sc.partes[p[0]], info[0],
+        exemplosPilar(p[0], convs, r.de, r.ate), info[1]);
+    }).join("") + '</div>';
 
   /* ------------------------------------------------------------ robô */
   var nr = notaRobo(dm), nrAnt = notaRobo(dmAnt);
@@ -936,7 +1113,82 @@ function pintar(){
         '<div class="p">' + esc(pp[2]) + '</div></div>'; }).join("") + '</div></div>' +
     '<p class="nota-rodape">' + dm.robo + ' pedidos resolvidos pelo robô em até 3 minutos (' +
     (dm.robo - dm.roboFora) + ' dentro do horário do SDR, ' + dm.roboFora + ' fora). ' +
-    'Transferência é quando o robô diz “não consegui entender, vou transferir”.</p></div>';
+    'Transferência é quando o robô diz “não consegui entender, vou transferir”. ' +
+    'As respostas da IA do Instagram têm nota própria, logo abaixo.</p></div>';
+
+  /* ------------------------------------------------ IA do Instagram */
+  (function(){
+    var II = D.ia_insta || {};
+    var cIG = convs.filter(function(c){ return c.n_ia_insta; });
+    var lidas = cIG.filter(function(c){ return c.ia_insta && c.ia_insta.notas; });
+    var partes = [], soma = 0, peso = 0;
+    function add(rot, v, w, txt){ partes.push([rot, v, txt]); if (v != null){ soma += v*w; peso += w; } }
+    function mediaDim(lista, filtro){
+      var t = 0, n = 0;
+      lista.forEach(function(c){ var ns = c.ia_insta.notas;
+        Object.keys(ns).forEach(function(k){ if (filtro(k)){ t += ns[k]; n++; } }); });
+      return n ? t/n : null;
+    }
+    var lw = lidas.filter(function(c){ return c.ia_insta.levou_whats != null; });
+    var lwSim = lw.filter(function(c){ return c.ia_insta.levou_whats; }).length;
+    var vieram = convs.filter(function(c){ return c.veio_do_insta; }).length;
+    add("Levou para o WhatsApp",
+      lw.length ? 10*lwSim/lw.length : (II.levou_whats_pct != null ? II.levou_whats_pct/10 : null), 35,
+      (lw.length ? lwSim + " de " + lw.length + " conversas lidas" : "leitura geral") +
+      " · " + vieram + " conversa(s) no WhatsApp vieram do Instagram no período");
+    var semNing = 0;
+    cIG.forEach(function(c){ (c.dem||[]).forEach(function(d){
+      var t = Date.parse(d.t)/1000; if (t < r.de || t > r.ate) return;
+      if (d.k === "p" && !d.q && !d.enc && !(d.tri && d.tri.c !== "precisa")) semNing++; }); });
+    add("Respondeu os pedidos", (dm.ia + semNing) ? 10*dm.ia/(dm.ia + semNing) : null, 15,
+      dm.ia + " pedido(s) respondidos pela IA · " + semNing + " ficaram sem ninguém");
+    var E = dm.iaE.slice().sort(function(a,b){ return a-b; });
+    add("Velocidade da IA",
+      E.length ? E.reduce(function(a,e){ return a + pontosEspera(e); }, 0)/E.length : null, 15,
+      E.length ? "mediana " + dur(E[Math.floor(E.length/2)]) + " (relógio corrido)" : "sem resposta da IA no período");
+    var qual = lidas.length ? mediaDim(lidas, function(k){ return k !== "conformidade"; }) : null;
+    if (qual == null && II.dimensoes){
+      var dd = II.dimensoes.filter(function(d){ return d.chave !== "conformidade"; });
+      qual = dd.length ? dd.reduce(function(a,d){ return a + d.nota; }, 0)/dd.length : null;
+    }
+    add("Qualidade da conversa", qual, 25,
+      lidas.length ? lidas.length + " conversa(s) lidas no período" : "leitura geral");
+    var conf = lidas.length ? mediaDim(lidas, function(k){ return k === "conformidade"; }) : null;
+    if (conf == null && II.dimensoes){
+      var cf = II.dimensoes.filter(function(d){ return d.chave === "conformidade"; })[0];
+      conf = cf ? cf.nota : null;
+    }
+    add("Conformidade médica (CFM)", conf, 10, (II.riscos || 0) + " conversa(s) com frase de risco, no total lido");
+    var nota = peso ? soma/peso : null;
+
+    var html = '<div class="cartao pad"><div class="robo-grade">' +
+      '<div class="robo-nota"><span class="n" style="color:' + (nota == null ? "var(--texto3)" : corNota(nota)) + '">' +
+      (nota == null ? "—" : n1(nota)) + '</span><span class="d">/10</span>' +
+      '<div class="sub">' + cIG.length + ' conversa(s) com a IA no período</div></div>' +
+      '<div class="comps">' + partes.map(function(pp){
+        var v = pp[1], cor = v == null ? "#425a70" : v >= 8 ? "#62b98b" : v >= 6 ? "#dcab45" : "#e5806d";
+        return '<div class="comp"><div class="l"><span>' + esc(pp[0]) + '</span>' +
+          (v == null ? '<span class="sd">sem dado</span>' : '<b>' + n1(v) + '</b>') + '</div>' +
+          '<div class="t"><span style="width:' + (v == null ? 0 : v*10) + '%;background:' + cor + '"></span><em></em></div>' +
+          '<div class="p">' + esc(pp[2]) + '</div></div>'; }).join("") + '</div></div>';
+    var dimsI = II.dimensoes || [];
+    if (dimsI.length){
+      var todas = D.conversas || [];
+      html += '<div style="margin-top:16px"><h3 style="margin:0 0 4px;font-size:15px">Notas da IA, com exemplo e como melhorar</h3>' +
+        '<p class="sub" style="margin:0 0 6px">' + II.lidas + ' conversas lidas. A correção aqui é no prompt da IA do Instagram, não no SDR.</p>' +
+        dimsI.map(function(d){
+          var c = piorPorDim(todas, "ia_insta", d.chave);
+          return blocoEx(esc(d.rotulo), d.nota, "", c ? exIA(c, c.ia_insta) : "", esc(INSTA_DICA[d.chave] || ""));
+        }).join("") + '</div>';
+      if ((II.erros || []).length)
+        html += '<p class="nota-rodape" style="padding:12px 0 0">Erros mais comuns da IA: ' +
+          II.erros.slice(0, 5).map(function(e){ return esc(e.rotulo) + ' (' + e.pct + '%)'; }).join(" · ") + '.</p>';
+    } else {
+      html += '<p class="nota-rodape" style="padding:12px 0 0">A leitura das conversas do Instagram está começando: ' +
+        'as notas de qualidade aparecem conforme a IA lê (cerca de 40 por hora).</p>';
+    }
+    el("insta").innerHTML = html + '</div>';
+  })();
 
   /* ------------------------------------------- não respondidas (aba) */
   var ROT_TRI = {precisa:"precisa de resposta", encerrou:"só agradeceu ou encerrou",
@@ -1092,7 +1344,14 @@ function pintar(){
         return '<div class="dim"><div class="l"><span><small>' + (i+1) + '</small>' +
           esc(d.rotulo) + '</span><b>' + n1(v) + '</b></div><div class="t">' +
           '<span style="width:' + v*10 + '%;background:' + corNota(v) + '"></span></div></div>';
-      }).join("") + '</div></div></div></div>';
+      }).join("") + '</div></div></div>' +
+      (dims.length ? '<div style="margin-top:14px"><h3 style="margin:0 0 4px;font-size:15px">Exemplo e como melhorar, nota a nota</h3>' +
+        dims.map(function(d, i){
+          var dica = DIM_DICA[d.chave] || ["", ""];
+          var c = piorPorDim(D.conversas || [], "ia", d.chave);
+          return blocoEx((i+1) + '. ' + esc(d.rotulo), d.nota,
+            '<b>O que derruba:</b> ' + esc(dica[0]), c ? exIA(c) : "", esc(dica[1]));
+        }).join("") + '</div>' : '') + '</div>';
   } else {
     el("qualidade").innerHTML = semDado("O agente ainda não leu as conversas",
       "Falta a chave da API no arquivo .env. Com ela, o agente lê as " +
